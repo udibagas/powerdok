@@ -1,13 +1,5 @@
 <script>
 import {
-    authFackMethods,
-    notificationMethods
-} from "~/store/helpers";
-import {
-    mapState
-} from "vuex";
-
-import {
     required,
     email
 } from "vuelidate/lib/validators";
@@ -18,14 +10,14 @@ import {
 export default {
     layout: "auth",
     data() {
-        return {
-            email: "admin@themesbrand.com",
-            password: "123456",
-            submitted: false,
-            authError: null,
-            tryingToLogIn: false,
-            isAuthError: false,
-        };
+      return {
+        email: '',
+        password: '',
+        submitted: false
+      }
+    },
+    mounted() {
+      this.$axios.$get('/sanctum/csrf-cookie')
     },
     validations: {
         email: {
@@ -36,36 +28,22 @@ export default {
             required,
         },
     },
-    computed: {
-        ...mapState("modules/authfack", ["status"]),
-        notification() {
-            return this.$store ? this.$store.state.modules.notification : null;
-        },
-    },
     methods: {
-        ...authFackMethods,
-        ...notificationMethods,
-        // Try to log the user in with the username
-        // and password they provided.
         tryToLogIn() {
-            this.submitted = true;
-            // stop here if form is invalid
-            this.$v.$touch();
+          this.submitted = true;
+          // stop here if form is invalid
+          this.$v.$touch();
 
-            if (this.$v.$invalid) {
-                return;
-            } else {
-                const {
-                    email,
-                    password
-                } = this;
-                if (email && password) {
-                    this.login({
-                        email,
-                        password,
-                    });
+          if (this.$v.$invalid) {
+              return;
+          } else {
+              this.$auth.loginWith('laravelSanctum', {
+                data: {
+                  email: this.email,
+                  password: this.password,
                 }
-            }
+              })
+          }
         },
     },
 };
@@ -99,9 +77,9 @@ export default {
                                 <p class="text-muted">Sign in to continue to Minible.</p>
                             </div>
                             <div class="p-2 mt-4">
-                                <b-alert v-model="isAuthError" variant="danger" class="mt-3" dismissible>{{ authError }}</b-alert>
+                                <!-- <b-alert v-model="isAuthError" variant="danger" class="mt-3" dismissible>{{ authError }}</b-alert>
 
-                                <div v-if="notification.message" :class="'alert ' + notification.type">{{ notification.message }}</div>
+                                <div v-if="notification.message" :class="'alert ' + notification.type">{{ notification.message }}</div> -->
 
                                 <b-form @submit.prevent="tryToLogIn">
                                     <b-form-group id="input-group-1" label="Email" label-for="input-1">
@@ -117,9 +95,7 @@ export default {
                                             <nuxt-link to="/account/forgot-password" class="text-muted">Forgot password?</nuxt-link>
                                         </div>
                                         <label for="input-2">Password</label>
-                                        <b-form-input id="input-2" v-model="password" type="password" placeholder="Enter password" :class="{
-                          'is-invalid': submitted && $v.password.$error
-                        }"></b-form-input>
+                                        <b-form-input id="input-2" v-model="password" type="password" placeholder="Enter password" :class="{ 'is-invalid': submitted && $v.password.$error }"></b-form-input>
                                         <div v-if="submitted && !$v.password.required" class="invalid-feedback">Password is required.</div>
                                     </b-form-group>
                                     <div class="custom-control custom-checkbox">
