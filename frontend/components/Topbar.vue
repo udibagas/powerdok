@@ -99,7 +99,7 @@ export default {
         logoutUser() {
             this.logout();
             this.$router.push({
-                path: "/account/login",
+                path: "/login",
             });
         },
     },

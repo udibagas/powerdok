@@ -7,16 +7,17 @@ import Vertical from "./vertical";
 import Horizontal from "./horizontal";
 
 export default {
-    components: {
-        Vertical,
-        Horizontal,
-    },
-    computed: {
-        ...layoutComputed,
-    },
-    mounted() {
-        document.body.classList.remove("authentication-bg");
-    },
+  middleware: ['auth'],
+  components: {
+      Vertical,
+      Horizontal,
+  },
+  computed: {
+      ...layoutComputed,
+  },
+  mounted() {
+      document.body.classList.remove("authentication-bg");
+  },
 };
 </script>
 

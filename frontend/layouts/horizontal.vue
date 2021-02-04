@@ -6,21 +6,22 @@ import {
  * Horiontal layout
  */
 export default {
-    created() {
-        document.body.setAttribute("data-layout", "horizontal");
-        document.body.setAttribute("data-topbar", "colored");
+  middleware: ['auth'],
+  created() {
+    document.body.setAttribute("data-layout", "horizontal");
+    document.body.setAttribute("data-topbar", "colored");
+  },
+  methods: {
+    toggleRightSidebar() {
+        document.body.classList.toggle("right-bar-enabled");
     },
-    methods: {
-        toggleRightSidebar() {
-            document.body.classList.toggle("right-bar-enabled");
-        },
-        hideRightSidebar() {
-            document.body.classList.remove("right-bar-enabled");
-        },
+    hideRightSidebar() {
+      document.body.classList.remove("right-bar-enabled");
     },
-    computed: {
-        ...layoutComputed,
-    },
+  },
+  computed: {
+    ...layoutComputed,
+  },
 };
 </script>
 

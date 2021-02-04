@@ -68,8 +68,50 @@ export default {
     // Doc: https://bootstrap-vue.js.org
     "bootstrap-vue/nuxt",
     // Doc: https://github.com/nuxt/content
-    "@nuxt/content"
+    "@nuxt/content",
+    '@nuxtjs/axios',
+    '@nuxtjs/auth-next'
   ],
+
+  axios: {
+    baseURL: process.env.API_URL || 'http://localhost:8000',
+    credentials: true
+  },
+
+  auth: {
+    redirect: {
+      login: '/login',
+      logout: '/',
+      calback: '/login',
+      home: '/'
+    },
+    strategies: {
+      'laravelSanctum': {
+        tokenType: false,
+        tokenRequired: false,
+        provider: 'laravel/sanctum',
+        url: 'http://localhost:8000',
+        endpoints: {
+          login: {
+            url: '/api/login',
+            method: 'post',
+            propertyName: false
+          },
+          logout: {
+            url: '/api/logout',
+            method: 'post'
+          },
+          user: {
+            url: '/api/me',
+            method: 'get',
+            propertyName: false
+          }
+        },
+      },
+      localStorage: false
+    },
+  },
+
   /*
    ** Content module configuration
    ** See https://content.nuxtjs.org/configuration
