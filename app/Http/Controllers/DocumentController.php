@@ -16,16 +16,16 @@ class DocumentController extends Controller
      */
     public function index(Request $request)
     {
-        $this->authorize('viewAny', Document::class);
+        // $this->authorize('viewAny', Document::class);
 
         return new DocumentCollection(
             Document::when($request->keyword, function($q) use ($request) {
                 $q->where(function($q) use ($request) {
-                    $q->where('field1', 'ILIKE', "%{$request->keyword}%")
-                        ->orWhere('field2', 'ILIKE', "%{$request->keyword}%");
+                    $q->where('title', 'ILIKE', "%{$request->keyword}%")
+                        ->orWhere('number', 'ILIKE', "%{$request->keyword}%");
                 });
             }) ->orderBy(
-                $request->sort_field ?: 'name',
+                $request->sort_field ?: 'title',
                 $request->sort_direction == 'descending' ? 'desc' : 'asc'
             )->paginate($request->per_page)
         );
