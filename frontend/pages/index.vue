@@ -5,17 +5,17 @@
 export default {
     head() {
         return {
-            title: `${this.title} | Nuxtjs Responsive Bootstrap 4 Admin Dashboard`,
+            title: `${this.title}`,
         };
     },
     data() {
         return {
             title: "Starter Page",
             items: [{
-                    text: "Minible",
+                    text: "Menu",
                 },
                 {
-                    text: "Starter Page",
+                    text: "Dashboard",
                     active: true,
                 },
             ],
