@@ -19,12 +19,12 @@ class DocumentController extends Controller
         // $this->authorize('viewAny', Document::class);
 
         return new DocumentCollection(
-            Document::when($request->keyword, function($q) use ($request) {
-                $q->where(function($q) use ($request) {
+            Document::when($request->keyword, function ($q) use ($request) {
+                $q->where(function ($q) use ($request) {
                     $q->where('title', 'ILIKE', "%{$request->keyword}%")
                         ->orWhere('number', 'ILIKE', "%{$request->keyword}%");
                 });
-            }) ->orderBy(
+            })->orderBy(
                 $request->sort_field ?: 'title',
                 $request->sort_direction == 'descending' ? 'desc' : 'asc'
             )->paginate($request->per_page)
@@ -81,5 +81,18 @@ class DocumentController extends Controller
         $this->authorize('delete', $document);
         $document->delete();
         return ['message' => 'Data has been deleted'];
+    }
+
+    public function favourite(Document $document)
+    {
+        if (in_array(auth()->user()->id, $document->favourite)) {
+            $index = array_search(auth()->user()->id, $document->favourite);
+            array_splice($document->favourite, $index, 1);
+        } else {
+            array_push($document->favourite);
+        }
+
+        $document->update(['favorite' => $document->favourite]);
+        return response('', 204);
     }
 }
