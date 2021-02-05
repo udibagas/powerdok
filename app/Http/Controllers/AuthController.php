@@ -26,7 +26,7 @@ class AuthController extends Controller
 
     public function logout()
     {
-        Auth::logout();
+        auth()->logout();
         return response('', 204);
     }
 

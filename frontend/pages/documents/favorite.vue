@@ -27,7 +27,7 @@
 
 										<td>
 											<h5>
-												<nuxt-link to="/slug">
+												<nuxt-link to="documents/_slug">
 													{{ documents.title }}
 												</nuxt-link>
 											</h5>

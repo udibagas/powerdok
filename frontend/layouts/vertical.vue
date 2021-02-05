@@ -49,24 +49,24 @@ export default {
 </script>
 
 <template>
-<!-- Begin page -->
-<div id="layout-wrapper">
-    <Topbar />
-    <Sidebar :type="leftSidebarType" :width="layoutWidth" />
-    <!-- ============================================================== -->
-    <!-- Start right Content here -->
-    <!-- ============================================================== -->
-    <div class="main-content">
-        <div class="page-content">
-            <div class="container-fluid">
-                <Nuxt />
-            </div>
-        </div>
-        <!-- End Page-content -->
-        <Footer />
-    </div>
-    <!-- end main content-->
-    <RightSidebar />
-</div>
-<!-- END layout-wrapper -->
+	<!-- Begin page -->
+	<div id="layout-wrapper">
+		<Topbar />
+		<Sidebar :type="leftSidebarType" :width="layoutWidth" />
+		<!-- ============================================================== -->
+		<!-- Start right Content here -->
+		<!-- ============================================================== -->
+		<div class="main-content">
+			<div class="page-content">
+				<div class="container-fluid">
+					<Nuxt />
+				</div>
+			</div>
+			<!-- End Page-content -->
+			<Footer />
+		</div>
+		<!-- end main content-->
+		<RightSidebar />
+	</div>
+	<!-- END layout-wrapper -->
 </template>

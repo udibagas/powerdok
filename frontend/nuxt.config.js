@@ -34,7 +34,10 @@ export default {
   /*
    ** Global CSS
    */
-  css: ["~/assets/scss/app.scss"],
+  css: [
+    "element-ui/lib/theme-chalk/index.css",
+    "~/assets/scss/app.scss"
+  ],
   /*
    ** Plugins to load before mounting the App
    ** https://nuxtjs.org/guide/plugins
@@ -49,7 +52,8 @@ export default {
     "~/plugins/vue-lightbox.js",
     "~/plugins/vue-chartist.js",
     "~/plugins/vue-mask.js",
-    "~/plugins/vue-googlemap.js"
+    "~/plugins/vue-googlemap.js",
+    "@/plugins/element-ui"
   ],
   /*
    ** Auto import components
@@ -82,12 +86,12 @@ export default {
         code: 'en',
         name: 'English',
         file: 'en.js',
-        flag: "~/assets/images/flags/us.png"
+        flag: "/images/flags/us.jpg"
       }, {
         code: 'id',
         name: 'Bahasa Indonesia',
         file: 'id.js',
-        flag: "~/assets/images/flags/id.png"
+        flag: "/images/flags/id.png"
       }
     ],
     // seo: true,
@@ -147,7 +151,10 @@ export default {
    ** Build configuration
    ** See https://nuxtjs.org/api/configuration-build/
    */
-  build: {},
+  build: {
+    transpile: [/^element-ui/],
+  },
+
   env: {
   }
 };

@@ -1,6 +1,7 @@
 export default {
   data() {
     return {
+      keyword: '',
       filters: {},
       tableData: [],
       selectedData: {},
@@ -73,10 +74,16 @@ export default {
       this.loading = true
 
       this.$axios.$get(this.url, { params }).then(r => {
-        //alert(params)
-        //tampil dam serc
         this.tableData = r.data
-        const { current_page, from, to, total, per_page } = r.meta
+        var meta = {}
+
+        if (r.meta) {
+          meta = r.meta
+        } else {
+          meta = r
+        }
+
+        const { current_page, from, to, total, per_page } = meta
         this.pagination = { current_page, from, to, total, per_page }
       }).catch(e => {
         this.$message({

@@ -14,14 +14,12 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-        return inertia('User', [
-            'users' => User::when($request->keyword, function ($q) use ($request) {
-                $q->where(function ($q) use ($request) {
-                    $q->where('name', 'ILIKE', "%{$request->keyword}%")
-                        ->orWhere('email', 'ILIKE', "%{$request->keyword}%");
-                });
-            })->paginate($request->pageSize)
-        ]);
+        return User::when($request->keyword, function ($q) use ($request) {
+            $q->where(function ($q) use ($request) {
+                $q->where('name', 'ILIKE', "%{$request->keyword}%")
+                    ->orWhere('email', 'ILIKE', "%{$request->keyword}%");
+            });
+        })->paginate($request->pageSize);
     }
 
     /**

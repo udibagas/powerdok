@@ -26,20 +26,20 @@ export default {
 </script>
 
 <template>
-<!-- Begin page -->
-<div id="layout-wrapper">
-    <HorizontalTopbar :type="topbar" :width="layoutWidth" />
-    <!-- ============================================================== -->
-    <!-- Start right Content here -->
-    <!-- ============================================================== -->
-    <div class="main-content">
-        <div class="page-content">
-            <div class="container-fluid">
-                <Nuxt />
-            </div>
-        </div>
-        <Footer />
-    </div>
-    <RightSidebar />
-</div>
+	<!-- Begin page -->
+	<div id="layout-wrapper">
+		<HorizontalTopbar :type="topbar" :width="layoutWidth" />
+		<!-- ============================================================== -->
+		<!-- Start right Content here -->
+		<!-- ============================================================== -->
+		<div class="main-content">
+			<div class="page-content">
+				<div class="container-fluid">
+					<Nuxt />
+				</div>
+			</div>
+			<Footer />
+		</div>
+		<RightSidebar />
+	</div>
 </template>
