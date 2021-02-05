@@ -19,12 +19,11 @@ class DepartmentController extends Controller
         $this->authorize('viewAny', Department::class);
 
         return new DepartmentCollection(
-            Department::when($request->keyword, function($q) use ($request) {
-                $q->where(function($q) use ($request) {
-                    $q->where('field1', 'ILIKE', "%{$request->keyword}%")
-                        ->orWhere('field2', 'ILIKE', "%{$request->keyword}%");
+            Department::when($request->keyword, function ($q) use ($request) {
+                $q->where(function ($q) use ($request) {
+                    $q->where('name', 'ILIKE', "%{$request->keyword}%");
                 });
-            }) ->orderBy(
+            })->orderBy(
                 $request->sort_field ?: 'name',
                 $request->sort_direction == 'descending' ? 'desc' : 'asc'
             )->paginate($request->per_page)

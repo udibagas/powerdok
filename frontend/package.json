@@ -30,6 +30,7 @@
     "leaflet": "^1.6.0",
     "metismenujs": "^1.2.1",
     "nuxt": "^2.14.0",
+    "nuxt-i18n": "^6.20.0",
     "simplebar-vue": "^1.5.1",
     "sweetalert2": "^9.17.1",
     "v-click-outside": "^3.0.1",

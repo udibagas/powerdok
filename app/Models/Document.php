@@ -10,7 +10,20 @@ class Document extends Model
     use HasFactory;
 
     protected $fillable = [
-        'field1',
-        'field2'
+        'title',
+        'category',
+        'number',
+        'version',
+        'departments',
+        'effective_date',
+        'expired_date',
+        'owner_id',
+        'favorite',
+    ];
+
+    protected $casts = [
+        'category' => 'json',
+        'departments' => 'json',
+        'favorite' => 'json'
     ];
 }

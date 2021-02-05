@@ -1,12 +1,12 @@
 
 
 export default {
-  loading: "~/components/loading.vue",
+  loading: "~/components/Loading.vue",
   /*
    ** Nuxt rendering mode
    ** See https://nuxtjs.org/api/configuration-mode
    */
-  mode: "spa",
+  ssr: false,
   /*
    ** Nuxt target
    ** See https://nuxtjs.org/api/configuration-target
@@ -23,7 +23,7 @@ export default {
       {
         hid: "description",
         name: "description",
-        content: "Responsive Bootstrap 4 Admin Dashboard"
+        content: "SOP Policy"
       }
     ],
     link: [{ rel: "icon", type: "image/x-icon", href: "/favicon.ico" }]
@@ -41,7 +41,6 @@ export default {
    */
   plugins: [
     '~/plugins/index.js',
-    '~/plugins/i18n.js',
     "~/plugins/simplebar.js",
     "~/plugins/vue-click-outside.js",
     "~/plugins/vue-apexcharts.js",
@@ -65,17 +64,44 @@ export default {
    ** Nuxt.js modules
    */
   modules: [
-    // Doc: https://bootstrap-vue.js.org
+    'nuxt-i18n',
     "bootstrap-vue/nuxt",
-    // Doc: https://github.com/nuxt/content
     "@nuxt/content",
     '@nuxtjs/axios',
-    '@nuxtjs/auth-next'
+    '@nuxtjs/auth-next',
   ],
 
   axios: {
     baseURL: process.env.API_URL || 'http://localhost:8000',
     credentials: true
+  },
+
+  i18n: {
+    locales: [
+      {
+        code: 'en',
+        name: 'English',
+        file: 'en.js',
+        flag: "~/assets/images/flags/us.png"
+      }, {
+        code: 'id',
+        name: 'Bahasa Indonesia',
+        file: 'id.js',
+        flag: "~/assets/images/flags/id.png"
+      }
+    ],
+    // seo: true,
+    defaultLocale: 'en',
+    vueI18nLoader: true,
+    lazy: true,
+    langDir: 'lang/',
+    detectBrowserLanguage: {
+      alwaysRedirect: true,
+      fallbackLocale: 'en'
+    },
+    vueI18n: {
+      fallbackLocale: 'en',
+    }
   },
 
   auth: {
@@ -90,7 +116,7 @@ export default {
         tokenType: false,
         tokenRequired: false,
         provider: 'laravel/sanctum',
-        url: 'http://localhost:8000',
+        url: process.env.API_URL || 'http://localhost:8000',
         endpoints: {
           login: {
             url: '/api/login',
