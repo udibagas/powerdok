@@ -5,7 +5,7 @@
 				<div class="card">
 					<div class="card-header bg-white text-muted d-flex">
 						<div class="flex-grow-1" style="line-height: 30px">
-							<strong> User </strong>
+							<strong> Departments </strong>
 						</div>
 						<el-input
 							:placeholder="$t('Search')"
@@ -48,7 +48,7 @@
 						></el-pagination>
 
 						<div style="line-height: 30px">
-							{{ pagination.from }} - {{ pagination.to }} of
+							{{ pagination.from }}-{{ pagination.to }} of
 							{{ pagination.total }}
 						</div>
 					</div>
@@ -59,14 +59,14 @@
 									<tr>
 										<th scope="col" style="width: 35px">#</th>
 										<th scope="col">Name</th>
-										<th scope="col">Email</th>
+										<th scope="col">Description</th>
 									</tr>
 								</thead>
 								<tbody>
 									<tr v-for="(item, index) in tableData" :key="item.id">
 										<td>{{ pagination.from + index }}</td>
 										<td>{{ item.name }}</td>
-										<td>{{ item.email }}</td>
+										<td>{{ item.description }}</td>
 									</tr>
 								</tbody>
 							</table>
@@ -92,8 +92,8 @@ export default {
 
   data() {
     return {
-      url: '/api/user',
-      title: "User",
+      url: '/api/department',
+      title: "Department",
     }
   },
 }
@@ -108,7 +108,6 @@ thead th {
 	position: sticky;
 	top: 0;
 	background: #5b73e8;
-	// background: #6e49eb;
 	color: white;
 }
 </style>

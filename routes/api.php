@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\UserController;
 use App\Models\User;
@@ -48,4 +49,5 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::get('me', [AuthController::class, 'me']);
     Route::resource('document', DocumentController::class);
     Route::resource('user', UserController::class);
+    Route::resource('department', DepartmentController::class);
 });

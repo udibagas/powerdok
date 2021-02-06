@@ -1,9 +1,10 @@
 export const menuItems = [
+  // {
+  //   id: 0,
+  //   label: "NAVIGATION",
+  //   isTitle: true
+  // },
   {
-    id: 0,
-    label: "NAVIGATION",
-    isTitle: true
-  }, {
     id: 1,
     label: "Dashboard",
     icon: "uil-home-alt",

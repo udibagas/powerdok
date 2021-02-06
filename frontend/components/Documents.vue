@@ -29,8 +29,6 @@
 							@click="refresh"
 						></el-button>
 						<el-pagination
-							class="text-white"
-							background
 							@current-change="
 								(p) => {
 									pagination.current_page = p;
@@ -43,23 +41,20 @@
 									fetchData();
 								}
 							"
-							layout="prev, next, sizes"
+							layout="prev, next"
 							:page-size="Number(pagination.per_page)"
 							:page-sizes="pageSizes"
 							:total="pagination.total"
 						></el-pagination>
 
 						<div style="line-height: 30px">
-							{{ pagination.from }}-{{ pagination.to }} of
+							{{ pagination.from }} - {{ pagination.to }} of
 							{{ pagination.total }}
 						</div>
 					</div>
 					<div class="card-body p-0">
-						<div class="table-responsive mb-0">
-							<table
-								class="table table-hover table-striped"
-								v-loading="loading"
-							>
+						<div class="table-responsive mb-0" v-loading="loading">
+							<table class="table table-hover table-striped">
 								<thead>
 									<tr>
 										<th scope="col" style="width: 35px"></th>
@@ -155,16 +150,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.nav-btn {
-	width: 50px !important;
-	height: 50px !important;
-}
-
-.nav-btn:hover {
-	border: 1px solid white;
-	border-radius: 50%;
-}
-
 .table-responsive {
 	height: calc(100vh - 170px);
 }
@@ -173,6 +158,7 @@ thead th {
 	position: sticky;
 	top: 0;
 	background: #5b73e8;
+	// background: #6e49eb;
 	color: white;
 }
 </style>

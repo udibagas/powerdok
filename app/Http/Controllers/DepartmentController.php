@@ -16,7 +16,7 @@ class DepartmentController extends Controller
      */
     public function index(Request $request)
     {
-        $this->authorize('viewAny', Department::class);
+        // $this->authorize('viewAny', Department::class);
 
         return new DepartmentCollection(
             Department::when($request->keyword, function ($q) use ($request) {
