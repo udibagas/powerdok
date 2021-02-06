@@ -26,4 +26,18 @@ class Document extends Model
         'departments' => 'json',
         'favorite' => 'json'
     ];
+
+    protected $with = ['owner'];
+
+    protected $appends = ['last_update'];
+
+    public function owner()
+    {
+        return $this->belongsTo(User::class, 'owner_id');
+    }
+
+    public function getLastUpdateAttribute()
+    {
+        return $this->updated_at->diffForHumans();
+    }
 }

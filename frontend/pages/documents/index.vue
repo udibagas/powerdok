@@ -1,5 +1,5 @@
 <template>
-	<Documents header="Favourite" />
+	<Documents header="Documents" />
 </template>
 
 <script>

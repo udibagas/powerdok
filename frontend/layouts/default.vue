@@ -1,36 +1,53 @@
 <script>
-import {
-    layoutComputed
-} from "~/store/helpers";
-
-import Vertical from "./vertical";
-import Horizontal from "./horizontal";
-
 export default {
-  middleware: ['auth'],
-  components: {
-      Vertical,
-      Horizontal,
+  created() {
+    document.body.removeAttribute("data-layout");
+    document.body.removeAttribute("data-topbar");
   },
-  computed: {
-      ...layoutComputed,
+  methods: {
+    toggleRightSidebar() {
+      document.body.classList.toggle("right-bar-enabled");
+    },
+    hideRightSidebar() {
+      document.body.classList.remove("right-bar-enabled");
+    },
+    toggleMenu() {
+      document.body.classList.toggle("sidebar-enable");
+
+      if (window.screen.width >= 992) {
+        // eslint-disable-next-line no-unused-vars
+        this.$router.afterEach((routeTo, routeFrom) => {
+          document.body.classList.remove("sidebar-enable");
+          document.body.classList.remove("vertical-collpsed");
+        });
+        document.body.classList.toggle("vertical-collpsed");
+      } else {
+        // eslint-disable-next-line no-unused-vars
+        this.$router.afterEach((routeTo, routeFrom) => {
+            document.body.classList.remove("sidebar-enable");
+        });
+        document.body.classList.remove("vertical-collpsed");
+      }
+      this.isMenuCondensed = !this.isMenuCondensed;
+    },
   },
-  mounted() {
-      document.body.classList.remove("authentication-bg");
+  data() {
+    return {};
   },
 };
 </script>
 
 <template>
-<div>
-    <!-- Begin page -->
-    <Vertical v-if="layoutType === 'vertical'" :layout="layoutType">
-        <Nuxt />
-    </Vertical>
-    <!-- END layout-wrapper -->
-
-    <Horizontal v-if="layoutType === 'horizontal'" :layout="layoutType">
-        <slot />
-    </Horizontal>
-</div>
+	<div id="layout-wrapper">
+		<Topbar />
+		<Sidebar type="dark" width="fluid" />
+		<div class="main-content">
+			<div class="page-content">
+				<div class="container-fluid">
+					<Nuxt />
+				</div>
+			</div>
+			<!-- <Footer /> -->
+		</div>
+	</div>
 </template>

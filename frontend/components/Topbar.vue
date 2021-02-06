@@ -1,8 +1,6 @@
 <script>
 import { authFackMethods } from "~/store/helpers";
-/**
- * Topbar component
- */
+
 export default {
   data() {
     return {
@@ -26,14 +24,14 @@ export default {
     this.text = this.value.title;
     this.flag = this.value.flag;
   },
+
   methods: {
     ...authFackMethods,
-    /**
-     * Toggle menu
-     */
+
     toggleMenu() {
         this.$parent.toggleMenu();
     },
+
     initFullScreen() {
         document.body.classList.toggle("fullscreen-enable");
         if (
@@ -62,21 +60,14 @@ export default {
             }
         }
     },
-    /**
-     * Toggle rightsidebar
-     */
-    toggleRightSidebar() {
-        this.$parent.toggleRightSidebar();
-    },
-    /**
-     * Set languages
-     */
+
     setLanguage(locale, country, flag) {
         this.$i18n.locale = locale;
         this.current_language = locale;
         this.text = country;
         this.flag = flag;
     },
+
     logoutUser() {
       this.$auth.logout();
       this.$router.push({ path: "/login", });
@@ -390,16 +381,6 @@ export default {
 						<span class="align-middle">{{ $t("Logout") }}</span>
 					</a>
 				</b-dropdown>
-
-				<div class="dropdown d-inline-block">
-					<button
-						type="button"
-						class="btn header-item noti-icon right-bar-toggle toggle-right"
-						@click="toggleRightSidebar"
-					>
-						<i class="uil-cog toggle-right"></i>
-					</button>
-				</div>
 			</div>
 		</div>
 	</header>

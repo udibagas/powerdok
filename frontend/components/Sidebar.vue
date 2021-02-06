@@ -213,6 +213,8 @@ export default {
 			<i class="fa fa-fw fa-bars"></i>
 		</button>
 
+		<button class="btn">NEW</button>
+
 		<div data-simplebar class="sidebar-menu-scroll">
 			<!--- Sidemenu -->
 			<div id="sidebar-menu">
