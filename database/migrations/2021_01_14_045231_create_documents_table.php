@@ -27,6 +27,7 @@ class CreateDocumentsTable extends Migration
             $table->unsignedBigInteger('owner_id');
             $table->json('favourites');
             $table->tinyInteger('type')->default(0); // SOP or Policy
+            $table->boolean('is_public')->default(false);
             $table->timestamps();
 
             $table->foreign('owner_id')->references('id')->on('users')->onDelete('cascade');

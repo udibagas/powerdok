@@ -12,6 +12,8 @@ class Document extends Model
     protected $fillable = [
         'title',
         'category',
+        'tags',
+        'type',
         'number',
         'version',
         'departments',
@@ -19,6 +21,7 @@ class Document extends Model
         'expired_date',
         'owner_id',
         'favorite',
+        'is_public'
     ];
 
     protected $casts = [
