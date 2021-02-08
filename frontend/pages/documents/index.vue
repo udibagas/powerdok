@@ -1,5 +1,5 @@
 <template>
-	<Documents header="Documents" />
+	<Documents header="Documents" icon="uil-file-heart" />
 </template>
 
 <script>

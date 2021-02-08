@@ -1,5 +1,5 @@
 <template>
-	<Documents header="Related Documents" />
+	<Documents header="Related Documents" icon="uil-file-share-alt" />
 </template>
 
 <script>

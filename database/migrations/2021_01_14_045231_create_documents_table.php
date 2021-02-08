@@ -15,7 +15,9 @@ class CreateDocumentsTable extends Migration
     {
         Schema::create('documents', function (Blueprint $table) {
             $table->id();
-            $table->string('title');
+            $table->text('title');
+            $table->text('slug');
+            $table->json('tags')->nullable();
             $table->json('categories')->nullable();
             $table->string('number');
             $table->string('version');
@@ -23,8 +25,8 @@ class CreateDocumentsTable extends Migration
             $table->date('effective_date')->nullable();
             $table->date('expired_date')->nullable();
             $table->unsignedBigInteger('owner_id');
-            $table->json('favorite');
-            $table->tinyInteger('type')->default(0);
+            $table->json('favourites');
+            $table->tinyInteger('type')->default(0); // SOP or Policy
             $table->timestamps();
 
             $table->foreign('owner_id')->references('id')->on('users')->onDelete('cascade');

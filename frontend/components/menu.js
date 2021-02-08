@@ -18,7 +18,7 @@ export const menuItems = [
     id: 3,
     label: "Favorite",
     icon: "uil-file-heart",
-    link: "/documents/favorite"
+    link: "/documents/favourite"
   }, {
     id: 4,
     label: "Public Documents",
@@ -42,6 +42,11 @@ export const menuItems = [
     id: 8,
     label: "User",
     icon: "uil-users-alt",
+    link: "/user"
+  }, {
+    id: 8,
+    label: "Role & Permission",
+    icon: "uil-user-check",
     link: "/user"
   }, {
     id: 9,

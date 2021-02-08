@@ -1,8 +1,11 @@
 <template>
 	<div class="card">
-		<div class="card-header bg-white text-muted d-flex">
+		<div class="card-header bg-white d-flex">
 			<div class="flex-grow-1" style="line-height: 30px">
-				<strong> {{ header }} </strong>
+				<h4 class="text-primary m-0 p-0">
+					<i :class="icon"></i>
+					{{ header }}
+				</h4>
 			</div>
 			<el-input
 				:placeholder="$t('Search')"
@@ -55,31 +58,43 @@
 					<thead>
 						<tr>
 							<th scope="col" style="width: 35px"></th>
-							<th scope="col">Title</th>
-							<th scope="col">Departments</th>
-							<th scope="col">Effective Date</th>
-							<th scope="col">Expired Date</th>
-							<th scope="col">Owner</th>
+							<th class="text-nowrap" scope="col">Title</th>
+							<th class="text-nowrap" scope="col">Departments</th>
+							<th class="text-nowrap" scope="col">Effective Date</th>
+							<th class="text-nowrap" scope="col">Expired Date</th>
+							<th class="text-nowrap" scope="col">Owner</th>
 							<th class="text-nowrap" scope="col">Last Update</th>
 						</tr>
 					</thead>
 					<tbody>
 						<tr v-for="doc in tableData" :key="doc.id">
 							<td>
-								<i class="uil-star"></i>
+								<i class="uil-star" style="font-size: 25px"></i>
 							</td>
 							<td class="text-nowrap">
-								Policy No. {{ doc.number }} Ver. {{ doc.version }}
+								<strong class="text-muted">
+									Policy No. {{ doc.number }} Ver. {{ doc.version }}
+								</strong>
 								<br />
 								<nuxt-link to="/slug" style="font-size: 17px">
 									{{ doc.title }}
 								</nuxt-link>
 								<br />
-								{{ doc.category.join(", ") }}
+								<em>{{ doc.category.join(", ") }}</em>
 							</td>
-							<td>{{ doc.departments }}</td>
-							<td>{{ doc.effective_date }}</td>
-							<td>{{ doc.expired_date }}</td>
+							<td>
+								<nuxt-link
+									class="mr-1"
+									v-for="(name, id) in doc.departments"
+									:key="id"
+									:to="`/documents?department_id=${id}`"
+									>{{ name }}</nuxt-link
+								>
+							</td>
+							<td class="text-nowrap">
+								{{ readableDate(doc.effective_date) }}
+							</td>
+							<td class="text-nowrap">{{ readableDate(doc.expired_date) }}</td>
 							<td class="text-nowrap">{{ doc.owner.name }}</td>
 							<td class="text-nowrap">{{ doc.last_update }}</td>
 						</tr>
@@ -92,21 +107,29 @@
 
 <script>
 import table from '~/mixins/table'
+import moment from 'moment'
 
 export default {
   mixins: [table],
-  props: ['header'],
+  props: ['header', 'icon'],
   head() {
     return {
       title: `${this.title}`,
     };
   },
+
   data() {
     return {
       url: '/api/document',
       title: "doc",
     }
   },
+
+  methods: {
+    readableDate(date) {
+      return moment(date).format('DD-MMM-YYYY')
+    }
+  }
 }
 </script>
 

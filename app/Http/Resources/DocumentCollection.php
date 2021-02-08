@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Department;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
 class DocumentCollection extends ResourceCollection
@@ -14,6 +15,11 @@ class DocumentCollection extends ResourceCollection
      */
     public function toArray($request)
     {
-        return parent::toArray($request);
+        return [
+            'data' => $this->collection->map(function ($item) {
+                $item->departments = Department::whereIn('id', $item->departments)->pluck('name', 'id');
+                return $item;
+            })
+        ];
     }
 }
