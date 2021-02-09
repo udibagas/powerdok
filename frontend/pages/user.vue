@@ -7,6 +7,13 @@
 						<div class="flex-grow-1" style="line-height: 30px">
 							<strong> User </strong>
 						</div>
+            <el-button
+              class="mr-2 btn-primary"
+							size="mini"
+							icon="el-icon-plus"
+							@click="addData"
+						>Create New
+            </el-button>
 						<el-input
 							:placeholder="$t('Search')"
 							v-model="keyword"
@@ -58,8 +65,9 @@
 								<thead>
 									<tr>
 										<th scope="col" style="width: 35px">#</th>
-										<th scope="col">Name</th>
-										<th scope="col">Email</th>
+										<th scope="col" style="width: 430px">Name</th>
+										<th scope="col" style="width: 450px">Email</th>
+										<th scope="col" class="text-center">Action</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -67,6 +75,25 @@
 										<td>{{ pagination.from + index }}</td>
 										<td>{{ item.name }}</td>
 										<td>{{ item.email }}</td>
+                    <td class="text-center">
+                      <el-dropdown>
+                        <span class="el-dropdown-link">
+                          <i class="el-icon-more"></i>
+                        </span>
+                        <el-dropdown-menu slot="dropdown">
+                          <el-dropdown-item
+                            icon="el-icon-edit"
+                            @click.native.prevent="editData(item)"
+                            >Edit</el-dropdown-item
+                          >
+                          <el-dropdown-item
+                            icon="el-icon-delete"
+                            @click.native.prevent="deleteData(item.id)"
+                            >Delete</el-dropdown-item
+                          >
+                        </el-dropdown-menu>
+                      </el-dropdown>
+                    </td>
 									</tr>
 								</tbody>
 							</table>
@@ -75,6 +102,13 @@
 				</div>
 			</div>
 		</div>
+    <UserForm
+			:show="showForm"
+			:model="selectedData"
+			:url="url"
+			@close="showForm = false"
+			@refresh="refresh"
+		/>
 	</div>
 </template>
 
