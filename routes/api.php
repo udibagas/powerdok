@@ -48,8 +48,8 @@ Route::post('token', function (Request $request) {
 Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::post('logout', [AuthController::class, 'logout']);
     Route::get('me', [AuthController::class, 'me']);
-    Route::resource('document', DocumentController::class);
+    Route::resource('lang', LanguageController::class)->except(['create', 'edit']);
     Route::resource('user', UserController::class)->except(['create', 'edit']);
+    Route::resource('document', DocumentController::class);
     Route::resource('department', DepartmentController::class);
-    Route::resource('lang', LanguageController::class);
 });

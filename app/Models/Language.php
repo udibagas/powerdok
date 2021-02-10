@@ -12,6 +12,6 @@ class Language extends Model
     protected $fillable = [
         'locale',
         'key',
-        'text'
+        'text',
     ];
 }
