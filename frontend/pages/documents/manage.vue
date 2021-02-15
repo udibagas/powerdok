@@ -71,6 +71,7 @@
 							<th class="text-nowrap" scope="col">Expired Date</th>
 							<th class="text-nowrap" scope="col">Owner</th>
 							<th class="text-nowrap" scope="col">Last Update</th>
+              <th></th>
 						</tr>
 					</thead>
 					<tbody>
@@ -108,6 +109,35 @@
 							<td class="text-nowrap">{{ readableDate(doc.expired_date) }}</td>
 							<td class="text-nowrap">{{ doc.owner.name }}</td>
 							<td class="text-nowrap">{{ doc.last_update }}</td>
+              <td class="text-center">
+                <el-dropdown>
+                  <span class="el-dropdown-link">
+                    <i class="el-icon-more"></i>
+                  </span>
+                  <el-dropdown-menu slot="dropdown">
+                    <el-dropdown-item
+                      icon="el-icon-edit"
+                      @click.native.prevent="editData(item)"
+                      >Edit</el-dropdown-item
+                    >
+                    <el-dropdown-item
+                      icon="el-icon-document-checked"
+                      @click.native.prevent="attestation(item)"
+                      >Attestation</el-dropdown-item
+                    >
+                    <el-dropdown-item
+                      icon="el-icon-document"
+                      @click.native.prevent="examination(item)"
+                      >Examination</el-dropdown-item
+                    >
+                    <el-dropdown-item
+                      icon="el-icon-delete"
+                      @click.native.prevent="deleteData(item.id)"
+                      >Delete</el-dropdown-item
+                    >
+                  </el-dropdown-menu>
+                </el-dropdown>
+              </td>
 						</tr>
 					</tbody>
 				</table>

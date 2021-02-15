@@ -19,6 +19,7 @@ class CreateLanguagesTable extends Migration
             $table->text('key');
             $table->text('text');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
