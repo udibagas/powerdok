@@ -11,23 +11,25 @@ class Document extends Model
 
     protected $fillable = [
         'title',
-        'category',
+        'slug',
         'tags',
-        'type',
+        'categories',
         'number',
         'version',
         'departments',
         'effective_date',
         'expired_date',
         'owner_id',
-        'favorite',
+        'favourites',
+        'type',
         'is_public'
     ];
 
     protected $casts = [
-        'category' => 'json',
+        'tags' => 'json',
+        'categories' => 'json',
         'departments' => 'json',
-        'favorite' => 'json'
+        'favourites' => 'json'
     ];
 
     protected $with = ['owner'];

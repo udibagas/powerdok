@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\UserRequest;
-use App\Models\User;
+use App\Http\Requests\LanguageRequest;
+use App\Models\Language;
 use Illuminate\Http\Request;
 
-class UserController extends Controller
+class LanguageController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,10 +15,10 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-        return User::when($request->keyword, function ($q) use ($request) {
+        return Language::when($request->keyword, function ($q) use ($request) {
             $q->where(function ($q) use ($request) {
-                $q->where('name', 'ILIKE', "%{$request->keyword}%")
-                    ->orWhere('email', 'ILIKE', "%{$request->keyword}%");
+                $q->where('locale', 'ILIKE', "%{$request->keyword}%")
+                    ->orWhere('key', 'ILIKE', "%{$request->keyword}%");
             });
         })->paginate($request->pageSize);
     }
@@ -39,30 +39,30 @@ class UserController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(UserRequest $request)
+    public function store(LanguageRequest $request)
     {
-        $user = User::create($request->all());
-        return response(['message' => 'Data has been saved', 'data' => $user], 201);
+        $lang = Language::create($request->all());
+        return response(['message' => 'Data has been saved', 'data' => $lang], 201);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\User  $user
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(User $user)
+    public function show(Language $lang)
     {
-        return $user;
+        return $lang;
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\User  $user
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(User $user)
+    public function edit($id)
     {
         //
     }
@@ -71,24 +71,24 @@ class UserController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\User  $user
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(UserRequest $request, User $user)
+    public function update(LanguageRequest $request, Language $lang)
     {
-        $user->update($request->all());
-        return response(['message' => 'Data has been updated', 'data' => $user],201);
+        $lang->update($request->all());
+        return response(['message' => 'Data has been updated', 'data' => $lang],201);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\User  $user
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(User $user)
+    public function destroy(Language $lang)
     {
-        $user->delete();
-        return response(['message' => 'Data has been deleted', 'data' => $user],201);
+        $lang->delete();
+        return response(['message' => 'Data has been deleted', 'data' => $lang],201);
     }
 }

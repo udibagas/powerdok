@@ -80,7 +80,7 @@
 									{{ doc.title }}
 								</nuxt-link>
 								<br />
-								<em>{{ doc.category.join(", ") }}</em>
+								<em>{{ doc.categories.join(", ") }}</em>
 							</td>
 							<td>
 								<nuxt-link

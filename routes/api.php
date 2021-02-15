@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\DocumentController;
+use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\UserController;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -47,7 +48,8 @@ Route::post('token', function (Request $request) {
 Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::post('logout', [AuthController::class, 'logout']);
     Route::get('me', [AuthController::class, 'me']);
+    Route::resource('lang', LanguageController::class)->except(['create', 'edit']);
+    Route::resource('user', UserController::class)->except(['create', 'edit']);
     Route::resource('document', DocumentController::class);
-    Route::resource('user', UserController::class);
     Route::resource('department', DepartmentController::class);
 });

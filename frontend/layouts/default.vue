@@ -1,5 +1,6 @@
 <script>
 export default {
+  middleware: ['auth'],
   created() {
     document.body.removeAttribute("data-layout");
     document.body.removeAttribute("data-topbar");

@@ -5,7 +5,7 @@
 				<div class="card">
 					<div class="card-header bg-white text-muted d-flex">
 						<div class="flex-grow-1" style="line-height: 30px">
-							<strong> User </strong>
+							<strong> Languages </strong>
 						</div>
             <el-button
               class="mr-2 btn-primary"
@@ -65,16 +65,18 @@
 								<thead>
 									<tr>
 										<th scope="col" style="width: 35px">#</th>
-										<th scope="col" style="width: 430px">Name</th>
-										<th scope="col" style="width: 450px">Email</th>
+										<th scope="col">Locale</th>
+										<th scope="col">Key</th>
+										<th scope="col">Text</th>
 										<th scope="col" class="text-center">Action</th>
 									</tr>
 								</thead>
 								<tbody>
 									<tr v-for="(item, index) in tableData" :key="item.id">
 										<td>{{ pagination.from + index }}</td>
-										<td>{{ item.name }}</td>
-										<td>{{ item.email }}</td>
+										<td>{{ item.locale }}</td>
+										<td>{{ item.key }}</td>
+										<td>{{ item.text }}</td>
                     <td class="text-center">
                       <el-dropdown>
                         <span class="el-dropdown-link">
@@ -102,7 +104,7 @@
 				</div>
 			</div>
 		</div>
-    <UserForm
+    <LanguageForm
 			:show="showForm"
 			:model="selectedData"
 			:url="url"
@@ -126,8 +128,8 @@ export default {
 
   data() {
     return {
-      url: '/api/user',
-      title: "User",
+      url: '/api/lang',
+      title: "Languages",
     }
   },
 }
