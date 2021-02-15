@@ -127,7 +127,7 @@ export default {
   data() {
     return {
       url: '/api/department',
-      title: "Department",
+      title: "Powerdok | Departments",
     }
   },
 }

@@ -127,7 +127,7 @@ export default {
   data() {
     return {
       url: '/api/user',
-      title: "User",
+      title: "Powerdok | User",
     }
   },
 }

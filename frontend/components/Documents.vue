@@ -125,7 +125,7 @@ export default {
   data() {
     return {
       url: '/api/document',
-      title: "Doc",
+      title: "Powerdok | Documents",
     }
   },
 
