@@ -95,4 +95,9 @@ class DocumentController extends Controller
         $document->update(['favorite' => $document->favourite]);
         return response('', 204);
     }
+
+    public function slug($slug)
+    {
+        return Document::where('slug', $slug)->first();
+    }
 }

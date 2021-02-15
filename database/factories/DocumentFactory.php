@@ -4,7 +4,6 @@ namespace Database\Factories;
 
 use App\Models\Document;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Str;
 
 class DocumentFactory extends Factory
 {
@@ -22,14 +21,10 @@ class DocumentFactory extends Factory
      */
     public function definition()
     {
-        $title = $this->faker->sentence();
-        $slug = Str::slug($title);
-
         return [
-            'title' => $title,
-            'slug' => $slug,
-            'tags' => [$this->faker->word(), $this->faker->word()],
+            'title' => $this->faker->sentence(),
             'categories' => [$this->faker->word(), $this->faker->word()],
+            'tags' => [$this->faker->word(), $this->faker->word()],
             'number' => $this->faker->randomDigit,
             'version' => $this->faker->randomDigit,
             'departments' => [1, 3, 2],
@@ -37,7 +32,8 @@ class DocumentFactory extends Factory
             'expired_date' => $this->faker->dateTime,
             'owner_id' => 1,
             'favourites' => [3, 2, 4],
-            'type' => $this->faker->randomElement([0, 1])
+            'type' => rand(0, 1),
+            'is_public' => !!rand(0, 1)
         ];
     }
 }

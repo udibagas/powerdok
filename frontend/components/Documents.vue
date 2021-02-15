@@ -69,14 +69,18 @@
 					<tbody>
 						<tr v-for="doc in tableData" :key="doc.id">
 							<td>
-								<i class="uil-star" style="font-size: 25px"></i>
+								<i class="uil-star" style="font-size: 20px"></i>
 							</td>
 							<td class="text-nowrap">
 								<strong class="text-muted">
-									Policy No. {{ doc.number }} Ver. {{ doc.version }}
+									{{ doc.type_name }} No. {{ doc.number }} Ver.
+									{{ doc.version }}
 								</strong>
 								<br />
-								<nuxt-link to="/slug" style="font-size: 17px">
+								<nuxt-link
+									:to="`/documents/${doc.slug}`"
+									style="font-size: 17px"
+								>
 									{{ doc.title }}
 								</nuxt-link>
 								<br />
