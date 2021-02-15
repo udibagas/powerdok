@@ -4,16 +4,22 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class Document extends Model
 {
     use HasFactory;
 
+    const TYPE_SOP = 0;
+
+    const TYPE_POLICY = 1;
+
     protected $fillable = [
         'title',
         'slug',
-        'tags',
         'categories',
+        'tags',
+        'type',
         'number',
         'version',
         'departments',
@@ -21,20 +27,19 @@ class Document extends Model
         'expired_date',
         'owner_id',
         'favourites',
-        'type',
         'is_public'
     ];
 
     protected $casts = [
-        'tags' => 'json',
         'categories' => 'json',
+        'tags' => 'json',
         'departments' => 'json',
         'favourites' => 'json'
     ];
 
     protected $with = ['owner'];
 
-    protected $appends = ['last_update'];
+    protected $appends = ['last_update', 'type_name'];
 
     public function owner()
     {
@@ -44,5 +49,18 @@ class Document extends Model
     public function getLastUpdateAttribute()
     {
         return $this->updated_at->diffForHumans();
+    }
+
+    public function setTitleAttribute($value)
+    {
+        $this->attributes['title'] = $value;
+        $this->attributes['slug'] = Str::slug($value);
+    }
+
+    public function getTypeNameAttribute()
+    {
+        $types = ['SOP', 'POLICY'];
+
+        return $types[$this->type];
     }
 }
