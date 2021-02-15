@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\DocumentController;
+use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\UserController;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -51,4 +52,5 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::resource('document', DocumentController::class);
     Route::resource('user', UserController::class);
     Route::resource('department', DepartmentController::class);
+    Route::resource('lang', LanguageController::class);
 });

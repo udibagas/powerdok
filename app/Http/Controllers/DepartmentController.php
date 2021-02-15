@@ -38,7 +38,7 @@ class DepartmentController extends Controller
      */
     public function store(DepartmentRequest $request)
     {
-        $this->authorize('create', Department::class);
+        // $this->authorize('create', Department::class);
         $department = Department::create($request->all());
         return ['message' => 'Data has been saved', 'data' => $department];
     }
@@ -64,7 +64,7 @@ class DepartmentController extends Controller
      */
     public function update(DepartmentRequest $request, Department $department)
     {
-        $this->authorize('update', $department);
+        // $this->authorize('update', $department);
         $department->update($request->all());
         return ['message' => 'Data has been updated', 'data' => $department];
     }
@@ -77,7 +77,7 @@ class DepartmentController extends Controller
      */
     public function destroy(Department $department)
     {
-        $this->authorize('delete', $department);
+        // $this->authorize('delete', $department);
         $department->delete();
         return ['message' => 'Data has been deleted'];
     }

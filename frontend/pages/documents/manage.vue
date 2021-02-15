@@ -3,10 +3,17 @@
 		<div class="card-header bg-white d-flex">
 			<div class="flex-grow-1" style="line-height: 30px">
 				<h4 class="text-primary m-0 p-0">
-					<i :class="icon"></i>
-					{{ header }}
-				</h4>
+          <i icon="uil-file-alt"></i>
+          Manage SOP / Policy
+        </h4>
 			</div>
+      <el-button
+        class="mr-2 btn-primary"
+        size="mini"
+        icon="el-icon-plus"
+        @click="addData"
+      >Create New
+      </el-button>
 			<el-input
 				:placeholder="$t('Search')"
 				v-model="keyword"
@@ -125,7 +132,7 @@ export default {
   data() {
     return {
       url: '/api/document',
-      title: "Doc",
+      title: "doc",
     }
   },
 
