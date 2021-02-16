@@ -9,10 +9,14 @@ class TaskAssignment extends Model
 {
     use HasFactory;
 
+    protected $primaryKey = 'user_id';
+
     protected $fillable = [
         'task_id',
         'user_id'
     ];
+
+    protected $with = ['user'];
 
     public function user()
     {

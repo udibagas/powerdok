@@ -5,15 +5,15 @@
 				<div class="card">
 					<div class="card-header bg-white text-muted d-flex">
 						<div class="flex-grow-1" style="line-height: 30px">
-							<strong> Languages </strong>
+							<strong> <i class="uil-globe"></i> Languages </strong>
 						</div>
-            <el-button
-              class="mr-2 btn-primary"
+						<el-button
+							class="mr-2 btn-primary"
 							size="mini"
 							icon="el-icon-plus"
 							@click="addData"
-						>Create New
-            </el-button>
+							>Create New
+						</el-button>
 						<el-input
 							:placeholder="$t('Search')"
 							v-model="keyword"
@@ -68,7 +68,11 @@
 										<th scope="col">Locale</th>
 										<th scope="col">Key</th>
 										<th scope="col">Text</th>
-										<th scope="col" class="text-center">Action</th>
+										<th
+											scope="col"
+											class="text-center"
+											style="width: 60px"
+										></th>
 									</tr>
 								</thead>
 								<tbody>
@@ -77,25 +81,25 @@
 										<td>{{ item.locale }}</td>
 										<td>{{ item.key }}</td>
 										<td>{{ item.text }}</td>
-                    <td class="text-center">
-                      <el-dropdown>
-                        <span class="el-dropdown-link">
-                          <i class="el-icon-more"></i>
-                        </span>
-                        <el-dropdown-menu slot="dropdown">
-                          <el-dropdown-item
-                            icon="el-icon-edit"
-                            @click.native.prevent="editData(item)"
-                            >Edit</el-dropdown-item
-                          >
-                          <el-dropdown-item
-                            icon="el-icon-delete"
-                            @click.native.prevent="deleteData(item.id)"
-                            >Delete</el-dropdown-item
-                          >
-                        </el-dropdown-menu>
-                      </el-dropdown>
-                    </td>
+										<td class="text-center">
+											<el-dropdown>
+												<span class="el-dropdown-link">
+													<i class="el-icon-more"></i>
+												</span>
+												<el-dropdown-menu slot="dropdown">
+													<el-dropdown-item
+														icon="el-icon-edit"
+														@click.native.prevent="editData(item)"
+														>{{ $t("Edit") }}</el-dropdown-item
+													>
+													<el-dropdown-item
+														icon="el-icon-delete"
+														@click.native.prevent="deleteData(item.id)"
+														>Delete</el-dropdown-item
+													>
+												</el-dropdown-menu>
+											</el-dropdown>
+										</td>
 									</tr>
 								</tbody>
 							</table>
@@ -104,7 +108,7 @@
 				</div>
 			</div>
 		</div>
-    <LanguageForm
+		<LanguageForm
 			:show="showForm"
 			:model="selectedData"
 			:url="url"

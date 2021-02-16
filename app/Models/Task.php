@@ -60,7 +60,7 @@ class Task extends Model
 
     public function assignees()
     {
-        return $this->hasMany(TaskAssignment::class);
+        return $this->hasManyThrough(User::class, TaskAssignment::class, 'user_id', 'id');
     }
 
     public function attachments()

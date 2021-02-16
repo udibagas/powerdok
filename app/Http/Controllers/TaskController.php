@@ -18,7 +18,7 @@ class TaskController extends Controller
     public function index(Request $request)
     {
         return new TaskCollection(
-            Task::when($request->keyword, function ($q) use ($request) {
+            Task::with('assignees')->when($request->keyword, function ($q) use ($request) {
                 $q->where(function ($q) use ($request) {
                     $q->where('title', 'ILIKE', "%{$request->keyword}%")
                         ->orWhere('description', 'ILIKE', "%{$request->keyword}%");
@@ -50,12 +50,12 @@ class TaskController extends Controller
      */
     public function show(Task $task)
     {
-        $this->authorize('view', $task);
+        // $this->authorize('view', $task);
 
         return $task->load([
             'assignees',
             'attachments',
-            'document',
+            // 'document',
             'comments',
             'approvals',
             'trackings'

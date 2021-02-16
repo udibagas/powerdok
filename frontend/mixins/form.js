@@ -12,7 +12,7 @@ export default {
       this.$axios({
         method: id > 0 ? 'put' : 'post',
         url: id > 0 ? `${this.url}/${id}` : this.url,
-        data: this.formModel
+        data: this.model
       }).then(r => {
         this.$message({
           message: r.data.message,
