@@ -21,7 +21,10 @@ class TaskController extends Controller
             Task::with('assignees')->when($request->keyword, function ($q) use ($request) {
                 $q->where(function ($q) use ($request) {
                     $q->where('title', 'ILIKE', "%{$request->keyword}%")
-                        ->orWhere('description', 'ILIKE', "%{$request->keyword}%");
+                        ->orWhere('description', 'ILIKE', "%{$request->keyword}%")
+                        ->orWhereHas('assignees', function ($q) use ($request) {
+                            $q->where('name', 'ILIKE', "%{$request->keyword}%");
+                        });
                 });
             })->orderBy(
                 $request->sort_field ?: 'updated_at',
