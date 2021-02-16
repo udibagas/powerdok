@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\TaskRequest;
 use App\Http\Resources\TaskCollection;
 use App\Models\Task;
+use App\Models\TaskApproval;
 use Illuminate\Http\Request;
 
 class TaskController extends Controller
@@ -117,5 +118,21 @@ class TaskController extends Controller
         }
 
         return ['message' => 'Comment has been saved'];
+    }
+
+    public function getPendingApproval(Request $request)
+    {
+        $data = TaskApproval::whereNull('status')->where('user_id', $request->user()->id);
+
+        return $request->count_only ? $data->count() : $data->get();
+    }
+
+    public function getNewTask(Request $request)
+    {
+        $data = Task::whereHas('assignees', function ($q) {
+            $q->where('user_id', auth()->user()->id);
+        })->where('status', Task::STATUS_SUBMITTED);
+
+        return $request->count_only ? $data->count() : $data->get();
     }
 }
