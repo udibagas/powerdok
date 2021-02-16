@@ -28,9 +28,8 @@ export default {
 
     sortChange(c) {
       if (c.prop != this.sort || c.order != this.order) {
-        // this.sort = { field: c.prop, direction: c.order }
         this.sort_field = c.prop;
-        this.sort_direction = c.order;
+        this.sort_direction = c.order == 'descending' ? 'desc' : 'asc';
         this.pagination.current_page = 1;
 				this.fetchData();
 			}
@@ -49,9 +48,9 @@ export default {
 
     refresh() {
       this.pagination.current_page = 1;
-      this.keyword = ''
-      this.sort = ''
-      this.order = ''
+      this.keyword = null
+      this.sort_field = null
+      this.sort_direction = null
       this.fetchData()
     },
 
@@ -94,7 +93,7 @@ export default {
     },
 
     deleteData(id) {
-      this.$confirm('Anda yakin akan menghapus data ini?', 'Confirm', { type: 'warning' }).then(() => {
+      this.$confirm($t('Are you sure you want to delete this data?'), $t('Confirm'), { type: 'warning' }).then(() => {
         this.$axios.delete(`${this.url}/${id}`).then(r => {
           this.$message({
             message: r.data.message,
@@ -144,12 +143,6 @@ export default {
 					document.getElementById('input-file').value = ''
 				})
     },
-
-    onFiltered(filteredItems) {
-      // Trigger pagination to update the number of buttons/pages due to filtering
-      this.totalRows = filteredItems.length;
-      this.currentPage = 1;
-  }
 
   },
 
