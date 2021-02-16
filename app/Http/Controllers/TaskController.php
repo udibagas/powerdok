@@ -1,0 +1,121 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Http\Requests\TaskRequest;
+use App\Http\Resources\TaskCollection;
+use App\Models\Task;
+use Illuminate\Http\Request;
+
+class TaskController extends Controller
+{
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index(Request $request)
+    {
+        return new TaskCollection(
+            Task::when($request->keyword, function ($q) use ($request) {
+                $q->where(function ($q) use ($request) {
+                    $q->where('title', 'ILIKE', "%{$request->keyword}%")
+                        ->orWhere('description', 'ILIKE', "%{$request->keyword}%");
+                });
+            })->orderBy(
+                $request->sort_field ?: 'updated_at',
+                $request->sort_direction ? $request->sort_direction : 'desc'
+            )->paginate($request->per_page)
+        );
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(TaskRequest $request)
+    {
+        $task = Task::create($request->all());
+        return ['message' => 'Data has been saved', 'data' => $task];
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  \App\Models\Task  $task
+     * @return \Illuminate\Http\Response
+     */
+    public function show(Task $task)
+    {
+        $this->authorize('view', $task);
+
+        return $task->load([
+            'assignees',
+            'attachments',
+            'document',
+            'comments',
+            'approvals',
+            'trackings'
+        ]);
+    }
+
+    /**
+     * Update the specifphp artisan stub:publishied resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Models\Task  $task
+     * @return \Illuminate\Http\Response
+     */
+    public function update(TaskRequest $request, Task $task)
+    {
+        $this->authorize('update', $task);
+        $task->update($request->all());
+
+        if ($request->attachments) {
+            $task->attachments()->delete();
+            $task->attachments()->createMany($request->attachments);
+        }
+
+        return ['message' => 'Data has been updated', 'data' => $task];
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  \App\Models\Task  $task
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy(Task $task)
+    {
+        $this->authorize('delete', $task);
+        $task->delete();
+        return ['message' => 'Data has been deleted'];
+    }
+
+    public function approve(Task $task, Request $request)
+    {
+        $this->authorize('approve', $task);
+        $request->validate(['status' => 'required|boolean']);
+
+        $task->approvals()
+            ->where('user_id', $request->user()->id)
+            ->update($request->all());
+
+        return ['message' => 'Approval has been saved'];
+    }
+
+    public function comment(Task $task, Request $request)
+    {
+        $this->authorize('comment', $task);
+        $request->validate(['body' => 'required']);
+        $comment = $task->comments()->create($request->all());
+
+        if ($request->attachments) {
+            $comment->attachments()->createMany($request->attachments);
+        }
+
+        return ['message' => 'Comment has been saved'];
+    }
+}

@@ -1,0 +1,126 @@
+<?php
+
+namespace App\Models;
+
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+
+class Task extends Model
+{
+    use HasFactory, SoftDeletes;
+
+    const STATUS_DRAFT = 0;
+
+    const STATUS_SUBMITTED = 1;
+
+    const STATUS_ON_PROGRESS = 2;
+
+    const STATUS_FINISHED = 3;
+
+    const STATUS_CLOSED = 4;
+
+    const STATUS_VOID = 5;
+
+    const STATUS_POSTPONED = 6;
+
+    const PRIORITY_LOW = 0;
+
+    const PRIORITY_MEDIUM = 1;
+
+    const PRIORITY_HIGH = 2;
+
+    const PRIORITY_URGENT = 3;
+
+    protected $fillable = [
+        'user_id',
+        'title',
+        'description',
+        'custom_fields',
+        'priority',
+        'due_date',
+        'status'
+    ];
+
+    protected $casts = [
+        'custom_fields' => 'json'
+    ];
+
+    protected $appends = [
+        'status_label',
+        'priority_label',
+        'overdue'
+    ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function assignees()
+    {
+        return $this->hasMany(TaskAssignment::class);
+    }
+
+    public function attachments()
+    {
+        return $this->morphMany(Attachment::class, 'attachable');
+    }
+
+    public function comments()
+    {
+        return $this->morphMany(Comment::class, 'commentable');
+    }
+
+    public function document()
+    {
+        return $this->hasOne(Document::class);
+    }
+
+    public function approvals()
+    {
+        return $this->hasMany(TaskApproval::class);
+    }
+
+    public function trackings()
+    {
+        return $this->hasMany(TaskTracking::class);
+    }
+
+    public function getStatusLabelAttribute()
+    {
+        $statusList = [
+            self::STATUS_DRAFT => 'Draft',
+            self::STATUS_SUBMITTED => 'Submitted',
+            self::STATUS_ON_PROGRESS => 'On Progress',
+            self::STATUS_FINISHED => 'Finished',
+            self::STATUS_CLOSED => 'Closed',
+            self::STATUS_VOID => 'Void',
+            self::STATUS_POSTPONED => 'Postponed'
+        ];
+
+        return isset($statusList[$this->status]) ? $statusList[$this->status] : 'N/A';
+    }
+
+    public function getPriorityLabelAttribute()
+    {
+        $priorityList = [
+            self::PRIORITY_LOW => 'Low',
+            self::PRIORITY_MEDIUM => 'Medium',
+            self::PRIORITY_HIGH => 'High',
+            self::PRIORITY_URGENT => 'Urgent'
+        ];
+
+        return isset($priorityList[$this->priority]) ? $priorityList[$this->priority] : 'N/A';
+    }
+
+    public function getOverdueAttribute()
+    {
+        if (!$this->due_date) {
+            return false;
+        }
+
+        return Carbon::now() > (new Carbon($this->due_date));
+    }
+}
