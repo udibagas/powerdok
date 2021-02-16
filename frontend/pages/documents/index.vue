@@ -1,5 +1,5 @@
 <template>
-	<Documents header="Documents" icon="uil-file-heart" />
+	<Documents header="My Documents" icon="uil-file-lock-alt" />
 </template>
 
 <script>

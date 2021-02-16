@@ -20,6 +20,7 @@ class CreateDepartmentsTable extends Migration
             $table->unsignedBigInteger('parent_id')->nullable();
             $table->unsignedBigInteger('head_id')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

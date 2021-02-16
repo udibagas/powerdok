@@ -1,9 +1,4 @@
 export const menuItems = [
-  // {
-  //   id: 0,
-  //   label: "NAVIGATION",
-  //   isTitle: true
-  // },
   {
     id: 1,
     label: "Dashboard",
@@ -11,58 +6,67 @@ export const menuItems = [
     link: "/"
   }, {
     id: 2,
+    label: "DOCUMENTS",
+    isTitle: true
+  }, {
+    id: 3,
     label: "My Documents",
     icon: "uil-file-lock-alt",
     link: "/documents"
   }, {
-    id: 3,
+    id: 4,
     label: "Favorite",
     icon: "uil-file-heart",
     link: "/documents/favourite"
   }, {
-    id: 4,
+    id: 5,
     label: "Public Documents",
     icon: "uil-file-copy-alt",
     link: "/documents/public"
   }, {
-    id: 5,
+    id: 6,
     label: "Related Documents",
     icon: "uil-file-share-alt",
     link: "/documents/related"
   }, {
-    id: 6,
+    id: 7,
     label: "My Task",
     icon: "uil-file-check-alt",
     link: "/task"
   }, {
-    id: 7,
+    id: 8,
+    label: "Manage SOP / Policy",
+    icon: "uil-file-alt",
+    link: "/documents/manage"
+  }, {
+    id: 9,
     label: "ADMINISTRATION",
     isTitle: true
   }, {
-    id: 8,
+    id: 10,
     label: "User",
     icon: "uil-users-alt",
     link: "/user"
   }, {
-    id: 8,
+    id: 11,
     label: "Role & Permission",
     icon: "uil-user-check",
-    link: "/user"
+    link: "/role"
   }, {
-    id: 9,
+    id: 12,
     label: "Department",
     icon: "uil-sitemap",
     link: "/department"
   }, {
-    id: 10,
+    id: 13,
     label: "Languages",
     icon: "uil-globe",
     link: "/language"
   }, {
-    id: 11,
+    id: 14,
     label: "Setting",
     icon: "uil-sliders-v-alt",
-    link: "/department"
+    link: "/setting"
   },
 ];
 

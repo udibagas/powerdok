@@ -188,19 +188,19 @@ export default {
 		<div class="navbar-brand-box">
 			<nuxt-link to="/" class="logo logo-dark">
 				<span class="logo-sm">
-					<img src="~/assets/images/logo-sm.png" alt height="22" />
+					<img src="~/assets/images/logo-powerdok.png" alt height="25" />
 				</span>
 				<span class="logo-lg">
-					<img src="~/assets/images/logo-dark.png" alt height="20" />
+					<img src="~/assets/images/powerdok-dark.png" alt height="36" />
 				</span>
 			</nuxt-link>
 
 			<nuxt-link to="/" class="logo logo-light">
 				<span class="logo-sm">
-					<img src="~/assets/images/logo-sm.png" alt height="22" />
+					<img src="~/assets/images/logo-powerdok.png" alt height="25" />
 				</span>
 				<span class="logo-lg">
-					<img src="~/assets/images/logo-light.png" alt height="20" />
+					<img src="~/assets/images/powerdok-light.png" alt height="36" />
 				</span>
 			</nuxt-link>
 		</div>
@@ -216,7 +216,7 @@ export default {
 		<div data-simplebar class="sidebar-menu-scroll">
 			<!--- Sidemenu -->
 			<div id="sidebar-menu">
-				<div class="p-3">
+				<!-- <div class="p-3">
 					<el-button
 						v-if="!$parent.isMenuCondensed"
 						class="btn-primary btn-block"
@@ -224,7 +224,7 @@ export default {
 						icon="el-icon-plus"
 						>{{ $t("NEW") }}</el-button
 					>
-				</div>
+				</div> -->
 				<!-- Left Menu Start -->
 				<ul class="metismenu list-unstyled" id="side-menu">
 					<template v-for="item in menuItems">
