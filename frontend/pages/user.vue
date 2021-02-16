@@ -5,7 +5,7 @@
 				<div class="card">
 					<div class="card-header bg-white text-muted d-flex">
 						<div class="flex-grow-1" style="line-height: 30px">
-							<strong> User </strong>
+							<strong> Manage User </strong>
 						</div>
             <el-button
               class="mr-2 btn-primary"
@@ -65,8 +65,11 @@
 								<thead>
 									<tr>
 										<th scope="col" style="width: 35px">#</th>
-										<th scope="col" style="width: 430px">Name</th>
-										<th scope="col" style="width: 450px">Email</th>
+										<th scope="col" style="width: 200px">Name</th>
+										<th scope="col">Role</th>
+										<th scope="col" style="width: 240px">Email</th>
+										<th scope="col">Position</th>
+										<th scope="col">Department</th>
 										<th scope="col" class="text-center">Action</th>
 									</tr>
 								</thead>
@@ -74,7 +77,10 @@
 									<tr v-for="(item, index) in tableData" :key="item.id">
 										<td>{{ pagination.from + index }}</td>
 										<td>{{ item.name }}</td>
+										<td>{{ item.role }}</td>
 										<td>{{ item.email }}</td>
+										<td>{{ item.position }}</td>
+										<td>{{ item.department.name }}</td>
                     <td class="text-center">
                       <el-dropdown>
                         <span class="el-dropdown-link">
@@ -127,7 +133,7 @@ export default {
   data() {
     return {
       url: '/api/user',
-      title: "Powerdok | User",
+      title: "Powerdok | Manage User",
     }
   },
 }

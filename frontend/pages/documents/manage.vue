@@ -3,7 +3,7 @@
 		<div class="card-header bg-white d-flex">
 			<div class="flex-grow-1" style="line-height: 30px">
 				<h4 class="text-primary m-0 p-0">
-          <i icon="uil-file-alt"></i>
+          <i class="uil-file-alt"></i>
           Manage SOP / Policy
         </h4>
 			</div>
@@ -116,6 +116,11 @@
                   </span>
                   <el-dropdown-menu slot="dropdown">
                     <el-dropdown-item
+                      icon="el-icon-view"
+                      @click.native.prevent="show(item)"
+                      >Show</el-dropdown-item
+                    >
+                    <el-dropdown-item
                       icon="el-icon-edit"
                       @click.native.prevent="editData(item)"
                       >Edit</el-dropdown-item
@@ -162,7 +167,7 @@ export default {
   data() {
     return {
       url: '/api/document',
-      title: "doc",
+      title: "Powerdok | Manage SOP / Policy",
     }
   },
 

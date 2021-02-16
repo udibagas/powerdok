@@ -19,6 +19,25 @@
 				</div>
 			</el-form-item>
 
+      <el-form-item label="Role">
+				<el-select
+					size="small"
+					style="width: 100%"
+					v-model="formModel.role"
+					placeholder="Role"
+					filterable
+					default-first-option
+				>
+					<el-option value="Admin"></el-option>
+					<el-option value="Author"></el-option>
+					<el-option value="User"></el-option>
+				</el-select>
+
+				<div class="el-form-item__error" v-if="errors.role">
+					{{ errors.role.join(', ') }}
+				</div>
+			</el-form-item>
+
       <el-form-item label="Email" :class="{ 'is-error': errors.email }">
 				<el-input
 					size="small"
@@ -30,6 +49,45 @@
 					{{ errors.email.join(', ') }}
 				</div>
 			</el-form-item>
+
+      <el-form-item label="Position" :class="{ 'is-error': errors.position }">
+				<el-input
+					size="small"
+					v-model="formModel.position"
+					placeholder="Position"
+				></el-input>
+
+				<div class="el-form-item__error" v-if="errors.position">
+					{{ errors.position.join(', ') }}
+				</div>
+			</el-form-item>
+
+      <el-form-item label="Department">
+        <el-select
+          size="small"
+          style="width: 100%"
+          v-model="formModel.department_id"
+          placeholder="Department"
+          filterable
+          default-first-option
+          clearable
+          remote
+          :remote-method="
+            (q) => getList('/api/departmentList', q, 'departmentList')
+          "
+        >
+          <el-option
+            v-for="department in departmentList"
+            :key="department.id"
+            :value="department.id"
+            :label="department.name"
+          ></el-option>
+        </el-select>
+
+        <div class="el-form-item__error" v-if="errors.department_id">
+          {{ errors.department_id.join(', ') }}
+        </div>
+      </el-form-item>
 
 			<el-form-item label="Password" :class="{ 'is-error': errors.password }">
 				<el-input
@@ -81,14 +139,18 @@
 
 <script>
 import form from '~/mixins/form'
+import dropdown from '~/mixins/dropdown'
 
 export default {
 	props: ['show', 'model', 'url'],
-	mixins: [form],
+	mixins: [form, dropdown],
 	computed: {
 		formModel() {
 			return this.model
 		},
 	},
+  mounted() {
+		this.getList('/api/departmentList', '', 'departmentList')
+  }
 }
 </script>

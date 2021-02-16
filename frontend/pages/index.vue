@@ -11,7 +11,7 @@ export default {
 
   data() {
     return {
-      title: "Starter Page",
+      title: "Powerdok | Dashboard",
       items: [{
           text: "Menu",
         },
