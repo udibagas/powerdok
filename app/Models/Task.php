@@ -90,17 +90,7 @@ class Task extends Model
 
     public function getStatusLabelAttribute()
     {
-        $statusList = [
-            self::STATUS_DRAFT => 'Draft',
-            self::STATUS_SUBMITTED => 'Submitted',
-            self::STATUS_ON_PROGRESS => 'On Progress',
-            self::STATUS_FINISHED => 'Finished',
-            self::STATUS_CLOSED => 'Closed',
-            self::STATUS_VOID => 'Void',
-            self::STATUS_POSTPONED => 'Postponed'
-        ];
-
-        return isset($statusList[$this->status]) ? $statusList[$this->status] : 'N/A';
+        return static::getStatusLabel($this->status);
     }
 
     public function getPriorityLabelAttribute()
@@ -122,5 +112,20 @@ class Task extends Model
         }
 
         return Carbon::now() > (new Carbon($this->due_date));
+    }
+
+    public static function getStatusLabel($status)
+    {
+        $statusList = [
+            self::STATUS_DRAFT => 'Draft',
+            self::STATUS_SUBMITTED => 'Submitted',
+            self::STATUS_ON_PROGRESS => 'On Progress',
+            self::STATUS_FINISHED => 'Finished',
+            self::STATUS_CLOSED => 'Closed',
+            self::STATUS_VOID => 'Void',
+            self::STATUS_POSTPONED => 'Postponed'
+        ];
+
+        return isset($statusList[$status]) ? $statusList[$status] : 'N/A';
     }
 }
