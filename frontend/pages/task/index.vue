@@ -54,7 +54,7 @@
 
 		<div class="table-responsive">
 			<table class="table table-hover table-striped">
-				<thead>
+				<thead class="bg-primary text-white">
 					<tr>
 						<th>#</th>
 						<th>Title</th>
@@ -65,7 +65,11 @@
 					</tr>
 				</thead>
 				<tbody>
-					<tr v-for="(task, index) in tableData" :key="task.id">
+					<tr
+						v-for="(task, index) in tableData"
+						:key="task.id"
+						:class="{ 'table-danger': task.overdue }"
+					>
 						<td>{{ pagination.from + index }}</td>
 						<td>
 							<nuxt-link class="text-nowrap" :to="`/task/${task.id}`">{{
@@ -120,7 +124,7 @@ export default {
         Finished: 'success',
         Closed: 'secondary',
         Void: 'secondary',
-        Posponed: 'secondary'
+        Postponed: 'secondary'
       }
     }
   },
