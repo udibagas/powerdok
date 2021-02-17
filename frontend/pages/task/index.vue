@@ -6,6 +6,16 @@
 					<i class="uil-file-check-alt"></i> My Task
 				</h4>
 			</div>
+
+			<el-button
+				class="btn-primary mr-2"
+				size="small"
+				icon="el-icon-plus"
+				@click="$router.push('/task/create')"
+			>
+				{{ $t("NEW TASK") }}
+			</el-button>
+
 			<el-input
 				:placeholder="$t('Search')"
 				v-model="keyword"
@@ -52,7 +62,7 @@
 			</div>
 		</div>
 
-		<div class="table-responsive">
+		<div class="table-responsive mb-0">
 			<table class="table table-hover table-striped">
 				<thead class="bg-primary text-white">
 					<tr>
@@ -108,6 +118,7 @@ import moment from 'moment'
 
 export default {
   mixins: [table],
+
   data() {
     return {
       url: '/api/task',
