@@ -49,7 +49,6 @@ Route::post('token', function (Request $request) {
 Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::post('logout', [AuthController::class, 'logout']);
     Route::get('me', [AuthController::class, 'me']);
-    Route::get('departmentList', [DepartmentController::class, 'getList']);
     Route::get('document/{slug}', [DocumentController::class, 'slug']);
 
     Route::apiResources([
