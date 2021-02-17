@@ -26,7 +26,7 @@ class DocumentController extends Controller
                 });
             })->orderBy(
                 $request->sort_field ?: 'title',
-                $request->sort_direction == 'descending' ? 'desc' : 'asc'
+                $request->sort_direction ?: 'asc'
             )->paginate($request->per_page)
         );
     }

@@ -16,9 +16,9 @@ export default {
 
   methods: {
 
-    getList(url, keyword, listContainer) {
-      this.$axios.get(url, { params: { keyword } }).then(r => {
-        this[listContainer] = r.data.data || r.data
+    getList(url, listContainer, keyword = '') {
+      this.$axios.$get(url, { params: { keyword } }).then(r => {
+        this[listContainer] = r.data || r
       }).catch(e => {
         this.$message({
           message: e.response.data.message,
