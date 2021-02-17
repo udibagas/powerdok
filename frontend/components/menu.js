@@ -44,7 +44,7 @@ export const menuItems = [
     isTitle: true
   }, {
     id: 10,
-    label: "User",
+    label: "Manage User",
     icon: "uil-users-alt",
     link: "/user"
   }, {

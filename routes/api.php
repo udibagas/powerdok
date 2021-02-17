@@ -53,6 +53,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::resource('document', DocumentController::class);
     Route::resource('user', UserController::class);
     Route::resource('department', DepartmentController::class);
+    Route::get('departmentList', [DepartmentController::class, 'getList']);
     Route::resource('lang', LanguageController::class);
     Route::resource('task', TaskController::class);
 });

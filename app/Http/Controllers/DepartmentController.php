@@ -81,4 +81,13 @@ class DepartmentController extends Controller
         $department->delete();
         return ['message' => 'Data has been deleted'];
     }
+
+    public function getList(Request $request)
+    {
+        return [
+            'data' => Department::when($request->keyword, function ($q) use ($request) {
+                $q->where('name', 'ILIKE', "%{$request->keyword}%");
+            })->orderBy('name', 'asc')->get()
+        ];
+    }
 }
