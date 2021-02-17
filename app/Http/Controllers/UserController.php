@@ -24,16 +24,6 @@ class UserController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -57,17 +47,6 @@ class UserController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\User  $user
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(User $user)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -77,7 +56,7 @@ class UserController extends Controller
     public function update(UserRequest $request, User $user)
     {
         $user->update($request->all());
-        return response(['message' => 'Data has been updated', 'data' => $user],201);
+        return response(['message' => 'Data has been updated', 'data' => $user], 201);
     }
 
     /**
@@ -89,6 +68,6 @@ class UserController extends Controller
     public function destroy(User $user)
     {
         $user->delete();
-        return response(['message' => 'Data has been deleted', 'data' => $user],201);
+        return response(['message' => 'Data has been deleted', 'data' => $user], 201);
     }
 }

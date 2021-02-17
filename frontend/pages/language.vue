@@ -132,7 +132,7 @@ export default {
 
   data() {
     return {
-      url: '/api/lang',
+      url: '/api/language',
       title: "Languages",
     }
   },

@@ -7,13 +7,13 @@
 						<div class="flex-grow-1" style="line-height: 30px">
 							<strong> Manage User </strong>
 						</div>
-            <el-button
-              class="mr-2 btn-primary"
+						<el-button
+							class="mr-2 btn-primary"
 							size="mini"
 							icon="el-icon-plus"
 							@click="addData"
-						>Create New
-            </el-button>
+							>{{ $t("NEW USER") }}
+						</el-button>
 						<el-input
 							:placeholder="$t('Search')"
 							v-model="keyword"
@@ -28,13 +28,6 @@
 								}
 							"
 						></el-input>
-						<el-button icon="uil-filter" size="small" class="ml-2"></el-button>
-						<el-button
-							icon="uil-refresh"
-							size="small"
-							class="ml-2"
-							@click="refresh"
-						></el-button>
 						<el-pagination
 							@current-change="
 								(p) => {
@@ -70,7 +63,15 @@
 										<th scope="col" style="width: 240px">Email</th>
 										<th scope="col">Position</th>
 										<th scope="col">Department</th>
-										<th scope="col" class="text-center">Action</th>
+										<th scope="col" class="text-center">
+											<el-button
+												size="small"
+												class="text-white"
+												type="text"
+												icon="el-icon-refresh"
+												@click="refresh"
+											></el-button>
+										</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -80,26 +81,26 @@
 										<td>{{ item.role }}</td>
 										<td>{{ item.email }}</td>
 										<td>{{ item.position }}</td>
-										<td>{{ item.department.name }}</td>
-                    <td class="text-center">
-                      <el-dropdown>
-                        <span class="el-dropdown-link">
-                          <i class="el-icon-more"></i>
-                        </span>
-                        <el-dropdown-menu slot="dropdown">
-                          <el-dropdown-item
-                            icon="el-icon-edit"
-                            @click.native.prevent="editData(item)"
-                            >Edit</el-dropdown-item
-                          >
-                          <el-dropdown-item
-                            icon="el-icon-delete"
-                            @click.native.prevent="deleteData(item.id)"
-                            >Delete</el-dropdown-item
-                          >
-                        </el-dropdown-menu>
-                      </el-dropdown>
-                    </td>
+										<td>{{ item.department ? item.department.name : "" }}</td>
+										<td class="text-center">
+											<el-dropdown>
+												<span class="el-dropdown-link">
+													<i class="el-icon-more"></i>
+												</span>
+												<el-dropdown-menu slot="dropdown">
+													<el-dropdown-item
+														icon="el-icon-edit"
+														@click.native.prevent="editData(item)"
+														>Edit</el-dropdown-item
+													>
+													<el-dropdown-item
+														icon="el-icon-delete"
+														@click.native.prevent="deleteData(item.id)"
+														>Delete</el-dropdown-item
+													>
+												</el-dropdown-menu>
+											</el-dropdown>
+										</td>
 									</tr>
 								</tbody>
 							</table>
@@ -108,7 +109,7 @@
 				</div>
 			</div>
 		</div>
-    <UserForm
+		<UserForm
 			:show="showForm"
 			:model="selectedData"
 			:url="url"

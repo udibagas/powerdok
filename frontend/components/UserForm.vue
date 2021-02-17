@@ -1,104 +1,73 @@
 <template>
 	<el-dialog
 		title="USER"
-		width="500px"
 		:visible.sync="show"
 		:before-close="closeForm"
 		:close-on-click-modal="false"
 	>
-		<el-form label-width="180px" label-position="left">
+		<el-form label-width="200px" label-position="left">
 			<el-form-item label="Name" :class="{ 'is-error': errors.name }">
-				<el-input
-					size="small"
-					v-model="formModel.name"
-					placeholder="Name"
-				></el-input>
+				<el-input v-model="formModel.name" placeholder="Name"></el-input>
 
 				<div class="el-form-item__error" v-if="errors.name">
-					{{ errors.name.join(', ') }}
+					{{ errors.name.join(", ") }}
 				</div>
 			</el-form-item>
 
-      <el-form-item label="Role">
-				<el-select
-					size="small"
-					style="width: 100%"
-					v-model="formModel.role"
-					placeholder="Role"
-					filterable
-					default-first-option
-				>
-					<el-option value="Admin"></el-option>
-					<el-option value="Author"></el-option>
-					<el-option value="User"></el-option>
-				</el-select>
-
-				<div class="el-form-item__error" v-if="errors.role">
-					{{ errors.role.join(', ') }}
-				</div>
-			</el-form-item>
-
-      <el-form-item label="Email" :class="{ 'is-error': errors.email }">
-				<el-input
-					size="small"
-					v-model="formModel.email"
-					placeholder="Email"
-				></el-input>
+			<el-form-item label="Email" :class="{ 'is-error': errors.email }">
+				<el-input v-model="formModel.email" placeholder="Email"></el-input>
 
 				<div class="el-form-item__error" v-if="errors.email">
-					{{ errors.email.join(', ') }}
+					{{ errors.email.join(", ") }}
 				</div>
 			</el-form-item>
 
-      <el-form-item label="Position" :class="{ 'is-error': errors.position }">
+			<el-form-item label="Position" :class="{ 'is-error': errors.position }">
 				<el-input
-					size="small"
 					v-model="formModel.position"
 					placeholder="Position"
 				></el-input>
 
 				<div class="el-form-item__error" v-if="errors.position">
-					{{ errors.position.join(', ') }}
+					{{ errors.position.join(", ") }}
 				</div>
 			</el-form-item>
 
-      <el-form-item label="Department">
-        <el-select
-          size="small"
-          style="width: 100%"
-          v-model="formModel.department_id"
-          placeholder="Department"
-          filterable
-          default-first-option
-          clearable
-          remote
-          :remote-method="
-            (q) => getList('/api/departmentList', q, 'departmentList')
-          "
-        >
-          <el-option
-            v-for="department in departmentList"
-            :key="department.id"
-            :value="department.id"
-            :label="department.name"
-          ></el-option>
-        </el-select>
+			<el-form-item label="Department">
+				<el-select
+					style="width: 100%"
+					v-model="formModel.department_id"
+					placeholder="Department"
+					filterable
+					default-first-option
+					clearable
+					remote
+					:remote-method="
+						(q) => getList('/api/department', 'departmentList', q)
+					"
+				>
+					<el-option
+						v-for="department in departmentList"
+						:key="department.id"
+						:value="department.id"
+						:label="department.name"
+					></el-option>
+				</el-select>
 
-        <div class="el-form-item__error" v-if="errors.department_id">
-          {{ errors.department_id.join(', ') }}
-        </div>
-      </el-form-item>
+				<div class="el-form-item__error" v-if="errors.department_id">
+					{{ errors.department_id.join(", ") }}
+				</div>
+			</el-form-item>
 
 			<el-form-item label="Password" :class="{ 'is-error': errors.password }">
 				<el-input
 					type="password"
-					size="small"
 					v-model="formModel.password"
 					placeholder="Password"
 				></el-input>
 
 				<div class="el-form-item__error" v-if="errors.password">
-					{{ errors.password.join(', ') }}
+					{{ errors.password.join(", ") }}
 				</div>
 			</el-form-item>
 
@@ -108,30 +77,28 @@
 			>
 				<el-input
 					type="password"
-					size="small"
 					v-model="formModel.password_confirmation"
 					placeholder="Password"
 				></el-input>
 
 				<div class="el-form-item__error" v-if="errors.password_confirmation">
-					{{ errors.password_confirmation.join(', ') }}
+					{{ errors.password_confirmation.join(", ") }}
 				</div>
 			</el-form-item>
 		</el-form>
 
 		<div slot="footer">
-			<el-button size="small" icon="el-icon-circle-close" @click="closeForm">
+			<el-button icon="el-icon-circle-close" @click="closeForm">
 				CANCEL
 			</el-button>
 
 			<el-button
-				size="small"
-        class="btn-primary"
+				class="btn-primary"
 				icon="el-icon-success"
 				@click="submit(model.id)"
 				:loading="loading"
 			>
-				{{ formModel.id ? 'UPDATE' : 'SAVE' }}
+				{{ formModel.id ? "UPDATE" : "SAVE" }}
 			</el-button>
 		</div>
 	</el-dialog>
@@ -150,7 +117,7 @@ export default {
 		},
 	},
   mounted() {
-		this.getList('/api/departmentList', '', 'departmentList')
+		this.getList('/api/department', 'departmentList')
   }
 }
 </script>
