@@ -30,7 +30,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'role', 'email', 'position', 'department_id', 'password',
+        'name', 'email', 'position', 'department_id', 'password', 'status'
     ];
 
     protected $with = ['department'];

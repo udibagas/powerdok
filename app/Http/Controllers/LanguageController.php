@@ -18,19 +18,10 @@ class LanguageController extends Controller
         return Language::when($request->keyword, function ($q) use ($request) {
             $q->where(function ($q) use ($request) {
                 $q->where('locale', 'ILIKE', "%{$request->keyword}%")
-                    ->orWhere('key', 'ILIKE', "%{$request->keyword}%");
+                    ->orWhere('key', 'ILIKE', "%{$request->keyword}%")
+                    ->orWhere('text', 'ILIKE', "%{$request->keyword}%");
             });
-        })->paginate($request->pageSize);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        })->paginate($request->per_page);
     }
 
     /**
@@ -41,8 +32,8 @@ class LanguageController extends Controller
      */
     public function store(LanguageRequest $request)
     {
-        $lang = Language::create($request->all());
-        return response(['message' => 'Data has been saved', 'data' => $lang], 201);
+        $language = Language::create($request->all());
+        return response(['message' => 'Data has been saved', 'data' => $language], 201);
     }
 
     /**
@@ -51,20 +42,9 @@ class LanguageController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Language $lang)
+    public function show(Language $language)
     {
-        return $lang;
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
+        return $language;
     }
 
     /**
@@ -74,10 +54,10 @@ class LanguageController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(LanguageRequest $request, Language $lang)
+    public function update(LanguageRequest $request, Language $language)
     {
-        $lang->update($request->all());
-        return response(['message' => 'Data has been updated', 'data' => $lang],201);
+        $language->update($request->all());
+        return response(['message' => 'Data has been updated', 'data' => $language], 201);
     }
 
     /**
@@ -86,9 +66,9 @@ class LanguageController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Language $lang)
+    public function destroy(Language $language)
     {
-        $lang->delete();
-        return response(['message' => 'Data has been deleted', 'data' => $lang],201);
+        $language->delete();
+        return response(['message' => 'Data has been deleted', 'data' => $language], 201);
     }
 }

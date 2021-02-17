@@ -16,8 +16,6 @@ class DepartmentController extends Controller
      */
     public function index(Request $request)
     {
-        // $this->authorize('viewAny', Department::class);
-
         return new DepartmentCollection(
             Department::when($request->keyword, function ($q) use ($request) {
                 $q->where(function ($q) use ($request) {
@@ -25,7 +23,7 @@ class DepartmentController extends Controller
                 });
             })->orderBy(
                 $request->sort_field ?: 'name',
-                $request->sort_direction == 'descending' ? 'desc' : 'asc'
+                $request->sort_direction ?: 'asc'
             )->paginate($request->per_page)
         );
     }
@@ -80,14 +78,5 @@ class DepartmentController extends Controller
         // $this->authorize('delete', $department);
         $department->delete();
         return ['message' => 'Data has been deleted'];
-    }
-
-    public function getList(Request $request)
-    {
-        return [
-            'data' => Department::when($request->keyword, function ($q) use ($request) {
-                $q->where('name', 'ILIKE', "%{$request->keyword}%");
-            })->orderBy('name', 'asc')->get()
-        ];
     }
 }
