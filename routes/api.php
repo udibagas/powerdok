@@ -49,11 +49,14 @@ Route::post('token', function (Request $request) {
 Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::post('logout', [AuthController::class, 'logout']);
     Route::get('me', [AuthController::class, 'me']);
-    Route::get('document/{slug}', [DocumentController::class, 'slug']);
-    Route::resource('document', DocumentController::class);
-    Route::resource('user', UserController::class);
-    Route::resource('department', DepartmentController::class);
     Route::get('departmentList', [DepartmentController::class, 'getList']);
-    Route::resource('lang', LanguageController::class);
-    Route::resource('task', TaskController::class);
+    Route::get('document/{slug}', [DocumentController::class, 'slug']);
+
+    Route::apiResources([
+        'department' => DepartmentController::class,
+        'document' => DocumentController::class,
+        'language' => LanguageController::class,
+        'task' => TaskController::class,
+        'user' => UserController::class,
+    ]);
 });
