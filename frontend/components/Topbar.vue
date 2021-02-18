@@ -34,11 +34,22 @@ export default {
 
     getNewNotifications() {
       this.$axios.$get('/api/notification/getNewNotifications').then(response => {
+        if (response.length > this.notifications.length) {
+          this.$notify.warning({
+            position: "bottom-right",
+            title: response[0].data.title,
+            dangerouslyUseHTMLString: true,
+            onClick: () => {
+              this.readNotification(response[0]);
+            },
+            message: response[0].data.text + '<br /><small class="text-muted"><i class="mdi mdi-clock-outline"></i>' + this.readableTime(response[0].created_at) + '</small>'
+          });
+        }
         this.notifications = response;
       });
     },
 
-    markAsRead(notification) {
+    readNotification(notification) {
       this.$axios.$put(`/api/notification/markAsRead/${notification.id}`).then(response => {
         let index = this.notifications.findIndex(n => n.id == notification.id);
         this.notifications.splice(index, 1);
@@ -249,7 +260,7 @@ export default {
 							v-for="notification in notifications"
 							:key="notification.id"
 							:to="notification.data.url"
-							@click.prevent="markAsRead(notification)"
+							@click.prevent="readNotification(notification)"
 						>
 							<div class="media">
 								<div class="avatar-xs mr-3">
