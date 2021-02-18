@@ -38,6 +38,14 @@ export default {
       });
     },
 
+    markAsRead(notification) {
+      this.$axios.$put(`/api/notification/markAsRead/${notification.id}`).then(response => {
+        let index = this.notifications.findIndex(n => n.id == notification.id);
+        this.notifications.splice(index, 1);
+        this.$router.push(notification.data.url);
+      });
+    },
+
     readableTime(time) {
       return moment(time).format('DD-MMM-YY HH:mm');
     },
@@ -240,6 +248,8 @@ export default {
 							class="text-reset notification-item"
 							v-for="notification in notifications"
 							:key="notification.id"
+							:to="notification.data.url"
+							@click.prevent="markAsRead(notification)"
 						>
 							<div class="media">
 								<div class="avatar-xs mr-3">
