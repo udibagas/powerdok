@@ -70,11 +70,10 @@ export default {
     },
 
     setLanguage(locale, country, flag) {
-      this.$i18n.locale = locale;
+      this.$i18n.setLocale(locale);
       this.current_language = locale;
       this.text = country;
       this.flag = flag;
-      // TODO: set language
     },
 
     logoutUser() {
