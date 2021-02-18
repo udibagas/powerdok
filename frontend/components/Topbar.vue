@@ -57,6 +57,12 @@ export default {
       });
     },
 
+    markAllAsRead() {
+      this.$axios.$put(`/api/notification/markAllAsRead`).then(response => {
+        this.notifications = []
+      });
+    },
+
     readableTime(time) {
       return moment(time).format('DD-MMM-YY HH:mm');
     },
@@ -96,6 +102,7 @@ export default {
 
     setLanguage(locale, country, flag) {
       this.$i18n.setLocale(locale);
+      this.$i18n.locale = locale;
       this.current_language = locale;
       this.text = country;
       this.flag = flag;
@@ -234,16 +241,18 @@ export default {
 						}}</span>
 					</template>
 
-					<div class="p-3">
+					<div class="p-3" v-if="notifications.length > 0">
 						<div class="row align-items-center">
 							<div class="col">
 								<h5 class="m-0 font-size-16">
 									{{ $t("Notifications") }}
 								</h5>
 							</div>
-							<!-- <div class="col-auto">
-								<a href="#!" class="small">{{ $t("subtext") }}</a>
-							</div> -->
+							<div class="col-auto">
+								<a href="#!" @click.prevent="markAllAsRead" class="small">{{
+									$t("Mark all as read")
+								}}</a>
+							</div>
 						</div>
 					</div>
 					<div class="text-center p-3" v-if="notifications.length == 0">
@@ -307,7 +316,7 @@ export default {
 							href="javascript:void(0)"
 						>
 							<i class="uil-arrow-circle-right mr-1"></i>
-							{{ $t("Show All Notifications") }}
+							{{ $t("Show all notifications") }}
 						</nuxt-link>
 					</div>
 				</b-dropdown>
