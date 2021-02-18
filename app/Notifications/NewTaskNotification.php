@@ -8,7 +8,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class NewTaskNotitifiation extends Notification implements ShouldQueue
+class NewTaskNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 
@@ -63,9 +63,10 @@ class NewTaskNotitifiation extends Notification implements ShouldQueue
     public function toArray($notifiable)
     {
         return [
+            'type' => 'task',
             'title' => "New Task",
             'text' => $this->task->title,
-            'task_id' => $this->task->id
+            'url' => '/'
         ];
     }
 }

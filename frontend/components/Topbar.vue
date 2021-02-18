@@ -1,5 +1,6 @@
 <script>
 import { authFackMethods } from "~/store/helpers";
+import moment from 'moment';
 
 export default {
   data() {
@@ -25,6 +26,7 @@ export default {
     this.text = this.value.title;
     this.flag = this.value.flag;
     this.getNewNotifications();
+    setInterval(this.getNewNotifications, 5000);
   },
 
   methods: {
@@ -34,6 +36,10 @@ export default {
       this.$axios.$get('/api/notification/getNewNotifications').then(response => {
         this.notifications = response;
       });
+    },
+
+    readableTime(time) {
+      return moment(time).format('DD-MMM-YY HH:mm');
     },
 
     toggleMenu() {
@@ -204,7 +210,9 @@ export default {
 				>
 					<template v-slot:button-content>
 						<i class="uil-bell"></i>
-						<span class="badge badge-danger badge-pill">3</span>
+						<span class="badge badge-danger badge-pill">{{
+							notifications.length
+						}}</span>
 					</template>
 
 					<div class="p-3">
@@ -219,7 +227,14 @@ export default {
 							</div> -->
 						</div>
 					</div>
-					<simplebar style="max-height: 230px" data-simplebar>
+					<div class="text-center p-3" v-if="notifications.length == 0">
+						{{ $t("No new notification") }}
+					</div>
+					<simplebar
+						v-if="notifications.length > 0"
+						style="max-height: 230px"
+						data-simplebar
+					>
 						<a
 							href
 							class="text-reset notification-item"
@@ -227,6 +242,21 @@ export default {
 							:key="notification.id"
 						>
 							<div class="media">
+								<div class="avatar-xs mr-3">
+									<span
+										class="avatar-title bg-primary rounded-circle font-size-16"
+									>
+										<i
+											class="uil-file-question-alt"
+											v-if="notification.data.type == 'task'"
+										></i>
+										<i
+											class="uil-comment-dots"
+											v-if="notification.data.type == 'comment'"
+										></i>
+									</span>
+								</div>
+
 								<!-- <img
 									src="~/assets/images/users/avatar-4.jpg"
 									class="mr-3 rounded-circle avatar-xs"
@@ -242,7 +272,7 @@ export default {
 										</p>
 										<p class="mb-0">
 											<i class="mdi mdi-clock-outline"></i>
-											{{ notification.created_at }}
+											{{ readableTime(notification.created_at) }}
 										</p>
 									</div>
 								</div>
@@ -250,13 +280,14 @@ export default {
 						</a>
 					</simplebar>
 					<div class="p-2 border-top">
-						<a
+						<nuxt-link
+							to="/notification"
 							class="btn btn-sm btn-link font-size-14 btn-block text-center"
 							href="javascript:void(0)"
 						>
 							<i class="uil-arrow-circle-right mr-1"></i>
 							{{ $t("Show All Notifications") }}
-						</a>
+						</nuxt-link>
 					</div>
 				</b-dropdown>
 
