@@ -27,6 +27,23 @@
 					</div>
 				</el-form-item>
 
+				<el-form-item :label="$t('Type')">
+					<el-select
+						style="width: 100%"
+						v-model="model.type"
+						:placeholder="$t('Type')"
+						default-first-option
+					>
+						<el-option :value="1" :label="$t('Document Review')"></el-option>
+						<el-option :value="2" :label="$t('Atestation')"></el-option>
+						<el-option :value="3" :label="$t('Examination')"></el-option>
+					</el-select>
+
+					<div class="el-form-item__error" v-if="errors.type">
+						{{ errors.type.join(", ") }}
+					</div>
+				</el-form-item>
+
 				<el-form-item label="Assignees">
 					<el-select
 						style="width: 100%"
