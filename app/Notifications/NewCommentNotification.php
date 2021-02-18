@@ -63,7 +63,8 @@ class NewCommentNotification extends Notification implements ShouldQueue
     public function toArray($notifiable)
     {
         return [
-            'message' => $this->subject,
+            'title' => "New Comment",
+            'text' => $this->comment->body,
         ];
     }
 }

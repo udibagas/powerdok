@@ -8,6 +8,7 @@ export default {
       text: null,
       flag: null,
       value: null,
+      notifications: []
     };
   },
 
@@ -23,49 +24,57 @@ export default {
     this.value = this.languages.find((x) => x.language === this.$i18n.locale);
     this.text = this.value.title;
     this.flag = this.value.flag;
+    this.getNewNotifications();
   },
 
   methods: {
     ...authFackMethods,
 
+    getNewNotifications() {
+      this.$axios.$get('/api/notification/getNewNotifications').then(response => {
+        this.notifications = response;
+      });
+    },
+
     toggleMenu() {
-        this.$parent.toggleMenu();
+      this.$parent.toggleMenu();
     },
 
     initFullScreen() {
         document.body.classList.toggle("fullscreen-enable");
         if (
-            !document.fullscreenElement &&
-            /* alternative standard method */
-            !document.mozFullScreenElement &&
-            !document.webkitFullscreenElement
+          !document.fullscreenElement &&
+          /* alternative standard method */
+          !document.mozFullScreenElement &&
+          !document.webkitFullscreenElement
         ) {
-            // current working methods
-            if (document.documentElement.requestFullscreen) {
-                document.documentElement.requestFullscreen();
-            } else if (document.documentElement.mozRequestFullScreen) {
-                document.documentElement.mozRequestFullScreen();
-            } else if (document.documentElement.webkitRequestFullscreen) {
-                document.documentElement.webkitRequestFullscreen(
-                    Element.ALLOW_KEYBOARD_INPUT
-                );
-            }
+          // current working methods
+          if (document.documentElement.requestFullscreen) {
+              document.documentElement.requestFullscreen();
+          } else if (document.documentElement.mozRequestFullScreen) {
+              document.documentElement.mozRequestFullScreen();
+          } else if (document.documentElement.webkitRequestFullscreen) {
+              document.documentElement.webkitRequestFullscreen(
+                  Element.ALLOW_KEYBOARD_INPUT
+              );
+          }
         } else {
-            if (document.cancelFullScreen) {
-                document.cancelFullScreen();
-            } else if (document.mozCancelFullScreen) {
-                document.mozCancelFullScreen();
-            } else if (document.webkitCancelFullScreen) {
-                document.webkitCancelFullScreen();
-            }
+          if (document.cancelFullScreen) {
+            document.cancelFullScreen();
+          } else if (document.mozCancelFullScreen) {
+            document.mozCancelFullScreen();
+          } else if (document.webkitCancelFullScreen) {
+            document.webkitCancelFullScreen();
+          }
         }
     },
 
     setLanguage(locale, country, flag) {
-        this.$i18n.locale = locale;
-        this.current_language = locale;
-        this.text = country;
-        this.flag = flag;
+      this.$i18n.locale = locale;
+      this.current_language = locale;
+      this.text = country;
+      this.flag = flag;
+      // TODO: set language
     },
 
     logoutUser() {
@@ -203,109 +212,38 @@ export default {
 						<div class="row align-items-center">
 							<div class="col">
 								<h5 class="m-0 font-size-16">
-									{{ $t("navbar.dropdown.notification.text") }}
+									{{ $t("Notifications") }}
 								</h5>
 							</div>
-							<div class="col-auto">
-								<a href="#!" class="small">{{
-									$t("navbar.dropdown.notification.subtext")
-								}}</a>
-							</div>
+							<!-- <div class="col-auto">
+								<a href="#!" class="small">{{ $t("subtext") }}</a>
+							</div> -->
 						</div>
 					</div>
 					<simplebar style="max-height: 230px" data-simplebar>
-						<a href class="text-reset notification-item">
+						<a
+							href
+							class="text-reset notification-item"
+							v-for="notification in notifications"
+							:key="notification.id"
+						>
 							<div class="media">
-								<div class="avatar-xs mr-3">
-									<span
-										class="avatar-title bg-primary rounded-circle font-size-16"
-									>
-										<i class="uil-cart"></i>
-									</span>
-								</div>
-								<div class="media-body">
-									<h6 class="mt-0 mb-1">
-										{{ $t("navbar.dropdown.notification.order.title") }}
-									</h6>
-									<div class="font-size-12 text-muted">
-										<p class="mb-1">
-											{{ $t("navbar.dropdown.notification.order.text") }}
-										</p>
-										<p class="mb-0">
-											<i class="mdi mdi-clock-outline"></i>
-											{{ $t("navbar.dropdown.notification.order.time") }}
-										</p>
-									</div>
-								</div>
-							</div>
-						</a>
-						<a href class="text-reset notification-item">
-							<div class="media">
-								<img
-									src="~/assets/images/users/avatar-3.jpg"
-									class="mr-3 rounded-circle avatar-xs"
-									alt="user-pic"
-								/>
-								<div class="media-body">
-									<h6 class="mt-0 mb-1">
-										{{ $t("navbar.dropdown.notification.james.title") }}
-									</h6>
-									<div class="font-size-12 text-muted">
-										<p class="mb-1">
-											{{ $t("navbar.dropdown.notification.james.text") }}
-										</p>
-										<p class="mb-0">
-											<i class="mdi mdi-clock-outline"></i>
-											{{ $t("navbar.dropdown.notification.james.time") }}
-										</p>
-									</div>
-								</div>
-							</div>
-						</a>
-						<a href class="text-reset notification-item">
-							<div class="media">
-								<div class="avatar-xs mr-3">
-									<span
-										class="avatar-title bg-success rounded-circle font-size-16"
-									>
-										<i class="uil-truck"></i>
-									</span>
-								</div>
-								<div class="media-body">
-									<h6 class="mt-0 mb-1">
-										{{ $t("navbar.dropdown.notification.item.title") }}
-									</h6>
-									<div class="font-size-12 text-muted">
-										<p class="mb-1">
-											{{ $t("navbar.dropdown.notification.item.text") }}
-										</p>
-										<p class="mb-0">
-											<i class="mdi mdi-clock-outline"></i>
-											{{ $t("navbar.dropdown.notification.item.time") }}
-										</p>
-									</div>
-								</div>
-							</div>
-						</a>
-
-						<a href class="text-reset notification-item">
-							<div class="media">
-								<img
+								<!-- <img
 									src="~/assets/images/users/avatar-4.jpg"
 									class="mr-3 rounded-circle avatar-xs"
 									alt="user-pic"
-								/>
+								/> -->
 								<div class="media-body">
 									<h6 class="mt-0 mb-1">
-										{{ $t("navbar.dropdown.notification.salena.title") }}
+										{{ notification.data.title }}
 									</h6>
 									<div class="font-size-12 text-muted">
 										<p class="mb-1">
-											{{ $t("navbar.dropdown.notification.salena.text") }}
+											{{ notification.data.text }}
 										</p>
 										<p class="mb-0">
 											<i class="mdi mdi-clock-outline"></i>
-											{{ $t("navbar.dropdown.notification.salena.time") }}
+											{{ notification.created_at }}
 										</p>
 									</div>
 								</div>
@@ -318,7 +256,7 @@ export default {
 							href="javascript:void(0)"
 						>
 							<i class="uil-arrow-circle-right mr-1"></i>
-							{{ $t("navbar.dropdown.notification.button") }}
+							{{ $t("Show All Notifications") }}
 						</a>
 					</div>
 				</b-dropdown>

@@ -12,7 +12,7 @@ class NotificationController extends Controller
         return $request->user()->notifications()->paginate();
     }
 
-    public function getNewNotification(Request $request)
+    public function getNewNotifications(Request $request)
     {
         return $request->user()->unreadNotifications;
     }

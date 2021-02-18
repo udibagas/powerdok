@@ -63,7 +63,8 @@ class NewTaskNotitifiation extends Notification implements ShouldQueue
     public function toArray($notifiable)
     {
         return [
-            'message' => $this->subject,
+            'title' => "New Task",
+            'text' => $this->task->title,
             'task_id' => $this->task->id
         ];
     }
