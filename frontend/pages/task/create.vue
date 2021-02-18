@@ -7,7 +7,10 @@
 		<div class="card-body row">
 			<el-form label-position="left" label-width="120px" class="col-7">
 				<el-form-item label="Title">
-					<el-input v-model="model.title" placeholder="Title"> </el-input>
+					<el-input
+            v-model="model.title"
+            placeholder="Title"
+          ></el-input>
 
 					<div class="el-form-item__error" v-if="errors.title">
 						{{ errors.title.join(", ") }}
@@ -60,7 +63,7 @@
 							v-for="user in userList"
 							:key="user.id"
 							:value="user.id"
-							:label="`${user.name} | ${user.position} (${user.department.name})`"
+							:label="`${user.name} | ${user.position ? user.position : ''}  (${user.department_id ? user.department.name : 'N/A'})`"
 						>
 							<span style="float: left">{{ user.name }}</span>
 							<span
@@ -71,13 +74,13 @@
 									margin-right: 20px;
 								"
 							>
-								{{ user.position }} ({{ user.department.name }})
+								{{ user.position }} ({{ user.department_id ? user.department.name : 'N/A' }})
 							</span>
 						</el-option>
 					</el-select>
 
-					<div class="el-form-item__error" v-if="errors.user_id">
-						{{ errors.user_id.join(", ") }}
+					<div class="el-form-item__error" v-if="errors.assignees">
+						{{ errors.assignees.join(", ") }}
 					</div>
 				</el-form-item>
 
@@ -115,30 +118,6 @@
 						{{ errors.priority.join(", ") }}
 					</div>
 				</el-form-item>
-
-				<!-- <el-form-item label="Status">
-					<el-select
-						style="width: 100%"
-						v-model="model.status"
-						placeholder="Status"
-						filterable
-						clearable
-						multiple
-						default-first-option
-					>
-						<el-option :value="0" label="Draft"></el-option>
-						<el-option :value="1" label="Submitted"></el-option>
-						<el-option :value="2" label="On Progress"></el-option>
-						<el-option :value="3" label="Finished"></el-option>
-						<el-option :value="4" label="Closed"></el-option>
-						<el-option :value="5" label="Void"></el-option>
-						<el-option :value="6" label="Postponed"></el-option>
-					</el-select>
-
-					<div class="el-form-item__error" v-if="errors.status">
-						{{ errors.status.join(", ") }}
-					</div>
-				</el-form-item> -->
 			</el-form>
 
 			<div class="col-5">
@@ -157,19 +136,29 @@
 		</div>
 
 		<div class="card-footer text-right">
-			<el-button class="btn-secondary" icon="el-icon-close">CANCEL</el-button>
-			<el-button class="btn-primary" icon="el-icon-check">SUBMIT</el-button>
+      <el-button size="small" icon="el-icon-circle-close" @click.native="$router.push('/task')">
+        CANCEL
+      </el-button>
+
+      <el-button
+        size="small"
+        class="btn-primary"
+        icon="el-icon-success"
+        @click="submit(model.id)"
+        :loading="loading"
+      >SAVE
+      </el-button>
 		</div>
 	</div>
 </template>
 
 <script>
-import form from '@/mixins/form';
+import form from '@/mixins/form'
 import dropdown from '~/mixins/dropdown'
 
 export default {
   mixins: [form, dropdown],
-    head() {
+  head() {
     return {
       title: `${this.title}`,
     };
@@ -180,9 +169,6 @@ export default {
       model: {},
       title: "Powerdok | New Task "
     }
-  },
-  mounted() {
-		this.getList('/api/user', 'userList')
   }
 }
 </script>

@@ -117,8 +117,8 @@
                   <el-dropdown-menu slot="dropdown">
                     <el-dropdown-item
                       icon="el-icon-view"
-                      @click.native.prevent="show(item)"
-                      >Show</el-dropdown-item
+                      @click.native="$router.push(`/documents/${doc.slug}`)"
+                    >Show</el-dropdown-item
                     >
                     <el-dropdown-item
                       icon="el-icon-edit"
@@ -127,12 +127,12 @@
                     >
                     <el-dropdown-item
                       icon="el-icon-document-checked"
-                      @click.native.prevent="attestation(item)"
+                      @click.native="$router.push('/documents/attestation')"
                       >Attestation</el-dropdown-item
                     >
                     <el-dropdown-item
                       icon="el-icon-document"
-                      @click.native.prevent="examination(item)"
+                      @click.native="$router.push('/documents/examination')"
                       >Examination</el-dropdown-item
                     >
                     <el-dropdown-item
