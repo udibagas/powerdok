@@ -51,6 +51,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::post('logout', [AuthController::class, 'logout']);
     Route::get('me', [AuthController::class, 'me']);
     Route::get('document/{slug}', [DocumentController::class, 'slug']);
+    Route::get('lang', [LanguageController::class, 'lang']);
 
     Route::apiResources([
         'department' => DepartmentController::class,
