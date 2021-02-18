@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\LanguageController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\UserController;
 use App\Models\User;
@@ -50,6 +51,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::post('logout', [AuthController::class, 'logout']);
     Route::get('me', [AuthController::class, 'me']);
     Route::get('document/{slug}', [DocumentController::class, 'slug']);
+    Route::get('lang', [LanguageController::class, 'lang']);
 
     Route::apiResources([
         'department' => DepartmentController::class,
@@ -58,4 +60,13 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
         'task' => TaskController::class,
         'user' => UserController::class,
     ]);
+
+    Route::prefix('notification')->group(function () {
+        Route::get('', [NotificationController::class, 'index']);
+        Route::get('/getNewNotifications', [NotificationController::class, 'getNewNotifications']);
+        Route::put('/markAsRead/{id}', [NotificationController::class, 'markAsRead']);
+        Route::put('/markAllAsRead', [NotificationController::class, 'markAllAsRead']);
+        Route::delete('/destroy/{id}', [NotificationController::class, 'destroy']);
+        Route::delete('/destroy', [NotificationController::class, 'destroyAll']);
+    });
 });

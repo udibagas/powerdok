@@ -7,42 +7,12 @@
 		<div class="card-body row">
 			<el-form label-position="left" label-width="120px" class="col-7">
 				<el-form-item label="Title">
-					<el-input
-            v-model="model.title"
-            placeholder="Title">
-          </el-input>
+					<el-input v-model="model.title" placeholder="Title"> </el-input>
 
-          <div class="el-form-item__error" v-if="errors.title">
-            {{ errors.title.join(', ') }}
-          </div>
+					<div class="el-form-item__error" v-if="errors.title">
+						{{ errors.title.join(", ") }}
+					</div>
 				</el-form-item>
-
-        <el-form-item label="Assignees">
-          <el-select
-            style="width: 100%"
-            v-model="model.assignees"
-            placeholder="Assignees"
-            filterable
-            default-first-option
-            clearable
-            remote
-            multiple
-            :remote-method="
-              (q) => getList('/api/user', 'userList', q)
-            "
-          >
-            <el-option
-              v-for="user in userList"
-              :key="user.id"
-              :value="user.id"
-              :label="`${user.name} | ${user.position} (${user.department.name})`"
-            ></el-option>
-          </el-select>
-
-          <div class="el-form-item__error" v-if="errors.user_id">
-            {{ errors.user_id.join(", ") }}
-          </div>
-        </el-form-item>
 
 				<el-form-item label="Description">
 					<el-input
@@ -52,72 +22,106 @@
 						placeholder="Description"
 					></el-input>
 
-          <div class="el-form-item__error" v-if="errors.description">
-            {{ errors.description.join(', ') }}
-          </div>
+					<div class="el-form-item__error" v-if="errors.description">
+						{{ errors.description.join(", ") }}
+					</div>
 				</el-form-item>
 
-        <el-form-item label="Due Date" :class="{ 'is-error': errors.due_date }">
-          <el-date-picker
-            style="width: 100%"
-            size="small"
-            v-model="model.due_date"
-            type="date"
-            format="dd-MMM-yyyy"
-            value-format="yyyy-MM-dd"
-            placeholder="Due Date"
-          ></el-date-picker>
+				<el-form-item label="Assignees">
+					<el-select
+						style="width: 100%"
+						v-model="model.assignees"
+						placeholder="Assignees"
+						filterable
+						default-first-option
+						clearable
+						remote
+						multiple
+						:remote-method="(q) => getList('/api/user', 'userList', q)"
+					>
+						<el-option
+							v-for="user in userList"
+							:key="user.id"
+							:value="user.id"
+							:label="`${user.name} | ${user.position} (${user.department.name})`"
+						>
+							<span style="float: left">{{ user.name }}</span>
+							<span
+								style="
+									float: right;
+									color: #8492a6;
+									font-size: 13px;
+									margin-right: 20px;
+								"
+							>
+								{{ user.position }} ({{ user.department.name }})
+							</span>
+						</el-option>
+					</el-select>
 
-          <div class="el-form-item__error" v-if="errors.due_date">
-            {{ errors.due_date.join(', ') }}
-          </div>
-        </el-form-item>
+					<div class="el-form-item__error" v-if="errors.user_id">
+						{{ errors.user_id.join(", ") }}
+					</div>
+				</el-form-item>
 
-        <el-form-item label="Priority">
-          <el-select
-            size="small"
-            style="width: 100%"
-            v-model="model.priority"
-            placeholder="Priority"
-            filterable
-            clearable
-            default-first-option
-          >
-            <el-option :value="0" label="Low"></el-option>
-            <el-option :value="1" label="Medium"></el-option>
-            <el-option :value="2" label="High"></el-option>
-            <el-option :value="3" label="Urgent"></el-option>
-          </el-select>
+				<el-form-item label="Due Date" :class="{ 'is-error': errors.due_date }">
+					<el-date-picker
+						style="width: 100%"
+						v-model="model.due_date"
+						type="date"
+						format="dd-MMM-yyyy"
+						value-format="yyyy-MM-dd"
+						placeholder="Due Date"
+					></el-date-picker>
 
-          <div class="el-form-item__error" v-if="errors.priority">
-            {{ errors.priority.join(', ') }}
-          </div>
-        </el-form-item>
+					<div class="el-form-item__error" v-if="errors.due_date">
+						{{ errors.due_date.join(", ") }}
+					</div>
+				</el-form-item>
 
-        <el-form-item label="Status">
-          <el-select
-            size="small"
-            style="width: 100%"
-            v-model="model.status"
-            placeholder="Status"
-            filterable
-            clearable
-            multiple
-            default-first-option
-          >
-            <el-option :value="0" label="Draft"></el-option>
-            <el-option :value="1" label="Submitted"></el-option>
-            <el-option :value="2" label="On Progress"></el-option>
-            <el-option :value="3" label="Finished"></el-option>
-            <el-option :value="4" label="Closed"></el-option>
-            <el-option :value="5" label="Void"></el-option>
-            <el-option :value="6" label="Postponed"></el-option>
-          </el-select>
+				<el-form-item label="Priority">
+					<el-select
+						style="width: 100%"
+						v-model="model.priority"
+						placeholder="Priority"
+						filterable
+						clearable
+						default-first-option
+					>
+						<el-option :value="0" label="Low"></el-option>
+						<el-option :value="1" label="Medium"></el-option>
+						<el-option :value="2" label="High"></el-option>
+						<el-option :value="3" label="Urgent"></el-option>
+					</el-select>
 
-          <div class="el-form-item__error" v-if="errors.status">
-            {{ errors.status.join(', ') }}
-          </div>
-        </el-form-item>
+					<div class="el-form-item__error" v-if="errors.priority">
+						{{ errors.priority.join(", ") }}
+					</div>
+				</el-form-item>
+
+				<!-- <el-form-item label="Status">
+					<el-select
+						style="width: 100%"
+						v-model="model.status"
+						placeholder="Status"
+						filterable
+						clearable
+						multiple
+						default-first-option
+					>
+						<el-option :value="0" label="Draft"></el-option>
+						<el-option :value="1" label="Submitted"></el-option>
+						<el-option :value="2" label="On Progress"></el-option>
+						<el-option :value="3" label="Finished"></el-option>
+						<el-option :value="4" label="Closed"></el-option>
+						<el-option :value="5" label="Void"></el-option>
+						<el-option :value="6" label="Postponed"></el-option>
+					</el-select>
+
+					<div class="el-form-item__error" v-if="errors.status">
+						{{ errors.status.join(", ") }}
+					</div>
+				</el-form-item> -->
 			</el-form>
 
 			<div class="col-5">

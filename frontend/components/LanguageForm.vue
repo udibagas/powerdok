@@ -62,7 +62,7 @@
 			</el-button>
 
 			<el-button
-				type="primary"
+				class="btn-primary"
 				icon="el-icon-success"
 				@click="submit(model.id)"
 				:loading="loading"
