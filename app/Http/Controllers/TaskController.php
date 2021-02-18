@@ -48,7 +48,7 @@ class TaskController extends Controller
             $task = Task::create(array_merge($request->all(), ['user_id' => $request->user()->id]));
 
             if ($task->assignees) {
-                $task->assignees()->createMany($request->assignees);
+                $task->assignees()->sync($request->assignees);
             }
 
             if ($request->attachments) {
