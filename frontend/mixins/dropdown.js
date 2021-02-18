@@ -3,6 +3,7 @@ export default {
     return {
       // REGISTER ALL LIST HERE
       departmentList: [],
+      userList: [],
     }
   },
 

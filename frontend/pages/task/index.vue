@@ -118,7 +118,11 @@ import moment from 'moment'
 
 export default {
   mixins: [table],
-
+  head() {
+    return {
+      title: `${this.title}`,
+    };
+  },
   data() {
     return {
       url: '/api/task',
@@ -136,7 +140,8 @@ export default {
         Closed: 'secondary',
         Void: 'secondary',
         Postponed: 'secondary'
-      }
+      },
+      title: "Powerdok | My Task",
     }
   },
 
