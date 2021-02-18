@@ -16,6 +16,7 @@ class CreateTasksTable extends Migration
         Schema::create('tasks', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id')->comment('Creator');
+            $table->tinyInteger('type')->comment('1 = document review, 2 = atestation, 3 = examination');
             $table->string('title');
             $table->text('description');
             $table->json('custom_fields')->nullable();

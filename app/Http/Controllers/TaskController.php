@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\NewCommentEvent;
+use App\Events\NewTaskEvent;
 use App\Http\Requests\TaskRequest;
 use App\Http\Resources\TaskCollection;
 use App\Models\Task;
 use App\Models\TaskApproval;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class TaskController extends Controller
 {
@@ -41,7 +44,21 @@ class TaskController extends Controller
      */
     public function store(TaskRequest $request)
     {
-        $task = Task::create($request->all());
+        $task = DB::transaction(function () use ($request) {
+            $task = Task::create(array_merge($request->all(), ['user_id' => $request->user()->id]));
+
+            if ($task->assignees) {
+                $task->assignees()->createMany($request->assignees);
+            }
+
+            if ($request->attachments) {
+                $task->attachments()->createMany($request->attachments);
+            }
+
+            return $task;
+        });
+
+        event(new NewTaskEvent($task));
         return ['message' => 'Data has been saved', 'data' => $task];
     }
 
@@ -120,6 +137,7 @@ class TaskController extends Controller
             $comment->attachments()->createMany($request->attachments);
         }
 
+        event(new NewCommentEvent($comment));
         return ['message' => 'Comment has been saved'];
     }
 

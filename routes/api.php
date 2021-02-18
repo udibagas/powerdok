@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\LanguageController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\UserController;
 use App\Models\User;
@@ -58,4 +59,13 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
         'task' => TaskController::class,
         'user' => UserController::class,
     ]);
+
+    Route::prefix('notification')->group(function () {
+        Route::get('', [NotificationController::class, 'index']);
+        Route::get('/getNewNotification', [NotificationController::class, 'getNewNotification']);
+        Route::put('/markAsRead', [NotificationController::class, 'markAsRead']);
+        Route::put('/markAllAsRead', [NotificationController::class, 'markAllAsRead']);
+        Route::delete('/destroy/{id}', [NotificationController::class, 'destroy']);
+        Route::delete('/destroy', [NotificationController::class, 'destroyAll']);
+    });
 });

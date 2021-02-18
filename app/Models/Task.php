@@ -11,6 +11,8 @@ class Task extends Model
 {
     use HasFactory, SoftDeletes;
 
+    // Status
+
     const STATUS_DRAFT = 0;
 
     const STATUS_SUBMITTED = 1;
@@ -25,6 +27,8 @@ class Task extends Model
 
     const STATUS_POSTPONED = 6;
 
+    // Priorities
+
     const PRIORITY_LOW = 0;
 
     const PRIORITY_MEDIUM = 1;
@@ -32,6 +36,14 @@ class Task extends Model
     const PRIORITY_HIGH = 2;
 
     const PRIORITY_URGENT = 3;
+
+    // Task Types
+
+    const TYPE_DOCUMENT_REVIEW = 1;
+
+    const TYPE_ATESTATION = 2;
+
+    const TYPE_EXAMINATION = 3;
 
     protected $fillable = [
         'user_id',
@@ -50,6 +62,7 @@ class Task extends Model
     protected $appends = [
         'status_label',
         'priority_label',
+        'type_name',
         'overdue'
     ];
 
@@ -127,5 +140,16 @@ class Task extends Model
         ];
 
         return isset($statusList[$status]) ? $statusList[$status] : 'N/A';
+    }
+
+    public function getTypeNameAttribute()
+    {
+        $types = [
+            self::TYPE_DOCUMENT_REVIEW => 'Document Review',
+            self::TYPE_ATESTATION => 'Atestation',
+            self::TYPE_EXAMINATION => 'Examination'
+        ];
+
+        return isset($types[$this->type]) ? $types[$this->type] : 'N/A';
     }
 }

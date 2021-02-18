@@ -18,7 +18,11 @@ class UserController extends Controller
         return User::when($request->keyword, function ($q) use ($request) {
             $q->where(function ($q) use ($request) {
                 $q->where('name', 'ILIKE', "%{$request->keyword}%")
-                    ->orWhere('email', 'ILIKE', "%{$request->keyword}%");
+                    ->orWhere('email', 'ILIKE', "%{$request->keyword}%")
+                    ->orWhere('position', 'ILIKE', "%{$request->keyword}%")
+                    ->orWhereHas('department', function ($q) use ($request) {
+                        $q->where('name', 'ILIKE', "%{$request->keyword}%");
+                    });
             });
         })->paginate($request->pageSize);
     }
