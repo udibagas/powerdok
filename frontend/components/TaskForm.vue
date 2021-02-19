@@ -172,5 +172,8 @@ export default {
 			return this.model
 		},
 	},
+  mounted() {
+		this.getList('/api/user', 'userList')
+  }
 }
 </script>
