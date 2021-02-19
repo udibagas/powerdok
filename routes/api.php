@@ -53,6 +53,8 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::get('document/{slug}', [DocumentController::class, 'slug']);
     Route::get('lang', [LanguageController::class, 'lang']);
 
+    Route::post('task/comment/{task}', [TaskController::class, 'comment']);
+
     Route::apiResources([
         'department' => DepartmentController::class,
         'document' => DocumentController::class,

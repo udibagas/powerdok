@@ -165,14 +165,15 @@ export default {
   mixins: [form, dropdown],
   head() {
     return {
-      title: `${this.title}`,
+      title: this.title,
     };
   },
+
   data() {
     return {
       url: '/api/task',
       model: {},
-      title: "Powerdok | New Task "
+      title: "Powerdok | New Task"
     }
   },
 

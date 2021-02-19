@@ -6,6 +6,8 @@ use App\Models\Task;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
+use function PHPUnit\Framework\returnSelf;
+
 class TaskPolicy
 {
     use HandlesAuthorization;
@@ -80,5 +82,10 @@ class TaskPolicy
             ->where('user_id', $user->id)
             ->whereNull('status')
             ->first();
+    }
+
+    public function comment(User $user, Task $task)
+    {
+        return $this->view($user, $task);
     }
 }

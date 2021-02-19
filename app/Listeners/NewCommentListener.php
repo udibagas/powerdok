@@ -26,5 +26,7 @@ class NewCommentListener
     public function handle($event)
     {
         $comment = $event->comment;
+
+        // TODO: send notification to all involved user except creator
     }
 }

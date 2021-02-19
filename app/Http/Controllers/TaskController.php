@@ -73,6 +73,7 @@ class TaskController extends Controller
         // $this->authorize('view', $task);
 
         return $task->load([
+            'user',
             'assignees',
             'attachments',
             // 'document',
@@ -131,14 +132,32 @@ class TaskController extends Controller
     {
         $this->authorize('comment', $task);
         $request->validate(['body' => 'required']);
-        $comment = $task->comments()->create($request->all());
+
+        $comment = $task->comments()
+            ->create(array_merge(
+                $request->all(),
+                ['user_id' => $request->user()->id]
+            ));
 
         if ($request->attachments) {
             $comment->attachments()->createMany($request->attachments);
         }
 
+        $task->refresh();
         event(new NewCommentEvent($comment));
-        return ['message' => 'Comment has been saved'];
+
+        return [
+            'message' => 'Comment has been saved',
+            'task' => $task->load([
+                'user',
+                'assignees',
+                'attachments',
+                // 'document',
+                'comments',
+                'approvals',
+                'trackings'
+            ])
+        ];
     }
 
     public function getPendingApproval(Request $request)
