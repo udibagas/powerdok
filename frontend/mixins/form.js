@@ -18,7 +18,7 @@ export default {
           message: r.data.message,
           type: 'success'
         })
-        this.closeForm()
+        this.closeForm(r.data)
         this.$emit('refresh')
       }).catch(e => {
         this.$message({
@@ -32,7 +32,7 @@ export default {
       }).finally(() => this.loading = false)
     },
 
-    closeForm() {
+    closeForm(data) {
       this.errors = {}
       this.$emit('close')
     }

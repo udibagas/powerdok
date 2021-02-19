@@ -7,10 +7,7 @@
 		<div class="card-body row">
 			<el-form label-position="left" label-width="120px" class="col-7">
 				<el-form-item label="Title">
-					<el-input
-            v-model="model.title"
-            placeholder="Title"
-          ></el-input>
+					<el-input v-model="model.title" placeholder="Title"></el-input>
 
 					<div class="el-form-item__error" v-if="errors.title">
 						{{ errors.title.join(", ") }}
@@ -63,7 +60,9 @@
 							v-for="user in userList"
 							:key="user.id"
 							:value="user.id"
-							:label="`${user.name} | ${user.position ? user.position : ''}  (${user.department_id ? user.department.name : 'N/A'})`"
+							:label="`${user.name} | ${user.position ? user.position : ''}  (${
+								user.department_id ? user.department.name : 'N/A'
+							})`"
 						>
 							<span style="float: left">{{ user.name }}</span>
 							<span
@@ -74,7 +73,9 @@
 									margin-right: 20px;
 								"
 							>
-								{{ user.position }} ({{ user.department_id ? user.department.name : 'N/A' }})
+								{{ user.position }} ({{
+									user.department_id ? user.department.name : "N/A"
+								}})
 							</span>
 						</el-option>
 					</el-select>
@@ -136,18 +137,22 @@
 		</div>
 
 		<div class="card-footer text-right">
-      <el-button size="small" icon="el-icon-circle-close" @click.native="$router.push('/task')">
-        CANCEL
-      </el-button>
+			<el-button
+				size="small"
+				icon="el-icon-circle-close"
+				@click.native="$router.push('/task')"
+			>
+				CANCEL
+			</el-button>
 
-      <el-button
-        size="small"
-        class="btn-primary"
-        icon="el-icon-success"
-        @click="submit(model.id)"
-        :loading="loading"
-      >SAVE
-      </el-button>
+			<el-button
+				size="small"
+				class="btn-primary"
+				icon="el-icon-success"
+				@click="submit(model.id)"
+				:loading="loading"
+				>SAVE
+			</el-button>
 		</div>
 	</div>
 </template>
@@ -168,6 +173,13 @@ export default {
       url: '/api/task',
       model: {},
       title: "Powerdok | New Task "
+    }
+  },
+
+  methods: {
+    closeForm(data) {
+      this.errors = {}
+      this.$router.push(`/task/${data.data.id}`);
     }
   }
 }
