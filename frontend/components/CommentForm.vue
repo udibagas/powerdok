@@ -1,5 +1,5 @@
 <template>
-	<div class="media my-3 border-top pt-3">
+	<div class="media my-3 pt-3">
 		<el-avatar class="mr-3"></el-avatar>
 		<div class="media-body">
 			<el-form>

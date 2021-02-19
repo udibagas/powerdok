@@ -1,10 +1,6 @@
 <template>
 	<div>
-		<div
-			class="media mb-3 border-top pt-3"
-			v-for="comment in comments"
-			:key="comment.id"
-		>
+		<div class="media mb-3 pt-3" v-for="comment in comments" :key="comment.id">
 			<el-avatar class="mr-3"></el-avatar>
 			<div class="media-body">
 				<div class="d-flex justify-content-between">

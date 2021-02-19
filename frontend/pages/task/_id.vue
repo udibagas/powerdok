@@ -24,7 +24,7 @@
 					</div>
 				</div>
 
-				<CommentForm :task="task" @refresh="(new_task) => (task = new_task)" />
+				<CommentForm :task="task" @refresh="fetchData" />
 
 				<Comments :comments="task.comments" />
 			</el-card>
@@ -91,6 +91,10 @@ export default {
   },
 
   methods: {
+    async fetchData() {
+      this.task = await this.$axios.$get(`/api/task/${this.task.id}`);
+    },
+
     readableDate(date) {
       return moment(date).format('DD-MMM-YYYY');
     },

@@ -143,21 +143,8 @@ class TaskController extends Controller
             $comment->attachments()->createMany($request->attachments);
         }
 
-        $task->refresh();
         event(new NewCommentEvent($comment));
-
-        return [
-            'message' => 'Comment has been saved',
-            'task' => $task->load([
-                'user',
-                'assignees',
-                'attachments',
-                // 'document',
-                'comments',
-                'approvals',
-                'trackings'
-            ])
-        ];
+        return ['message' => 'Comment has been saved',];
     }
 
     public function getPendingApproval(Request $request)
