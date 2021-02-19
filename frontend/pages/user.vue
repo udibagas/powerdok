@@ -81,7 +81,7 @@
 										<td>{{ item.role }}</td>
 										<td>{{ item.email }}</td>
 										<td>{{ item.position }}</td>
-										<td>{{ item.department ? item.department.name : "" }}</td>
+										<td>{{ item.department ? item.department.name : "N/A" }}</td>
 										<td class="text-center">
 											<el-dropdown>
 												<span class="el-dropdown-link">

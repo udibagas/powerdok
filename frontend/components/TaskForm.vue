@@ -1,13 +1,18 @@
 <template>
-	<div class="card">
-		<div class="card-header bg-primary text-white">
-			<i class="el-icon-plus"></i> NEW TASK
-		</div>
-
-		<div class="card-body row">
+	<el-dialog
+		title="TASK"
+		width="1000px"
+		:visible.sync="show"
+		:before-close="closeForm"
+		:close-on-click-modal="false"
+	>
+    <div class="card-body row">
 			<el-form label-position="left" label-width="120px" class="col-7">
 				<el-form-item label="Title">
-					<el-input v-model="model.title" placeholder="Title"></el-input>
+					<el-input
+            v-model="formModel.title"
+            placeholder="Title"
+          ></el-input>
 
 					<div class="el-form-item__error" v-if="errors.title">
 						{{ errors.title.join(", ") }}
@@ -18,7 +23,7 @@
 					<el-input
 						type="textarea"
 						rows="7"
-						v-model="model.description"
+						v-model="formModel.description"
 						placeholder="Description"
 					></el-input>
 
@@ -27,16 +32,17 @@
 					</div>
 				</el-form-item>
 
-				<el-form-item :label="$t('Type')">
+				<el-form-item label="Type">
 					<el-select
 						style="width: 100%"
-						v-model="model.type"
-						:placeholder="$t('Type')"
+						v-model="formModel.type"
+						placeholder="Type"
 						default-first-option
+            clearable
 					>
-						<el-option :value="1" :label="$t('Document Review')"></el-option>
-						<el-option :value="2" :label="$t('Atestation')"></el-option>
-						<el-option :value="3" :label="$t('Examination')"></el-option>
+						<el-option :value="1" label="Document Review"></el-option>
+						<el-option :value="2" label="Atestation"></el-option>
+						<el-option :value="3" label="Examination"></el-option>
 					</el-select>
 
 					<div class="el-form-item__error" v-if="errors.type">
@@ -47,7 +53,7 @@
 				<el-form-item label="Assignees">
 					<el-select
 						style="width: 100%"
-						v-model="model.assignees"
+						v-model="formModel.assignees"
 						placeholder="Assignees"
 						filterable
 						default-first-option
@@ -88,7 +94,7 @@
 				<el-form-item label="Due Date" :class="{ 'is-error': errors.due_date }">
 					<el-date-picker
 						style="width: 100%"
-						v-model="model.due_date"
+						v-model="formModel.due_date"
 						type="date"
 						format="dd-MMM-yyyy"
 						value-format="yyyy-MM-dd"
@@ -103,7 +109,7 @@
 				<el-form-item label="Priority">
 					<el-select
 						style="width: 100%"
-						v-model="model.priority"
+						v-model="formModel.priority"
 						placeholder="Priority"
 						filterable
 						clearable
@@ -136,55 +142,35 @@
 			</div>
 		</div>
 
-		<div class="card-footer text-right">
-			<el-button
-				size="small"
-				icon="el-icon-circle-close"
-				@click.native="$router.push('/task')"
-			>
-				CANCEL
-			</el-button>
+    <div slot="footer">
+      <el-button size="small" icon="el-icon-circle-close" @click="closeForm">
+        CANCEL
+      </el-button>
 
-			<el-button
-				size="small"
-				class="btn-primary"
-				icon="el-icon-success"
-				@click="submit(model.id)"
-				:loading="loading"
-				>SAVE
-			</el-button>
-		</div>
-	</div>
+      <el-button
+        size="small"
+        class="btn-primary"
+        icon="el-icon-success"
+        @click="submit(model.id)"
+        :loading="loading"
+      >
+        {{ formModel.id ? 'UPDATE' : 'SAVE' }}
+      </el-button>
+    </div>
+	</el-dialog>
 </template>
 
 <script>
-import form from '@/mixins/form'
+import form from '~/mixins/form'
 import dropdown from '~/mixins/dropdown'
 
 export default {
-  mixins: [form, dropdown],
-  head() {
-    return {
-      title: this.title,
-    };
-  },
-
-  data() {
-    return {
-      url: '/api/task',
-      model: {},
-      title: "Powerdok | New Task"
-    }
-  },
-
-  methods: {
-    closeForm(data) {
-      this.errors = {}
-      this.$router.push(`/task/${data.data.id}`);
-    }
-  }
+	props: ['show', 'model', 'url'],
+	mixins: [form, dropdown],
+	computed: {
+		formModel() {
+			return this.model
+		},
+	},
 }
 </script>
-
-<style>
-</style>
