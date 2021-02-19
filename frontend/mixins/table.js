@@ -93,7 +93,7 @@ export default {
     },
 
     deleteData(id) {
-      this.$confirm($t('Are you sure you want to delete this data?'), $t('Confirm'), { type: 'warning' }).then(() => {
+      this.$confirm('Anda yakin akan menghapus data ini?', 'Confirm', { type: 'warning' }).then(() => {
         this.$axios.delete(`${this.url}/${id}`).then(r => {
           this.$message({
             message: r.data.message,

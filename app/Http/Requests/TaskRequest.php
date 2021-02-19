@@ -29,6 +29,7 @@ class TaskRequest extends FormRequest
             'type' => 'required|in:1,2,3',
             'assignees' => 'required',
             'priority' => 'required|in:0,1,2,3',
+            'due_date' => 'required'
         ];
     }
 }

@@ -92,8 +92,11 @@ class TaskController extends Controller
      */
     public function update(TaskRequest $request, Task $task)
     {
-        $this->authorize('update', $task);
-        $task->update($request->all());
+        $task->update(array_merge($request->all(), ['user_id' => $request->user()->id]));
+
+        if ($request->assignees) {
+            $task->assignees()->sync($request->assignees);
+        }
 
         if ($request->attachments) {
             $task->attachments()->delete();
@@ -111,9 +114,13 @@ class TaskController extends Controller
      */
     public function destroy(Task $task)
     {
-        $this->authorize('delete', $task);
+        // $this->authorize('delete', $task);
         $task->delete();
-        return ['message' => 'Data has been deleted'];
+
+        if($task->assignees) {
+            DB::table('task_assignments')->where('task_id', $task->id)->delete();
+        }
+        return ['message' => 'Data has been deleted', 'data' => $task];
     }
 
     public function approve(Task $task, Request $request)

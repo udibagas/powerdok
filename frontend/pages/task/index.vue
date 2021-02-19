@@ -11,13 +11,12 @@
 				class="btn-primary mr-2"
 				size="small"
 				icon="el-icon-plus"
-				@click="$router.push('/task/create')"
-			>
-				{{ $t("NEW TASK") }}
+				@click="addData"
+			>NEW TASK
 			</el-button>
 
 			<el-input
-				:placeholder="$t('Search')"
+				placeholder="Search"
 				v-model="keyword"
 				prefix-icon="el-icon-search"
 				size="small"
@@ -67,11 +66,12 @@
 				<thead class="bg-primary text-white">
 					<tr>
 						<th>#</th>
-						<th>Title</th>
-						<th>Assignees</th>
+						<th style="width: 260px">Title</th>
+            <th style="width: 180px">Type</th>
 						<th class="text-center" style="min-width: 120px">Due Date</th>
 						<th class="text-center">Priority</th>
 						<th class="text-center">Status</th>
+            <th class="text-center">Action</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -86,13 +86,7 @@
 								task.title
 							}}</nuxt-link>
 						</td>
-						<td class="text-nowrap">
-							{{
-								task.assignees
-									? task.assignees.map((a) => a.name).join(", ")
-									: ""
-							}}
-						</td>
+            <td>{{ task.type_name }}</td>
 						<td class="text-center">{{ readableDate(task.due_date) }}</td>
 						<td class="text-center">
 							<span
@@ -105,10 +99,41 @@
 								task.status_label
 							}}</span>
 						</td>
+            <td class="text-center">
+                <el-dropdown>
+                  <span class="el-dropdown-link">
+                    <i class="el-icon-more"></i>
+                  </span>
+                  <el-dropdown-menu slot="dropdown">
+                    <el-dropdown-item
+                      icon="el-icon-view"
+                      @click.native="$router.push(`/task/${task.id}`)"
+                    >Show</el-dropdown-item
+                    >
+                    <el-dropdown-item
+                      icon="el-icon-edit"
+                      @click.native.prevent="editData(task)"
+                      >Edit</el-dropdown-item
+                    >
+                    <el-dropdown-item
+                      icon="el-icon-delete"
+                      @click.native.prevent="deleteData(task.id)"
+                      >Delete</el-dropdown-item
+                    >
+                  </el-dropdown-menu>
+                </el-dropdown>
+              </td>
 					</tr>
 				</tbody>
 			</table>
 		</div>
+      <TaskForm
+			:show="showForm"
+			:model="selectedData"
+			:url="url"
+			@close="showForm = false"
+			@refresh="refresh"
+		/>
 	</div>
 </template>
 
