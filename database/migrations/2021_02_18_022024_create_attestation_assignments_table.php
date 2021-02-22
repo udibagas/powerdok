@@ -14,7 +14,6 @@ class CreateAttestationAssignmentsTable extends Migration
     public function up()
     {
         Schema::create('attestation_assignments', function (Blueprint $table) {
-            $table->id();
             $table->index(['attestation_id', 'user_id']);
             $table->unsignedBigInteger('attestation_id');
             $table->unsignedBigInteger('user_id');
