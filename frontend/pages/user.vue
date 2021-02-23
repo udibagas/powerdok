@@ -5,7 +5,7 @@
 				<div class="card">
 					<div class="card-header bg-white text-muted d-flex">
 						<div class="flex-grow-1" style="line-height: 30px">
-							<strong> Manage User </strong>
+							<strong><i class="uil-users-alt"></i> Manage User </strong>
 						</div>
 						<el-button
 							class="mr-2 btn-primary"

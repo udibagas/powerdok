@@ -37,11 +37,11 @@ class DocumentQuizController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(DocumentQuizRequest $request)
     {
         // $this->authorize('create', DocumentQuiz::class);
-        DocumentQuiz::insert($request->quizzes);
-        return ['message' => 'Data has been saved'];
+        $documentQuiz = DocumentQuiz::create($request->all());
+        return ['message' => 'Data has been saved', 'data' => $documentQuiz];
     }
 
     /**

@@ -62,6 +62,7 @@
 			</el-button>
 
 			<el-button
+        size="small"
 				class="btn-primary"
 				icon="el-icon-success"
 				@click="submit(model.id)"

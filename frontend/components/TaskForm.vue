@@ -171,7 +171,7 @@ import form from '~/mixins/form'
 import dropdown from '~/mixins/dropdown'
 
 export default {
-	props: ['show', 'model', 'url'],
+	props: ['show', 'model'],
 	mixins: [form, dropdown],
   computed: {
     fileList() {

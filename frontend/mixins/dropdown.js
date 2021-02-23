@@ -4,6 +4,7 @@ export default {
       // REGISTER ALL LIST HERE
       departmentList: [],
       userList: [],
+      documentList: [],
     }
   },
 

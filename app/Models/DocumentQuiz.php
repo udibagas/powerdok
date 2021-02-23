@@ -20,6 +20,6 @@ class DocumentQuiz extends Model
 
     public function document()
     {
-        return $this->belongsTo(Document::class);
+        return $this->belongsTo(Document::class, 'document_id');
     }
 }
