@@ -21,7 +21,7 @@ class TaskController extends Controller
     public function index(Request $request)
     {
         return new TaskCollection(
-            Task::with('assignees')->when($request->keyword, function ($q) use ($request) {
+            Task::with(['assignees', 'attachments'])->when($request->keyword, function ($q) use ($request) {
                 $q->where(function ($q) use ($request) {
                     $q->where('title', 'ILIKE', "%{$request->keyword}%")
                         ->orWhere('description', 'ILIKE', "%{$request->keyword}%")
@@ -92,16 +92,19 @@ class TaskController extends Controller
      */
     public function update(TaskRequest $request, Task $task)
     {
-        $task->update(array_merge($request->all(), ['user_id' => $request->user()->id]));
+        $task = DB::transaction(function () use ($request, $task) {
+            $task->update(array_merge($request->all(), ['user_id' => $request->user()->id]));
 
-        if ($request->assignees) {
-            $task->assignees()->sync($request->assignees);
-        }
+            if ($request->assignees) {
+                $task->assignees()->sync($request->assignees);
+            }
 
-        if ($request->attachments) {
-            $task->attachments()->delete();
-            $task->attachments()->createMany($request->attachments);
-        }
+            if ($request->attachments) {
+                $task->attachments()->delete();
+                $task->attachments()->createMany($request->attachments);
+            }
+            return $task;
+        });
 
         return ['message' => 'Data has been updated', 'data' => $task];
     }
@@ -115,11 +118,12 @@ class TaskController extends Controller
     public function destroy(Task $task)
     {
         // $this->authorize('delete', $task);
-        $task->delete();
+        DB::transaction(function () use ($task) {
+            $task->assignees()->detach();
+            $task->attachments()->delete();
+            $task->delete();
+        });
 
-        if($task->assignees) {
-            DB::table('task_assignments')->where('task_id', $task->id)->delete();
-        }
         return ['message' => 'Data has been deleted', 'data' => $task];
     }
 

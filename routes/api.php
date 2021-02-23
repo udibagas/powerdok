@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\AttachmentController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\LanguageController;
@@ -71,4 +72,6 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
         Route::delete('/destroy/{id}', [NotificationController::class, 'destroy']);
         Route::delete('/destroy', [NotificationController::class, 'destroyAll']);
     });
+
+    Route::post('upload', [AttachmentController::class, 'store']);
 });

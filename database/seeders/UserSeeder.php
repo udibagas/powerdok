@@ -18,6 +18,7 @@ class UserSeeder extends Seeder
             'name' => 'Admin',
             'email' => 'admin@mail.com',
             'position' => 'System App',
+            'department_id' => 1,
             'email_verified_at' => now(),
             'password' => 'admin123',
             'status' => true,
