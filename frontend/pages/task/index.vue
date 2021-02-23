@@ -127,7 +127,7 @@
 				</tbody>
 			</table>
 		</div>
-      <TaskForm
+    <TaskForm
 			:show="showForm"
 			:model="selectedData"
 			:url="url"
@@ -173,7 +173,12 @@ export default {
   methods: {
     readableDate(date) {
       return moment(date).format('DD-MMM-YYYY');
-    }
+    },
+
+    addData() {
+      this.selectedData = { attachments: [] }
+      this.showForm = true
+    },
   }
 }
 </script>

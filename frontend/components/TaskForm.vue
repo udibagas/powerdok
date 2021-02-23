@@ -1,7 +1,7 @@
 <template>
 	<el-dialog
 		title="TASK"
-		width="1000px"
+		width="85%"
 		:visible.sync="show"
 		:before-close="closeForm"
 		:close-on-click-modal="false"
@@ -10,7 +10,7 @@
 			<el-form label-position="left" label-width="120px" class="col-7">
 				<el-form-item label="Title">
 					<el-input
-            v-model="formModel.title"
+            v-model="model.title"
             placeholder="Title"
           ></el-input>
 
@@ -23,7 +23,7 @@
 					<el-input
 						type="textarea"
 						rows="7"
-						v-model="formModel.description"
+						v-model="model.description"
 						placeholder="Description"
 					></el-input>
 
@@ -35,7 +35,7 @@
 				<el-form-item label="Type">
 					<el-select
 						style="width: 100%"
-						v-model="formModel.type"
+						v-model="model.type"
 						placeholder="Type"
 						default-first-option
             clearable
@@ -53,7 +53,7 @@
 				<el-form-item label="Assignees">
 					<el-select
 						style="width: 100%"
-						v-model="formModel.assignees"
+						v-model="model.assignees"
 						placeholder="Assignees"
 						filterable
 						default-first-option
@@ -94,7 +94,7 @@
 				<el-form-item label="Due Date" :class="{ 'is-error': errors.due_date }">
 					<el-date-picker
 						style="width: 100%"
-						v-model="formModel.due_date"
+						v-model="model.due_date"
 						type="date"
 						format="dd-MMM-yyyy"
 						value-format="yyyy-MM-dd"
@@ -109,7 +109,7 @@
 				<el-form-item label="Priority">
 					<el-select
 						style="width: 100%"
-						v-model="formModel.priority"
+						v-model="model.priority"
 						placeholder="Priority"
 						filterable
 						clearable
@@ -131,8 +131,15 @@
 				<div class="mb-3"><i class="uil-paperclip"></i> Attachments</div>
 				<el-upload
 					drag
-					action="https://jsonplaceholder.typicode.com/posts/"
+					action=""
 					multiple
+          :file-list="fileList"
+          :on-preview="handlePreview"
+          :on-remove="handleRemove"
+          :on-success="handleUploadFileSuccess"
+          :on-error="handleUploadFileError"
+          :http-request="upload"
+          :data="{test: 'Test data'}"
 				>
 					<i class="el-icon-upload"></i>
 					<div class="el-upload__text">
@@ -154,7 +161,7 @@
         @click="submit(model.id)"
         :loading="loading"
       >
-        {{ formModel.id ? 'UPDATE' : 'SAVE' }}
+        {{ model.id ? 'UPDATE' : 'SAVE' }}
       </el-button>
     </div>
 	</el-dialog>
@@ -167,10 +174,13 @@ import dropdown from '~/mixins/dropdown'
 export default {
 	props: ['show', 'model', 'url'],
 	mixins: [form, dropdown],
-	computed: {
-		formModel() {
-			return this.model
-		},
-	},
+  computed: {
+    fileList() {
+      return this.model.attachments || [];
+    }
+  },
+  mounted() {
+		this.getList('/api/user', 'userList')
+  }
 }
 </script>

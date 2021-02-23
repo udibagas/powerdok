@@ -28,7 +28,7 @@ class UserFactory extends Factory
             'email_verified_at' => now(),
             'password' => 'password',
             'position' => $this->faker->jobTitle,
-            'department_id' => random(1, 10),
+            'department_id' => rand(1, 10),
             'remember_token' => Str::random(10),
         ];
     }
