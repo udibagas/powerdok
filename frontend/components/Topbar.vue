@@ -26,7 +26,26 @@ export default {
     this.text = this.value.title;
     this.flag = this.value.flag;
     this.getNewNotifications();
-    setInterval(this.getNewNotifications, 5000);
+    // setInterval(this.getNewNotifications, 5000);
+
+    console.log('Listening', 'App.Models.User.' + this.$auth.user.id);
+    this.$echo
+      .private('users.' + this.$auth.user.id)
+      .notification((notification) => {
+        console.log(notification);
+        alert(JSON.stringify(notification))
+        // TODO: push notification
+        // this.notifications.push(notification);
+        // this.$notify.warning({
+        //   position: "bottom-right",
+        //   title: notification.data.title,
+        //   dangerouslyUseHTMLString: true,
+        //   onClick: () => {
+        //     this.readNotification(notification);
+        //   },
+        //   message: notification.data.text + '<br /><small class="text-muted"><i class="mdi mdi-clock-outline"></i>' + this.$moment(notification.created_at).fromNow() + '</small>'
+        // });
+      });
   },
 
   methods: {
@@ -34,17 +53,6 @@ export default {
 
     getNewNotifications() {
       this.$axios.$get('/api/notification/getNewNotifications').then(response => {
-        if (response.length > this.notifications.length) {
-          this.$notify.warning({
-            position: "bottom-right",
-            title: response[0].data.title,
-            dangerouslyUseHTMLString: true,
-            onClick: () => {
-              this.readNotification(response[0]);
-            },
-            message: response[0].data.text + '<br /><small class="text-muted"><i class="mdi mdi-clock-outline"></i>' + this.readableTime(response[0].created_at) + '</small>'
-          });
-        }
         this.notifications = response;
       });
     },

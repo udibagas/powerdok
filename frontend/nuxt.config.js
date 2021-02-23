@@ -63,7 +63,26 @@ export default {
   /*
    ** Nuxt.js dev-modules
    */
-  buildModules: [],
+  buildModules: [
+    '@nuxtjs/moment',
+    '@nuxtjs/laravel-echo',
+  ],
+
+  // moment: {
+  //   defaultLocale: 'en',
+  //   locales: ['en', 'id']
+  // },
+
+  echo: {
+    broadcaster: 'pusher',
+    key: process.env.WS_KEY,
+    wsHost: process.env.WS_HOST,
+    wsPort: process.env.WS_PORT,
+    disableStats: true,
+    encrypted: true,
+    forceTLS: false
+  },
+
   /*
    ** Nuxt.js modules
    */

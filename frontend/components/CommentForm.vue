@@ -11,6 +11,82 @@
 						placeholder="Type your comment here"
 					></el-input>
 				</el-form-item>
+
+				<el-form-item label="Assignees">
+					<el-select
+						style="width: 100%"
+						v-model="form.assignees"
+						placeholder="Assignees"
+						filterable
+						default-first-option
+						clearable
+						remote
+						multiple
+						:remote-method="(q) => getList('/api/user', 'userList', q)"
+					>
+						<el-option
+							v-for="user in userList"
+							:key="user.id"
+							:value="user.id"
+							:label="`${user.name} | ${user.position ? user.position : ''}  (${
+								user.department_id ? user.department.name : 'N/A'
+							})`"
+						>
+							<span style="float: left">{{ user.name }}</span>
+							<span
+								style="
+									float: right;
+									color: #8492a6;
+									font-size: 13px;
+									margin-right: 20px;
+								"
+							>
+								{{ user.position }} ({{
+									user.department_id ? user.department.name : "N/A"
+								}})
+							</span>
+						</el-option>
+					</el-select>
+
+					<div class="el-form-item__error" v-if="errors.assignees">
+						{{ errors.assignees.join(", ") }}
+					</div>
+				</el-form-item>
+
+				<el-form-item label="Due Date" :class="{ 'is-error': errors.due_date }">
+					<el-date-picker
+						style="width: 100%"
+						v-model="form.due_date"
+						type="date"
+						format="dd-MMM-yyyy"
+						value-format="yyyy-MM-dd"
+						placeholder="Due Date"
+					></el-date-picker>
+
+					<div class="el-form-item__error" v-if="errors.due_date">
+						{{ errors.due_date.join(", ") }}
+					</div>
+				</el-form-item>
+
+				<el-form-item label="Priority">
+					<el-select
+						style="width: 100%"
+						v-model="form.priority"
+						placeholder="Priority"
+						filterable
+						clearable
+						default-first-option
+					>
+						<el-option :value="0" label="Low"></el-option>
+						<el-option :value="1" label="Medium"></el-option>
+						<el-option :value="2" label="High"></el-option>
+						<el-option :value="3" label="Urgent"></el-option>
+					</el-select>
+
+					<div class="el-form-item__error" v-if="errors.priority">
+						{{ errors.priority.join(", ") }}
+					</div>
+				</el-form-item>
 			</el-form>
 
 			<div class="text-right">
@@ -29,7 +105,11 @@
 </template>
 
 <script>
+import dropdown from '@/mixins/dropdown';
+
 export default {
+  mixins: [dropdown],
+
   props: ['task'],
 
   data() {
@@ -63,6 +143,10 @@ export default {
         });
       })
     },
+  },
+
+  mounted() {
+    this.getList('/api/user', 'userList');
   }
 }
 </script>

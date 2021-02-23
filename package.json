@@ -12,6 +12,7 @@
     "devDependencies": {
         "@inertiajs/inertia": "^0.3.0",
         "@inertiajs/inertia-vue": "^0.2.0",
+        "@nuxtjs/laravel-echo": "^1.1.0",
         "@tailwindcss/ui": "^0.6.0",
         "axios": "^0.19",
         "cross-env": "^7.0",
@@ -25,5 +26,8 @@
         "tailwindcss": "^1.8.0",
         "vue": "^2.5.17",
         "vue-template-compiler": "^2.6.10"
+    },
+    "dependencies": {
+        "pusher-js": "^7.0.3"
     }
 }

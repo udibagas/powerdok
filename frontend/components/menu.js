@@ -29,6 +29,11 @@ export const menuItems = [
     icon: "uil-file-share-alt",
     link: "/documents/related"
   }, {
+    id: 81,
+    label: "Manage Task",
+    icon: "uil-file-check-alt",
+    link: "/task/manage"
+  }, {
     id: 7,
     label: "My Task",
     icon: "uil-file-check-alt",

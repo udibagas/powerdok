@@ -1,50 +1,38 @@
 <template>
 	<div>
-		<div class="media mb-3 pt-3" v-for="comment in comments" :key="comment.id">
-			<el-avatar class="mr-3"></el-avatar>
+		<div class="media mb-5" v-for="comment in comments" :key="comment.id">
+			<el-avatar
+				src="https://ckeditor.com/docs/ckeditor5/latest/assets/img/m_1.jpg"
+				class="mr-3"
+				:size="40"
+			></el-avatar>
 			<div class="media-body">
-				<div class="d-flex justify-content-between">
-					<div>
-						<strong>{{ comment.user.name }}</strong>
-						<div class="text-muted">
-							{{ comment.user.position }} |
-							{{
-								comment.user.department ? comment.user.department.name : "N/A"
-							}}
-						</div>
-					</div>
-					<small class="text-muted">
-						{{ readableDateTime(comment.created_at) }}
-					</small>
-				</div>
+				<strong>{{ comment.user.name }}</strong>
 
-				<div class="my-3">
+				<span class="text-muted">
+					&bull;
+					{{ comment.user.position }} |
+					{{ comment.user.department ? comment.user.department.name : "N/A" }}
+					&bull;
+					{{ $moment(comment.created_at).lang($i18n.locale).fromNow() }}
+				</span>
+				<span class="badge badge-success">Online</span>
+
+				<div class="mb-2">
 					{{ comment.body }}
 				</div>
 
-				<el-button type="text">
+				<!-- <el-button type="text">
 					<i class="mdi mdi-reply mr-1"></i> {{ $t("Reply") }}
-				</el-button>
+				</el-button> -->
 			</div>
 		</div>
 	</div>
 </template>
 
 <script>
-import moment from 'moment';
-
 export default {
   props: ['comments'],
-
-  methods: {
-    readableDate(date) {
-      return moment(date).format('DD-MMM-YYYY');
-    },
-
-    readableDateTime(date) {
-      return moment(date).format('DD-MMM-YYYY HH:mm');
-    }
-  }
 }
 </script>
 
