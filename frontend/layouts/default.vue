@@ -5,6 +5,7 @@ export default {
     document.body.removeAttribute("data-layout");
     document.body.removeAttribute("data-topbar");
   },
+
   methods: {
     toggleRightSidebar() {
       document.body.classList.toggle("right-bar-enabled");
@@ -32,6 +33,7 @@ export default {
       this.isMenuCondensed = !this.isMenuCondensed;
     },
   },
+
   data() {
     return {};
   },

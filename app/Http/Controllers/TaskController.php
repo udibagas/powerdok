@@ -78,7 +78,7 @@ class TaskController extends Controller
             'user',
             'assignees',
             'attachments',
-            // 'document',
+            'document',
             'comments',
             'approvals',
             'trackings'

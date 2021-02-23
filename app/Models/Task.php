@@ -48,6 +48,7 @@ class Task extends Model
     protected $fillable = [
         'user_id',
         'type',
+        'document_id',
         'title',
         'description',
         'custom_fields',

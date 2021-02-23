@@ -35,9 +35,14 @@ export const menuItems = [
     link: "/task"
   }, {
     id: 8,
-    label: "Manage SOP / Policy",
+    label: "Manage Document",
     icon: "uil-file-alt",
     link: "/documents/manage"
+  }, {
+    id: 81,
+    label: "Manage Task",
+    icon: "uil-file-check-alt",
+    link: "/task/manage"
   }, {
     id: 9,
     label: "ADMINISTRATION",
