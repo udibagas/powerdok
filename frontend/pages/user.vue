@@ -28,6 +28,13 @@
 								}
 							"
 						></el-input>
+            <el-button icon="uil-filter" size="small" class="ml-2"></el-button>
+						<el-button
+							icon="uil-refresh"
+							size="small"
+							class="ml-2"
+							@click="refresh"
+						></el-button>
 						<el-pagination
 							@current-change="
 								(p) => {
@@ -63,15 +70,7 @@
 										<th scope="col" style="width: 240px">Email</th>
 										<th scope="col">Position</th>
 										<th scope="col">Department</th>
-										<th scope="col" class="text-center">
-											<el-button
-												size="small"
-												class="text-white"
-												type="text"
-												icon="el-icon-refresh"
-												@click="refresh"
-											></el-button>
-										</th>
+										<th scope="col" class="text-center">Action</th>
 									</tr>
 								</thead>
 								<tbody>

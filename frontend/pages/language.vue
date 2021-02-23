@@ -65,14 +65,10 @@
 								<thead>
 									<tr>
 										<th scope="col" style="width: 35px">#</th>
-										<th scope="col">Locale</th>
+										<th scope="col" style="width: 200px">Locale</th>
 										<th scope="col">Key</th>
 										<th scope="col">Text</th>
-										<th
-											scope="col"
-											class="text-center"
-											style="width: 60px"
-										></th>
+										<th scope="col" class="text-center" style="width: 120px">Action</th>
 									</tr>
 								</thead>
 								<tbody>

@@ -139,7 +139,6 @@
           :on-success="handleUploadFileSuccess"
           :on-error="handleUploadFileError"
           :http-request="upload"
-          :data="{test: 'Test data'}"
 				>
 					<i class="el-icon-upload"></i>
 					<div class="el-upload__text">
