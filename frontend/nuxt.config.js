@@ -75,9 +75,9 @@ export default {
 
   echo: {
     broadcaster: 'pusher',
-    key: process.env.WS_KEY,
-    wsHost: process.env.WS_HOST,
-    wsPort: process.env.WS_PORT,
+    key: process.env.WS_KEY || 'pusher_key',
+    wsHost: process.env.WS_HOST || '127.0.0.1',
+    wsPort: process.env.WS_PORT || 6001,
     disableStats: true,
     encrypted: true,
     forceTLS: false
