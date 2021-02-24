@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AttachmentController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\DocumentController;
+use App\Http\Controllers\DocumentQuizController;
 use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\TaskController;
@@ -57,6 +58,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::prefix('document')->group(function () {
         Route::post('quiz/{document}', [DocumentController::class, 'saveQuiz']);
         Route::get('quiz/{document}', [DocumentController::class, 'getQuiz']);
+        Route::delete('quiz/{documentQuiz}', [DocumentController::class, 'deleteQuiz']);
         Route::get('{slug}', [DocumentController::class, 'slug']);
     });
 

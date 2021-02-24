@@ -23,6 +23,7 @@ class TaskFactory extends Factory
     {
         return [
             'title' => $this->faker->sentence(),
+            'document_id' => rand(1, 10),
             'type' => rand(1, 3),
             'description' => $this->faker->paragraph(10),
             'user_id' => rand(1, 10),

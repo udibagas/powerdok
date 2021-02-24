@@ -24,7 +24,9 @@ class DocumentQuizRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'question' => 'required',
+            'choice' => 'required',
+            'correct_answer' => 'required'
         ];
     }
 }

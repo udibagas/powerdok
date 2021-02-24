@@ -18,8 +18,15 @@ class DocumentQuiz extends Model
 
     protected $casts = ['choices' => 'json'];
 
+    protected $with = ['attachments'];
+
     public function document()
     {
         return $this->belongsTo(Document::class, 'document_id');
+    }
+
+    public function attachments()
+    {
+        return $this->morphMany(Attachment::class, 'attachable');
     }
 }

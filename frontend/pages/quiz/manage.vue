@@ -22,46 +22,74 @@
 					<h4 class="text-muted">#{{ index + 1 }}</h4>
 				</div>
 				<div class="flex-grow-1">
-          <el-input
-            type="textarea"
-            rows="3"
-            :placeholder="$t('Question')"
-            v-model="q.question"
-            class="mb-3"
-          ></el-input>
-          <el-button
-            type="danger"
-            size="small"
-            circle
-            icon="el-icon-delete"
-            @click="deleteQuiz"
-          ></el-button>
-					<div class="row">
-              <div v-for="(c, i) in q.choices" :key="i" class="col-5 mb-3 d-flex">
-                <el-radio v-model="q.correct_answer" :label="i">
-                  <h5 class="text-muted" style="display: inline-block">
-                    {{ ["A", "B", "C", "D"][i] }}.
-                  </h5>
-                </el-radio>
-                <el-input
-                  type="textarea"
-                  rows="2"
-                  v-model="q.choices[i]"
-                ></el-input>
-              </div>
+          <div class="d-flex">
+            <div class="mr-3 mb-3 flex-grow-1">
+              <el-input
+                type="textarea"
+                rows="3"
+                :placeholder="$t('Question')"
+                v-model="q.question"
+                class="mb-2"
+              ></el-input>
+
+              <img class="mb-3" style="width:200px" v-for="image in q.attachments" :src="image.url" :key="image.id" />
+
+              <el-upload
+                class="mb-3"
+                action=""
+                :data="{quiz_index: index}"
+                multiple
+                list-type="picture"
+                :loading="loading"
+                :show-file-list="false"
+                :file-list="q.attachments.map(a => {
+                  const { name, url: path } = a;
+                  return { name, path }
+                })"
+                :on-remove="handleRemove"
+                :on-success="handleUploadFileSuccess"
+                :on-error="handleUploadFileError"
+                :http-request="upload"
+              >
+                <el-button size="small" type="primary" class="el-icon-paperclip">Attach image</el-button>
+                <div slot="tip" class="el-upload__tip">jpg/png files with a size less than 500kb</div>
+              </el-upload>
             </div>
+            <div>
+              <el-button
+                type="danger"
+                size="small"
+                circle
+                icon="el-icon-delete"
+                @click="deleteQuiz(index, q.id)"
+              ></el-button>
+            </div>
+          </div>
+
+					<div class="row">
+            <div v-for="(c, i) in q.choices" :key="i" class="col-5 mb-3 d-flex">
+              <el-radio v-model="q.correct_answer" :label="i">
+                <h5 class="text-muted" style="display: inline-block">
+                  {{ ["A", "B", "C", "D"][i] }}.
+                </h5>
+              </el-radio>
+              <el-input
+                type="textarea"
+                rows="2"
+                v-model="q.choices[i]"
+              ></el-input>
+            </div>
+          </div>
 				</div>
 			</div>
 
-			<div class="d-flex mb-4">
-				<div class="mr-3">
-					<h4 class="text-muted">#{{ quizzes.length + 1 }}</h4>
-				</div>
-				<div>
-					<el-button size="small" class="btn-primary" icon="el-icon-plus" @click="newQuiz">
-						{{ $t("NEW QUESTION") }}
-					</el-button>
-				</div>
+			<div class="mb-4">
+        <el-card shadow="hover">
+          <div @click="newQuiz" class="text-center text-primary" style="line-height:120px;cursor:pointer;font-size:20px">
+            <i class="el-icon-plus"></i>
+            {{ $t("NEW QUESTION") }}
+          </div>
+        </el-card>
 			</div>
 		</div>
 
@@ -103,25 +131,14 @@ export default {
   data() {
     return {
       loading: false,
-      quizzes: [
-        {
-          question: '',
-          choices: [
-            'Choice 1',
-            'Choice 2',
-            'Choice 3',
-            'Choice 4',
-          ],
-          correct_answer: null
-        }
-      ],
+      quizzes: [],
     }
   },
   methods: {
     newQuiz() {
       this.quizzes.push({
-        document_id: '',
         question: '',
+        attachments: [],
         choices: [
           'Choice 1',
           'Choice 2',
@@ -131,7 +148,40 @@ export default {
         correct_answer: null
       });
     },
+    deleteQuiz(index, id) {
+      this.$confirm('Are you sure want to delete this question?', 'Confirm', {type: 'warning'}).then(() => {
+        if (id) {
+          this.$axios.$delete(`api/document/quiz/${id}`).then(r => {
+            this.$message({
+              message: r.message,
+              type: 'success',
+              showClose: true
+            })
+            this.quizzes.splice(index, 1)
+          }).catch(e => {
+            this.$message({
+              message: e.response.data.message,
+              type: 'error',
+              showClose: true
+            })
+          }).finally(() => this.loading = false)
+        } else {
+          this.quizzes.splice(index, 1)
+        }
+      })
+    },
     save() {
+      // [
+      //   {
+      //     question: '',
+      //     choices: [],
+      //     correct_answer: 0,
+      //     attachments: [
+      //       {path: '', name: ''}
+      //     ]
+      //   }
+      // ]
+
       this.loading = true;
       const data = { document_id: this.document.id, quizzes: this.quizzes };
       this.$axios.$post(`/api/document/quiz/${this.document.id}`, data).then(response => {
@@ -162,7 +212,70 @@ export default {
     },
     readableDate(date) {
       return moment(date).format('DD-MMM-YYYY')
-    }
+    },
+
+    upload(params) {
+      console.log(params);
+      const { file, onError, onSuccess, onProgress, data } = params;
+
+      let formData = new FormData();
+      formData.append('file', file);
+      formData.append('data', JSON.stringify(data));
+
+      this.$axios.$post('/api/upload', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+        onUploadProgress: (e) => {
+          let percent = (e.loaded / e.total * 100) | 0;
+          onProgress( { percent } );
+        },
+      }).then((response) => onSuccess(response)).catch(e => onError(e.response))
+    },
+
+    handlePreview() {
+      //
+    },
+
+    handleRemove(file, fileList) {
+      console.log(file)
+      const indexFile = this.attachments.findIndex(f => f.uid == file.uid)
+      this.attachments.splice(indexFile, 1);
+      console.log(this.attachments);
+    },
+
+		handleUploadFileSuccess(res, file, fileList) {
+      this.$message({ message: res.message, type: 'success' });
+      let data = JSON.parse(res.data);
+
+      if (this.quizzes[data.quiz_index].attachments == null) {
+        this.quizzes[data.quiz_index].attachments = [];
+      }
+      const { name, path, user_id, url } = res
+      this.quizzes[data.quiz_index].attachments.push({ name, path, user_id, url });
+		},
+
+		handleUploadFileError(err, file, fileList) {
+      console.log(err);
+      let message =  ''
+
+			if (err.status == 413) {
+				message = this.$t('Failed to upload document. File too big.')
+			}
+
+			if (err.status == 422) {
+				message = err.data.errors.file[0]
+			}
+
+			if (err.status == 500) {
+				message = err.data.message
+			}
+
+			this.$message({
+				message: message,
+				type: 'error',
+				showClose: true,
+				duration: 10000,
+			})
+		}
   },
   mounted() {
 		this.getQuizByDepartment()
