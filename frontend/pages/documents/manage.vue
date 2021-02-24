@@ -81,8 +81,7 @@
 							</td>
 							<td class="text-nowrap">
 								<strong class="text-muted">
-									{{ doc.type_name }} No. {{ doc.number }} Ver.
-									{{ doc.version }}
+									{{ doc.type_name }} &nbsp; No. {{ doc.number }} &nbsp; Ver. {{ doc.version }}
 								</strong>
 								<br />
 								<nuxt-link
@@ -130,12 +129,6 @@
                       @click.native="$router.push('/documents/attestation')"
                       >Attestation</el-dropdown-item
                     >
-                    <el-dropdown-item
-                      icon="el-icon-document"
-                      @click.native="$router.push('/documents/examination')"
-                      >Examination</el-dropdown-item
-                    >
-
                     <el-dropdown-item
                       icon="el-icon-document"
                       @click.native="$router.push(`/quiz/manage?slug=${doc.slug}`)"

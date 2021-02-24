@@ -22,28 +22,34 @@
 					<h4 class="text-muted">#{{ index + 1 }}</h4>
 				</div>
 				<div class="flex-grow-1">
-					<el-input
-						type="textarea"
-						rows="3"
-						:placeholder="$t('Question')"
-						v-model="q.question"
-						class="mb-3"
-					></el-input>
-
+          <el-input
+            type="textarea"
+            rows="3"
+            :placeholder="$t('Question')"
+            v-model="q.question"
+            class="mb-3"
+          ></el-input>
+          <el-button
+            type="danger"
+            size="small"
+            circle
+            icon="el-icon-delete"
+            @click="deleteQuiz"
+          ></el-button>
 					<div class="row">
-						<div v-for="(c, i) in q.choices" :key="i" class="col-6 mb-3 d-flex">
-							<el-radio v-model="q.correct_answer" :label="i">
-								<h5 class="text-muted" style="display: inline-block">
-									{{ ["A", "B", "C", "D"][i] }}.
-								</h5>
-							</el-radio>
-							<el-input
-								type="textarea"
-								rows="2"
-								v-model="q.choices[i]"
-							></el-input>
-						</div>
-					</div>
+              <div v-for="(c, i) in q.choices" :key="i" class="col-5 mb-3 d-flex">
+                <el-radio v-model="q.correct_answer" :label="i">
+                  <h5 class="text-muted" style="display: inline-block">
+                    {{ ["A", "B", "C", "D"][i] }}.
+                  </h5>
+                </el-radio>
+                <el-input
+                  type="textarea"
+                  rows="2"
+                  v-model="q.choices[i]"
+                ></el-input>
+              </div>
+            </div>
 				</div>
 			</div>
 
@@ -62,12 +68,18 @@
 		<div class="card-footer text-right">
       <el-button
         size="small"
+        icon="el-icon-circle-close"
+        @click.native="$router.push('/documents/manage')"
+        :loading="loading"
+      >CANCEL
+      </el-button>
+      <el-button
+        size="small"
         class="btn-primary"
         icon="el-icon-success"
         @click="save"
         :loading="loading"
-      >
-        {{ id ? 'UPDATE' : 'SAVE' }}
+      >SAVE
       </el-button>
 		</div>
 	</div>

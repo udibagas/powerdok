@@ -105,7 +105,7 @@ class DocumentController extends Controller
     {
         $document->quizzes()->delete();
         $document->quizzes()->createMany($request->quizzes);
-        return ['message' => 'Document has been saved'];
+        return ['message' => 'Question has been saved'];
     }
 
     public function getQuiz(Document $document)
