@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Http\Requests\DocumentRequest;
 use App\Http\Resources\DocumentCollection;
 use App\Models\Document;
+use App\Models\DocumentQuiz;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class DocumentController extends Controller
 {
@@ -103,13 +105,41 @@ class DocumentController extends Controller
 
     public function saveQuiz(Document $document, Request $request)
     {
-        $document->quizzes()->delete();
-        $document->quizzes()->createMany($request->quizzes);
-        return ['message' => 'Document has been saved'];
+        $request->validate([
+            'quizzes.*.question' => 'required',
+            'quizzes.*.correct_answer' => 'required',
+            'quizzes.*.choices' => 'required|array|size:4',
+        ]);
+
+        DB::transaction(function () use ($document, $request) {
+            foreach ($request->quizzes as $q) {
+                if (isset($q['id'])) {
+                    $quiz = DocumentQuiz::find($q['id']);
+                    $quiz->update($q);
+                    if (isset($quiz['attachments'])) {
+                        $quiz->attachments()->delete();
+                        $quiz->attachments()->createMany($q['attachments']);
+                    }
+                } else {
+                    $quiz = $document->quizzes()->create($q);
+                    if (isset($q['attachments'])) {
+                        $quiz->attachments()->createMany($q['attachments']);
+                    }
+                }
+            }
+        });
+
+        return ['message' => 'Question has been saved'];
     }
 
     public function getQuiz(Document $document)
     {
         return $document->quizzes;
+    }
+
+    public function deleteQuiz(DocumentQuiz $documentQuiz)
+    {
+        $documentQuiz->delete();
+        return ['message' => 'Question has been deleted'];
     }
 }
