@@ -135,6 +135,12 @@
                       @click.native="$router.push('/documents/examination')"
                       >Examination</el-dropdown-item
                     >
+
+                    <el-dropdown-item
+                      icon="el-icon-document"
+                      @click.native="$router.push(`/quiz/manage?slug=${doc.slug}`)"
+                      >Manage Quiz</el-dropdown-item
+                    >
                     <el-dropdown-item
                       icon="el-icon-delete"
                       @click.native.prevent="deleteData(item.id)"

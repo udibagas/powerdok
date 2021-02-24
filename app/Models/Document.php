@@ -46,6 +46,11 @@ class Document extends Model
         return $this->belongsTo(User::class, 'owner_id');
     }
 
+    public function quizzes()
+    {
+        return $this->hasMany(DocumentQuiz::class);
+    }
+
     public function getLastUpdateAttribute()
     {
         return $this->updated_at->diffForHumans();

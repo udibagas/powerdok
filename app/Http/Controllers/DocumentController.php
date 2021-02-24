@@ -100,4 +100,16 @@ class DocumentController extends Controller
     {
         return Document::where('slug', $slug)->first();
     }
+
+    public function saveQuiz(Document $document, Request $request)
+    {
+        $document->quizzes()->delete();
+        $document->quizzes()->createMany($request->quizzes);
+        return ['message' => 'Document has been saved'];
+    }
+
+    public function getQuiz(Document $document)
+    {
+        return $document->quizzes;
+    }
 }

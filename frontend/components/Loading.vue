@@ -22,7 +22,7 @@ export default {
 <div id="preloader" v-if="loading">
     <div id="status">
         <div class="spinner">
-            <i class="uil-shutter-alt spin-icon"></i>
+            <img src="~/assets/images/logo-powerdok.png" alt height="50" class="spin-icon">
         </div>
     </div>
 </div>
