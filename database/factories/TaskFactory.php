@@ -23,8 +23,9 @@ class TaskFactory extends Factory
     {
         return [
             'title' => $this->faker->sentence(),
+            'type' => rand(1, 3),
             'description' => $this->faker->paragraph(10),
-            'user_id' => rand(1, 100),
+            'user_id' => rand(1, 10),
             'due_date' => $this->faker->date('Y-m-d', now()->addMonth()->format('Y-m-d')),
             'priority' => rand(0, 3),
             'status' => rand(0, 6),

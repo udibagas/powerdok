@@ -6,10 +6,12 @@ use App\Events\NewCommentEvent;
 use App\Events\NewTaskEvent;
 use App\Http\Requests\TaskRequest;
 use App\Http\Resources\TaskCollection;
+use App\Models\Attachment;
 use App\Models\Task;
 use App\Models\TaskApproval;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class TaskController extends Controller
 {
@@ -123,6 +125,11 @@ class TaskController extends Controller
             $task->attachments()->delete();
             $task->delete();
         });
+
+        if($task->attachments)
+        {
+            Storage::delete('path');
+        }
 
         return ['message' => 'Data has been deleted', 'data' => $task];
     }

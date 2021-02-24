@@ -51,10 +51,14 @@ Route::post('token', function (Request $request) {
 Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::post('logout', [AuthController::class, 'logout']);
     Route::get('me', [AuthController::class, 'me']);
-    Route::get('document/{slug}', [DocumentController::class, 'slug']);
     Route::get('lang', [LanguageController::class, 'lang']);
-
     Route::post('task/comment/{task}', [TaskController::class, 'comment']);
+
+    Route::prefix('document')->group(function () {
+        Route::post('quiz/{document}', [DocumentController::class, 'saveQuiz']);
+        Route::get('quiz/{document}', [DocumentController::class, 'getQuiz']);
+        Route::get('{slug}', [DocumentController::class, 'slug']);
+    });
 
     Route::apiResources([
         'department' => DepartmentController::class,

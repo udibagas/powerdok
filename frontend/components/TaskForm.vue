@@ -139,7 +139,6 @@
           :on-success="handleUploadFileSuccess"
           :on-error="handleUploadFileError"
           :http-request="upload"
-          :data="{test: 'Test data'}"
 				>
 					<i class="el-icon-upload"></i>
 					<div class="el-upload__text">
@@ -172,7 +171,7 @@ import form from '~/mixins/form'
 import dropdown from '~/mixins/dropdown'
 
 export default {
-	props: ['show', 'model', 'url'],
+	props: ['show', 'model'],
 	mixins: [form, dropdown],
   computed: {
     fileList() {

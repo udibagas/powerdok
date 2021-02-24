@@ -31,7 +31,7 @@
 			></el-input>
 			<el-button icon="uil-filter" size="small" class="ml-2"></el-button>
 			<el-button
-				icon="el-icon-refresh"
+				icon="uil-refresh"
 				size="small"
 				class="ml-2"
 				@click="refresh"
@@ -60,73 +60,74 @@
 				{{ pagination.total }}
 			</div>
 		</div>
-
-		<div class="table-responsive mb-0">
-			<table class="table table-hover table-striped">
-				<thead class="bg-primary text-white">
-					<tr>
-						<th>#</th>
-						<th style="width: 260px">Title</th>
-            <th style="width: 180px">Type</th>
-						<th class="text-center" style="min-width: 120px">Due Date</th>
-						<th class="text-center">Priority</th>
-						<th class="text-center">Status</th>
-            <th class="text-center">Action</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr
-						v-for="(task, index) in tableData"
-						:key="task.id"
-						:class="{ 'table-danger': task.overdue }"
-					>
-						<td>{{ pagination.from + index }}</td>
-						<td>
-							<nuxt-link class="text-nowrap" :to="`/task/${task.id}`">{{
-								task.title
-							}}</nuxt-link>
-						</td>
-            <td>{{ task.type_name }}</td>
-						<td class="text-center">{{ readableDate(task.due_date) }}</td>
-						<td class="text-center">
-							<span
-								:class="`badge badge-${priorityColors[task.priority_label]}`"
-								>{{ task.priority_label }}</span
-							>
-						</td>
-						<td class="text-center">
-							<span :class="`badge badge-${statusColors[task.status_label]}`">{{
-								task.status_label
-							}}</span>
-						</td>
-            <td class="text-center">
-                <el-dropdown>
-                  <span class="el-dropdown-link">
-                    <i class="el-icon-more"></i>
-                  </span>
-                  <el-dropdown-menu slot="dropdown">
-                    <el-dropdown-item
-                      icon="el-icon-view"
-                      @click.native="$router.push(`/task/${task.id}`)"
-                    >Show</el-dropdown-item
-                    >
-                    <el-dropdown-item
-                      icon="el-icon-edit"
-                      @click.native.prevent="editData(task)"
-                      >Edit</el-dropdown-item
-                    >
-                    <el-dropdown-item
-                      icon="el-icon-delete"
-                      @click.native.prevent="deleteData(task.id)"
-                      >Delete</el-dropdown-item
-                    >
-                  </el-dropdown-menu>
-                </el-dropdown>
+		<div class="card-body p-0">
+			<div class="table-responsive mb-0" v-loading="loading">
+				<table class="table table-hover table-striped">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th style="width: 260px">Title</th>
+              <th style="width: 180px">Type</th>
+              <th class="text-center" style="min-width: 120px">Due Date</th>
+              <th class="text-center">Priority</th>
+              <th class="text-center">Status</th>
+              <th class="text-center">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              v-for="(task, index) in tableData"
+              :key="task.id"
+              :class="{ 'table-danger': task.overdue }"
+            >
+              <td>{{ pagination.from + index }}</td>
+              <td>
+                <nuxt-link class="text-nowrap" :to="`/task/${task.id}`">{{
+                  task.title
+                }}</nuxt-link>
               </td>
-					</tr>
-				</tbody>
-			</table>
-		</div>
+              <td>{{ task.type_name }}</td>
+              <td class="text-center">{{ readableDate(task.due_date) }}</td>
+              <td class="text-center">
+                <span
+                  :class="`badge badge-${priorityColors[task.priority_label]}`"
+                  >{{ task.priority_label }}</span
+                >
+              </td>
+              <td class="text-center">
+                <span :class="`badge badge-${statusColors[task.status_label]}`">{{
+                  task.status_label
+                }}</span>
+              </td>
+              <td class="text-center">
+                  <el-dropdown>
+                    <span class="el-dropdown-link">
+                      <i class="el-icon-more"></i>
+                    </span>
+                    <el-dropdown-menu slot="dropdown">
+                      <el-dropdown-item
+                        icon="el-icon-view"
+                        @click.native="$router.push(`/task/${task.id}`)"
+                      >Show</el-dropdown-item
+                      >
+                      <el-dropdown-item
+                        icon="el-icon-edit"
+                        @click.native.prevent="editData(task)"
+                        >Edit</el-dropdown-item
+                      >
+                      <el-dropdown-item
+                        icon="el-icon-delete"
+                        @click.native.prevent="deleteData(task.id)"
+                        >Delete</el-dropdown-item
+                      >
+                    </el-dropdown-menu>
+                  </el-dropdown>
+                </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
     <TaskForm
 			:show="showForm"
 			:model="selectedData"
@@ -183,6 +184,19 @@ export default {
 }
 </script>
 
-<style scoped>
-/* nowrap */
+<style lang="scss" scoped>
+.table-responsive {
+	height: calc(100vh - 170px);
+}
+
+thead th {
+	position: sticky;
+	top: 0;
+	background: #5b73e8;
+	color: white;
+}
+
+td {
+	vertical-align: middle;
+}
 </style>

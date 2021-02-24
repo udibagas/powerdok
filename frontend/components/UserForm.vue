@@ -88,11 +88,15 @@
 		</el-form>
 
 		<div slot="footer">
-			<el-button icon="el-icon-circle-close" @click="closeForm">
+			<el-button
+        size="small"
+        icon="el-icon-circle-close"
+        @click="closeForm">
 				CANCEL
 			</el-button>
 
 			<el-button
+        size="small"
 				class="btn-primary"
 				icon="el-icon-success"
 				@click="submit(model.id)"
