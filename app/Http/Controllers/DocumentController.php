@@ -107,8 +107,17 @@ class DocumentController extends Controller
     {
         $request->validate([
             'quizzes.*.question' => 'required',
+            'quizzes.*.choices' => ['required', 'array', 'size:4', function($attribute, $value, $fail) {
+                $hasBlankAnswer = array_search("", $value);
+                if ($hasBlankAnswer !== false) {
+                    $fail('Choices is required');
+                }
+            }],
             'quizzes.*.correct_answer' => 'required',
-            'quizzes.*.choices' => 'required|array|size:4',
+        ], [
+            'quizzes.*.question.required' => 'Question is required',
+            'quizzes.*.choices.required' => 'Choices is required',
+            'quizzes.*.correct_answer.required' => 'Correct Answer is required',
         ]);
 
         DB::transaction(function () use ($document, $request) {
@@ -139,7 +148,11 @@ class DocumentController extends Controller
 
     public function deleteQuiz(DocumentQuiz $documentQuiz)
     {
-        $documentQuiz->delete();
+        DB::transaction(function () use ($documentQuiz) {
+            $documentQuiz->attachments()->delete();
+            $documentQuiz->delete();
+        });
+
         return ['message' => 'Question has been deleted'];
     }
 }

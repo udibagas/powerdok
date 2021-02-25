@@ -20,6 +20,7 @@ class CreateDocumentQuizzesTable extends Migration
             $table->json('choices');
             $table->tinyInteger('correct_answer');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

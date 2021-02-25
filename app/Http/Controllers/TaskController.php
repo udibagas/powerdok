@@ -126,11 +126,6 @@ class TaskController extends Controller
             $task->delete();
         });
 
-        if($task->attachments)
-        {
-            Storage::delete('path');
-        }
-
         return ['message' => 'Data has been deleted', 'data' => $task];
     }
 
