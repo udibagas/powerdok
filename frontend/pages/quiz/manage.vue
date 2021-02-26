@@ -24,6 +24,22 @@
 				<div class="flex-grow-1">
           <div class="d-flex">
             <div class="mr-3 mb-3 flex-grow-1">
+              <el-alert class="mb-3" type="error" title="Validation error" v-if="Object.values(errors).length > 0">
+                <ul>
+                  <template v-for="(error, i) in Object.entries(errors)">
+                    <li v-if="error[0] == `quizzes.${index}.question`" :key="i">
+                      {{error[1].join(',')}}
+                    </li>
+                    <li v-if="error[0] == `quizzes.${index}.choices`" :key="i">
+                      {{error[1].join(',')}}
+                    </li>
+                    <li v-if="error[0] == `quizzes.${index}.correct_answer`" :key="i">
+                      {{error[1].join(',')}}
+                    </li>
+                  </template>
+                </ul>
+              </el-alert>
+
               <el-input
                 type="textarea"
                 rows="3"
@@ -32,28 +48,36 @@
                 class="mb-2"
               ></el-input>
 
-              <img class="mb-3" style="width:200px" v-for="image in q.attachments" :src="image.url" :key="image.id" />
+              <div class="d-flex flex-wrap">
+                <el-image
+                  class="mb-3 border mr-3 rounded"
+                  style="width:150px;height:150px;"
+                  fit="cover"
+                  v-for="image in q.attachments"
+                  :src="image.url" :key="image.id"
+                ></el-image>
 
-              <el-upload
-                class="mb-3"
-                action=""
-                :data="{quiz_index: index}"
-                multiple
-                list-type="picture"
-                :loading="loading"
-                :show-file-list="false"
-                :file-list="q.attachments.map(a => {
-                  const { name, url: path } = a;
-                  return { name, path }
-                })"
-                :on-remove="handleRemove"
-                :on-success="handleUploadFileSuccess"
-                :on-error="handleUploadFileError"
-                :http-request="upload"
-              >
-                <el-button size="small" type="primary" class="el-icon-paperclip">Attach image</el-button>
-                <div slot="tip" class="el-upload__tip">jpg/png files with a size less than 500kb</div>
-              </el-upload>
+                <el-upload
+                  class="mb-3"
+                  action=""
+                  :data="{quiz_index: index}"
+                  multiple
+                  :show-file-list="false"
+                  :loading="loading"
+                  :file-list="q.attachments.map(a => {
+                    const { name, url: path } = a;
+                    return { name, path }
+                  })"
+                  :on-remove="handleRemove"
+                  :on-success="handleUploadFileSuccess"
+                  :on-error="handleUploadFileError"
+                  :http-request="upload"
+                >
+                  <div style="width:150px;line-height:150px;" class="border rounded">
+                    <i class="el-icon-upload2"></i> UPLOAD IMAGE
+                  </div>
+                </el-upload>
+              </div>
             </div>
             <div>
               <el-button
@@ -77,6 +101,7 @@
                 type="textarea"
                 rows="2"
                 v-model="q.choices[i]"
+                :placeholder="$t('Choice')"
               ></el-input>
             </div>
           </div>
@@ -132,6 +157,7 @@ export default {
     return {
       loading: false,
       quizzes: [],
+      errors: {}
     }
   },
   methods: {
@@ -140,10 +166,10 @@ export default {
         question: '',
         attachments: [],
         choices: [
-          'Choice 1',
-          'Choice 2',
-          'Choice 3',
-          'Choice 4',
+          '',
+          '',
+          '',
+          '',
         ],
         correct_answer: null
       });
@@ -171,17 +197,6 @@ export default {
       })
     },
     save() {
-      // [
-      //   {
-      //     question: '',
-      //     choices: [],
-      //     correct_answer: 0,
-      //     attachments: [
-      //       {path: '', name: ''}
-      //     ]
-      //   }
-      // ]
-
       this.loading = true;
       const data = { document_id: this.document.id, quizzes: this.quizzes };
       this.$axios.$post(`/api/document/quiz/${this.document.id}`, data).then(response => {
@@ -192,11 +207,16 @@ export default {
         })
         this.getQuizByDepartment();
       }).catch(e => {
-         this.$message({
-          message: e.response.data.message,
-          type: 'error',
-          showClose: true
-        })
+          this.$message({
+            message: e.response.data.message,
+            type: 'error',
+            showClose: true
+          });
+
+          if (e.response.status == 422) {
+            this.errors = e.response.data.errors
+          }
+
       }).finally(() => this.loading = false)
     },
     getQuizByDepartment() {
@@ -231,15 +251,8 @@ export default {
       }).then((response) => onSuccess(response)).catch(e => onError(e.response))
     },
 
-    handlePreview() {
-      //
-    },
-
     handleRemove(file, fileList) {
-      console.log(file)
-      const indexFile = this.attachments.findIndex(f => f.uid == file.uid)
-      this.attachments.splice(indexFile, 1);
-      console.log(this.attachments);
+      console.log(file, fileList);
     },
 
 		handleUploadFileSuccess(res, file, fileList) {
@@ -251,6 +264,7 @@ export default {
       }
       const { name, path, user_id, url } = res
       this.quizzes[data.quiz_index].attachments.push({ name, path, user_id, url });
+      this.$forceUpdate();
 		},
 
 		handleUploadFileError(err, file, fileList) {
