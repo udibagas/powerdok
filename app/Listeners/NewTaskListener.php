@@ -2,7 +2,7 @@
 
 namespace App\Listeners;
 
-use App\Notifications\NewTaskNotitifiation;
+use App\Notifications\NewTaskNotification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 
@@ -26,10 +26,6 @@ class NewTaskListener
      */
     public function handle($event)
     {
-        $task = $event->task;
-
-        foreach ($task->assignees as $user) {
-            $user->notify(new NewTaskNotitifiation($task));
-        }
+        $event->task->assignee->notify(new NewTaskNotification($event->task));
     }
 }

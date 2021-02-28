@@ -6,12 +6,11 @@ use App\Events\NewCommentEvent;
 use App\Events\NewTaskEvent;
 use App\Http\Requests\TaskRequest;
 use App\Http\Resources\TaskCollection;
-use App\Models\Attachment;
+use App\Models\DocumentExam;
 use App\Models\Task;
 use App\Models\TaskApproval;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Storage;
 
 class TaskController extends Controller
 {
@@ -23,7 +22,7 @@ class TaskController extends Controller
     public function index(Request $request)
     {
         return new TaskCollection(
-            Task::with(['assignees', 'attachments'])->when($request->keyword, function ($q) use ($request) {
+            Task::with(['attachments'])->when($request->keyword, function ($q) use ($request) {
                 $q->where(function ($q) use ($request) {
                     $q->where('title', 'ILIKE', "%{$request->keyword}%")
                         ->orWhere('description', 'ILIKE', "%{$request->keyword}%")
@@ -46,22 +45,48 @@ class TaskController extends Controller
      */
     public function store(TaskRequest $request)
     {
-        $task = DB::transaction(function () use ($request) {
-            $task = Task::create(array_merge($request->all(), ['user_id' => $request->user()->id]));
+        $tasks = DB::transaction(function () use ($request) {
+            $tasks = [];
 
-            if ($task->assignees) {
-                $task->assignees()->sync($request->assignees);
+            foreach ($request->assignees as $assignee) {
+                $task = Task::create(array_merge(
+                    $request->all(),
+                    [
+                        'user_id' => $request->user()->id,
+                        'assignee_id' => $assignee
+                    ]
+                ));
+
+                if ($request->attachments) {
+                    $task->attachments()->createMany($request->attachments);
+                }
+
+                if ($request->type == Task::TYPE_EXAMINATION) {
+                    $task->document->exams()->create([
+                        'task_id' => $task->id,
+                        'user_id' => $assignee,
+                        'quizzes' => $task->document->quizzes->map(function($item) {
+                            return [
+                                'question' => $item->question,
+                                'choices' => $item->choices,
+                                'correct_answer' => $item->correct_answer,
+                                'user_anwer' => null
+                            ];
+                        })
+                    ]);
+                }
+
+                $tasks[] = $task;
             }
 
-            if ($request->attachments) {
-                $task->attachments()->createMany($request->attachments);
-            }
-
-            return $task;
+            return $tasks;
         });
 
-        event(new NewTaskEvent($task));
-        return ['message' => 'Data has been saved', 'data' => $task];
+        foreach ($tasks as $task) {
+            event(new NewTaskEvent($task));
+        }
+
+        return ['message' => 'Data has been saved'];
     }
 
     /**
@@ -81,7 +106,8 @@ class TaskController extends Controller
             'document',
             'comments',
             'approvals',
-            'trackings'
+            'trackings',
+            'exam'
         ]);
     }
 

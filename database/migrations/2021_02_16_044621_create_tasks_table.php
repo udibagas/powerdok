@@ -18,6 +18,7 @@ class CreateTasksTable extends Migration
             $table->unsignedBigInteger('user_id')->comment('Creator');
             $table->tinyInteger('type')->comment('1 = document review, 2 = atestation, 3 = examination');
             $table->unsignedBigInteger('document_id')->nullable();
+            $table->unsignedBigInteger('assignee_id')->nullable();
             $table->string('title');
             $table->text('description');
             $table->json('custom_fields')->nullable();

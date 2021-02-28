@@ -54,7 +54,8 @@ class Task extends Model
         'custom_fields',
         'priority',
         'due_date',
-        'status'
+        'status',
+        'assignee_id'
     ];
 
     protected $casts = [
@@ -68,14 +69,16 @@ class Task extends Model
         'overdue'
     ];
 
+    protected $with = ['assignee', 'document'];
+
     public function user()
     {
         return $this->belongsTo(User::class);
     }
 
-    public function assignees()
+    public function assignee()
     {
-        return $this->belongsToMany(User::class, 'task_assignments', 'task_id', 'user_id');
+        return $this->belongsTo(User::class, 'assignee_id');
     }
 
     public function attachments()
@@ -90,7 +93,12 @@ class Task extends Model
 
     public function document()
     {
-        return $this->hasOne(Document::class);
+        return $this->belongsTo(Document::class);
+    }
+
+    public function exam()
+    {
+        return $this->hasOne(DocumentExam::class);
     }
 
     public function approvals()
