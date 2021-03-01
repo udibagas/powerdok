@@ -68,4 +68,9 @@ class Document extends Model
 
         return $types[$this->type];
     }
+
+    public function exams()
+    {
+        return $this->hasMany(DocumentExam::class);
+    }
 }

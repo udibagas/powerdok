@@ -66,9 +66,10 @@
           <thead>
             <tr>
               <th>#</th>
-              <th style="width: 260px">Title</th>
-              <th style="width: 180px">Type</th>
-              <th class="text-center" style="min-width: 120px">Due Date</th>
+              <th style="width: 200px">Title</th>
+              <th>Assignee</th>
+              <th>Type</th>
+              <th class="text-center">Due Date</th>
               <th class="text-center">Priority</th>
               <th class="text-center">Status</th>
               <th class="text-center">Action</th>
@@ -86,6 +87,7 @@
                   task.title
                 }}</nuxt-link>
               </td>
+              <td>{{ task.assignee.name }}</td>
               <td>{{ task.type_name }}</td>
               <td class="text-center">{{ readableDate(task.due_date) }}</td>
               <td class="text-center">

@@ -8,9 +8,9 @@
 	>
     <div class="card-body row">
 			<el-form label-position="left" label-width="120px" class="col-7">
-				<el-form-item label="Title">
+				<el-form-item label="Title" :class="{ 'is-error': errors.title }">
 					<el-input
-            v-model="model.title"
+            v-model="formModel.title"
             placeholder="Title"
           ></el-input>
 
@@ -19,11 +19,11 @@
 					</div>
 				</el-form-item>
 
-				<el-form-item label="Description">
+				<el-form-item label="Description" :class="{ 'is-error': errors.description }">
 					<el-input
 						type="textarea"
 						rows="7"
-						v-model="model.description"
+						v-model="formModel.description"
 						placeholder="Description"
 					></el-input>
 
@@ -32,10 +32,10 @@
 					</div>
 				</el-form-item>
 
-				<el-form-item label="Type">
+				<el-form-item label="Type" :class="{ 'is-error': errors.type }">
 					<el-select
 						style="width: 100%"
-						v-model="model.type"
+						v-model="formModel.type"
 						placeholder="Type"
 						default-first-option
             clearable
@@ -50,16 +50,48 @@
 					</div>
 				</el-form-item>
 
-				<el-form-item label="Assignees">
+				<el-form-item label="Document" :class="{ 'is-error': errors.document_id }">
 					<el-select
 						style="width: 100%"
-						v-model="model.assignees"
-						placeholder="Assignees"
+						v-model="formModel.document_id"
+						placeholder="Select Document"
 						filterable
 						default-first-option
 						clearable
 						remote
-						multiple
+						:remote-method="(q) => getList('/api/document', 'documentList', q)"
+					>
+						<el-option
+							v-for="doc in documentList"
+							:key="doc.id"
+							:value="doc.id"
+							:label="`${doc.type_name} No. ${doc.number} Ver. ${doc.version} | ${doc.title}`"
+						>
+              <span
+								style="float: left; color: #8492a6; font-size: 13px; margin-right: 20px;"
+              >{{ doc.type_name }} | No. {{ doc.number }} Ver. {{ doc.version }}</span>
+							<span
+                style="float: right; font-size: 14px;"
+							>{{ doc.title }}
+							</span>
+            </el-option>
+					</el-select>
+
+					<div class="el-form-item__error" v-if="errors.document_id">
+						{{ errors.document_id.join(", ") }}
+					</div>
+				</el-form-item>
+
+				<el-form-item label="Assignees" :class="{ 'is-error': errors.assignees }">
+					<el-select
+						style="width: 100%"
+						v-model="formModel.assignees"
+						placeholder="Assignees"
+						filterable
+						default-first-option
+						clearable
+            multiple
+						remote
 						:remote-method="(q) => getList('/api/user', 'userList', q)"
 					>
 						<el-option
@@ -94,7 +126,7 @@
 				<el-form-item label="Due Date" :class="{ 'is-error': errors.due_date }">
 					<el-date-picker
 						style="width: 100%"
-						v-model="model.due_date"
+						v-model="formModel.due_date"
 						type="date"
 						format="dd-MMM-yyyy"
 						value-format="yyyy-MM-dd"
@@ -106,10 +138,10 @@
 					</div>
 				</el-form-item>
 
-				<el-form-item label="Priority">
+				<el-form-item label="Priority" :class="{ 'is-error': errors.priority }">
 					<el-select
 						style="width: 100%"
-						v-model="model.priority"
+						v-model="formModel.priority"
 						placeholder="Priority"
 						filterable
 						clearable
@@ -171,15 +203,19 @@ import form from '~/mixins/form'
 import dropdown from '~/mixins/dropdown'
 
 export default {
-	props: ['show', 'model'],
+	props: ['show', 'model', 'url'],
 	mixins: [form, dropdown],
   computed: {
+    formModel() {
+      return this.model
+    },
     fileList() {
       return this.model.attachments || [];
     }
   },
   mounted() {
-		this.getList('/api/user', 'userList')
+		this.getList('/api/user', 'userList'),
+    this.getList('/api/document', 'documentList')
   }
 }
 </script>
