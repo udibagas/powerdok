@@ -70,7 +70,6 @@ class TaskController extends Controller
                                 'question' => $item->question,
                                 'choices' => $item->choices,
                                 'correct_answer' => $item->correct_answer,
-                                'user_anwer' => null
                             ];
                         })
                     ]);
@@ -101,7 +100,7 @@ class TaskController extends Controller
 
         return $task->load([
             'user',
-            'assignees',
+            'assignee',
             'attachments',
             'document',
             'comments',
@@ -121,17 +120,38 @@ class TaskController extends Controller
     public function update(TaskRequest $request, Task $task)
     {
         $task = DB::transaction(function () use ($request, $task) {
-            $task->update(array_merge($request->all(), ['user_id' => $request->user()->id]));
+            $tasks = [];
 
-            if ($request->assignees) {
-                $task->assignees()->sync($request->assignees);
-            }
+            foreach ($request->assignees as $assignee) {
+                $task->update(array_merge(
+                    $request->all(),
+                    [
+                        'user_id' => $request->user()->id,
+                        'assignee_id' => $assignee
+                    ]
+                ));
 
-            if ($request->attachments) {
-                $task->attachments()->delete();
-                $task->attachments()->createMany($request->attachments);
+                if ($request->attachments) {
+                    $task->attachments()->createMany($request->attachments);
+                }
+
+                if ($request->type == Task::TYPE_EXAMINATION) {
+                    $task->document->exams()->create([
+                        'task_id' => $task->id,
+                        'user_id' => $assignee,
+                        'quizzes' => $task->document->quizzes->map(function($item) {
+                            return [
+                                'question' => $item->question,
+                                'choices' => $item->choices,
+                                'correct_answer' => $item->correct_answer,
+                                'user_anwer' => null
+                            ];
+                        })
+                    ]);
+                }
+
+                $tasks[] = $task;
             }
-            return $task;
         });
 
         return ['message' => 'Data has been updated', 'data' => $task];
@@ -147,7 +167,6 @@ class TaskController extends Controller
     {
         // $this->authorize('delete', $task);
         DB::transaction(function () use ($task) {
-            $task->assignees()->detach();
             $task->attachments()->delete();
             $task->delete();
         });
@@ -184,6 +203,34 @@ class TaskController extends Controller
 
         event(new NewCommentEvent($comment));
         return ['message' => 'Comment has been saved',];
+    }
+
+    public function submitExam(Task $task, Request $request)
+    {
+        $request->validate([
+            'answer' => 'required|array',
+            'status' => 'required|in:0,1'
+        ]);
+
+        $userAnswer = $task->exam->quizzes;
+
+        foreach ($request->answer as $answer) {
+            $userAnswer[$answer['quiz_id']]['user_answer'] = $answer['answer'];
+        }
+
+        $task->exam->update(['quizzes' => $userAnswer]);
+
+        if ($request->status == 0) {
+            $task->status = Task::STATUS_ON_PROGRESS;
+        }
+
+        if ($request->status == 1) {
+            $task->status = Task::STATUS_FINISHED;
+        }
+
+        $task->save();
+
+        return ['message' => 'Your answer has been saved'];
     }
 
     public function getPendingApproval(Request $request)

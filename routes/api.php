@@ -53,13 +53,18 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::post('logout', [AuthController::class, 'logout']);
     Route::get('me', [AuthController::class, 'me']);
     Route::get('lang', [LanguageController::class, 'lang']);
-    Route::post('task/comment/{task}', [TaskController::class, 'comment']);
+
 
     Route::prefix('document')->group(function () {
         Route::post('quiz/{document}', [DocumentController::class, 'saveQuiz']);
         Route::get('quiz/{document}', [DocumentController::class, 'getQuiz']);
         Route::delete('quiz/{documentQuiz}', [DocumentController::class, 'deleteQuiz']);
         Route::get('{slug}', [DocumentController::class, 'slug']);
+    });
+
+    Route::prefix('task')->group(function () {
+        Route::post('comment/{task}', [TaskController::class, 'comment']);
+        Route::post('submitExam/{task}', [TaskController::class, 'submitExam']);
     });
 
     Route::apiResources([

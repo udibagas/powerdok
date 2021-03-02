@@ -26,6 +26,8 @@ class DocumentController extends Controller
                     $q->where('title', 'ILIKE', "%{$request->keyword}%")
                         ->orWhere('number', 'ILIKE', "%{$request->keyword}%");
                 });
+            })->when($request->has_quizzes, function($q) use ($request) {
+                $q->whereHas('quizzes');
             })->orderBy(
                 $request->sort_field ?: 'title',
                 $request->sort_direction ?: 'asc'

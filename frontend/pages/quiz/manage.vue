@@ -24,21 +24,23 @@
 				<div class="flex-grow-1">
           <div class="d-flex">
             <div class="mr-3 mb-3 flex-grow-1">
-              <el-alert class="mb-3" type="error" title="Validation error" v-if="Object.values(errors).length > 0">
-                <ul>
-                  <template v-for="(error, i) in Object.entries(errors)">
-                    <li v-if="error[0] == `quizzes.${index}.question`" :key="i">
-                      {{error[1].join(',')}}
-                    </li>
-                    <li v-if="error[0] == `quizzes.${index}.choices`" :key="i">
-                      {{error[1].join(',')}}
-                    </li>
-                    <li v-if="error[0] == `quizzes.${index}.correct_answer`" :key="i">
-                      {{error[1].join(',')}}
-                    </li>
-                  </template>
-                </ul>
-              </el-alert>
+              <div  v-if="Object.values(errors).length > 0">
+                <el-alert class="mb-3" type="error" title="Validation error">
+                  <ul>
+                    <template v-for="(error, i) in Object.entries(errors)">
+                      <li v-if="error[0] == `quizzes.${index}.question`" :key="i">
+                        {{error[1].join(',')}}
+                      </li>
+                      <li v-if="error[0] == `quizzes.${index}.choices`" :key="i">
+                        {{error[1].join(',')}}
+                      </li>
+                      <li v-if="error[0] == `quizzes.${index}.correct_answer`" :key="i">
+                        {{error[1].join(',')}}
+                      </li>
+                    </template>
+                  </ul>
+                </el-alert>
+              </div>
 
               <el-input
                 type="textarea"
