@@ -65,7 +65,7 @@ export default {
    */
   buildModules: [
     '@nuxtjs/moment',
-    '@nuxtjs/laravel-echo',
+    // '@nuxtjs/laravel-echo',
   ],
 
   // moment: {

@@ -23,7 +23,7 @@ class TaskPolicy
     {
         return in_array($user->id, [
             $task->user_id,
-            ...$task->assignees()->pluck('user_id')->toArray(),
+            $task->assignee_id,
             ...$task->approvals()->pluck('user_id')->toArray()
         ]);
     }

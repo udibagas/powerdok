@@ -143,7 +143,6 @@ export default {
 					document.getElementById('input-file').value = ''
 				})
     },
-
   },
 
   mounted() {

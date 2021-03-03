@@ -86,7 +86,7 @@
 				<el-form-item label="Assignees" :class="{ 'is-error': errors.assignees }">
 					<el-select
 						style="width: 100%"
-						v-model="formModel.assignees"
+						v-model="formModel.assignee_id"
 						placeholder="Assignees"
 						filterable
 						default-first-option
@@ -220,8 +220,8 @@ export default {
     }
   },
   mounted() {
-		this.getList('/api/user', 'userList'),
-		this.getList(this.documentUrl, 'documentList');
+		this.getList('/api/user', 'userList');
+		// this.getList(this.documentUrl, 'userList');
   }
 }
 </script>

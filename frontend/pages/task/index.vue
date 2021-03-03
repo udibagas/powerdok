@@ -7,14 +7,6 @@
 				</h4>
 			</div>
 
-			<el-button
-				class="btn-primary mr-2"
-				size="small"
-				icon="el-icon-plus"
-				@click="addData"
-			>NEW TASK
-			</el-button>
-
 			<el-input
 				placeholder="Search"
 				v-model="keyword"
@@ -72,7 +64,6 @@
               <th class="text-center">Due Date</th>
               <th class="text-center">Priority</th>
               <th class="text-center">Status</th>
-              <th class="text-center">Action</th>
             </tr>
           </thead>
           <tbody>
@@ -89,7 +80,7 @@
               </td>
               <td>{{ task.assignee.name }}</td>
               <td>{{ task.type_name }}</td>
-              <td class="text-center">{{ readableDate(task.due_date) }}</td>
+						  <td class="text-center">{{ $moment(task.due_date).fromNow() }}</td>
               <td class="text-center">
                 <span
                   :class="`badge badge-${priorityColors[task.priority_label]}`"
@@ -101,48 +92,16 @@
                   task.status_label
                 }}</span>
               </td>
-              <td class="text-center">
-                  <el-dropdown>
-                    <span class="el-dropdown-link">
-                      <i class="el-icon-more"></i>
-                    </span>
-                    <el-dropdown-menu slot="dropdown">
-                      <el-dropdown-item
-                        icon="el-icon-view"
-                        @click.native="$router.push(`/task/${task.id}`)"
-                      >Show</el-dropdown-item
-                      >
-                      <el-dropdown-item
-                        icon="el-icon-edit"
-                        @click.native.prevent="editData(task)"
-                        >Edit</el-dropdown-item
-                      >
-                      <el-dropdown-item
-                        icon="el-icon-delete"
-                        @click.native.prevent="deleteData(task.id)"
-                        >Delete</el-dropdown-item
-                      >
-                    </el-dropdown-menu>
-                  </el-dropdown>
-                </td>
             </tr>
           </tbody>
         </table>
       </div>
     </div>
-    <TaskForm
-			:show="showForm"
-			:model="selectedData"
-			:url="url"
-			@close="showForm = false"
-			@refresh="refresh"
-		/>
 	</div>
 </template>
 
 <script>
 import table from '@/mixins/table'
-import moment from 'moment'
 
 export default {
   mixins: [table],
@@ -172,12 +131,7 @@ export default {
       title: "Powerdok | My Task",
     }
   },
-
   methods: {
-    readableDate(date) {
-      return moment(date).format('DD-MMM-YYYY');
-    },
-
     addData() {
       this.selectedData = { attachments: [] }
       this.showForm = true
