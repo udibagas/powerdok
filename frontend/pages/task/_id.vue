@@ -3,28 +3,33 @@
 		<el-card>
 			<TaskSummary slot="header" :task="task" />
 			<div class="row px-3">
-        <div class="col-md-6">
-          <div class="text-muted">
-            {{ $t("Task Title") }}
-          </div>
-          <h3 class="mt-3">{{ task.title }}</h3>
-          <div class="mt-2">{{ task.description }}</div>
-        </div>
 				<div class="col-md-6">
-          <div class="text-muted">
-            {{ $t("Related Document") }}
-          </div>
-          <div class="mt-3">
-            <strong>{{ task.document.type_name }}</strong> &nbsp; No. {{ task.document.number }} &nbsp; Ver. {{ task.document.version }}
-          </div>
+					<div class="text-muted">
+						{{ $t("Task Title") }}
+					</div>
+					<h3 class="mt-3">{{ task.title }}</h3>
+					<div class="mt-2">{{ task.description }}</div>
+				</div>
+				<div class="col-md-6">
+					<div class="text-muted">
+						{{ $t("Related Document") }}
+					</div>
+					<div class="mt-3">
+						<strong>{{ task.document.type_name }}</strong> &nbsp; No.
+						{{ task.document.number }} &nbsp; Ver. {{ task.document.version }}
+					</div>
 					<h5 class="mt-2">{{ task.document.title }}</h5>
 				</div>
 			</div>
 		</el-card>
 
 		<div class="mt-3">
-			<ckeditor v-if="task.type == 1" v-model="document" :editor="editor"></ckeditor>
-      <TaskExam v-if="task.type == 3" :task="task" />
+			<ckeditor
+				v-if="task.type == TASK_TYPE.DOCUMENT_REVIEW"
+				v-model="document"
+				:editor="editor"
+			></ckeditor>
+			<TaskExam v-if="task.type == TASK_TYPE.EXAMINATION" :task="task" />
 		</div>
 
 		<el-card :header="$t('SUBMIT COMMENT')" class="mt-3">
@@ -40,10 +45,15 @@
 <script>
 import CKEditor from "@ckeditor/ckeditor5-vue";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
+import { mapState } from 'vuex';
 
 export default {
   components: {
     ckeditor: CKEditor.component
+  },
+
+  computed: {
+    ...mapState(['TASK_STATUS', 'TASK_TYPE'])
   },
 
   data() {

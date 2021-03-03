@@ -27,7 +27,8 @@ class Document extends Model
         'expired_date',
         'owner_id',
         'favourites',
-        'is_public'
+        'is_public',
+        'minimum_score'
     ];
 
     protected $casts = [

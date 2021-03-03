@@ -88,4 +88,9 @@ class TaskPolicy
     {
         return $this->view($user, $task);
     }
+
+    public function submitExam(User $user, Task $task)
+    {
+        return ($user->id == $task->assignee_id) && $task->exam->status == null;
+    }
 }

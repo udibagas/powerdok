@@ -19,7 +19,7 @@ class CreateDocumentExamsTable extends Migration
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('document_id');
             $table->json('quizzes');
-            $table->boolean('status')->nullable();
+            $table->smallInteger('minimum_score')->default(0);
             $table->timestamps();
         });
     }

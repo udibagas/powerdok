@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Events\NewCommentEvent;
 use App\Events\NewTaskEvent;
+use App\Events\TaskFinishedEvent;
 use App\Http\Requests\TaskRequest;
 use App\Http\Resources\TaskCollection;
 use App\Models\DocumentExam;
@@ -51,10 +52,7 @@ class TaskController extends Controller
             foreach ($request->assignees as $assignee) {
                 $task = Task::create(array_merge(
                     $request->all(),
-                    [
-                        'user_id' => $request->user()->id,
-                        'assignee_id' => $assignee
-                    ]
+                    ['user_id' => $request->user()->id, 'assignee_id' => $assignee]
                 ));
 
                 if ($request->attachments) {
@@ -65,11 +63,16 @@ class TaskController extends Controller
                     $task->document->exams()->create([
                         'task_id' => $task->id,
                         'user_id' => $assignee,
-                        'quizzes' => $task->document->quizzes->map(function($item) {
+                        'minimum_score' => $task->document->minimum_score,
+                        'quizzes' => $task->document->quizzes->map(function ($item) {
                             return [
                                 'question' => $item->question,
                                 'choices' => $item->choices,
                                 'correct_answer' => $item->correct_answer,
+                                'user_answer' => null,
+                                'attachments' => $item->attachments->map(function ($attachment) {
+                                    return $attachment->url;
+                                })
                             ];
                         })
                     ]);
@@ -119,38 +122,13 @@ class TaskController extends Controller
      */
     public function update(TaskRequest $request, Task $task)
     {
+        $this->authorize('update', $task);
+
         $task = DB::transaction(function () use ($request, $task) {
-            $tasks = [];
+            $task->update($request->all());
 
-            foreach ($request->assignees as $assignee) {
-                $task->update(array_merge(
-                    $request->all(),
-                    [
-                        'user_id' => $request->user()->id,
-                        'assignee_id' => $assignee
-                    ]
-                ));
-
-                if ($request->attachments) {
-                    $task->attachments()->createMany($request->attachments);
-                }
-
-                if ($request->type == Task::TYPE_EXAMINATION) {
-                    $task->document->exams()->create([
-                        'task_id' => $task->id,
-                        'user_id' => $assignee,
-                        'quizzes' => $task->document->quizzes->map(function($item) {
-                            return [
-                                'question' => $item->question,
-                                'choices' => $item->choices,
-                                'correct_answer' => $item->correct_answer,
-                                'user_anwer' => null
-                            ];
-                        })
-                    ]);
-                }
-
-                $tasks[] = $task;
+            if ($request->attachments) {
+                $task->attachments()->createMany($request->attachments);
             }
         });
 
@@ -207,6 +185,8 @@ class TaskController extends Controller
 
     public function submitExam(Task $task, Request $request)
     {
+        $this->authorize('submitExam', $task);
+
         $request->validate([
             'answer' => 'required|array',
             'status' => 'required|in:0,1'
@@ -214,21 +194,22 @@ class TaskController extends Controller
 
         $userAnswer = $task->exam->quizzes;
 
-        foreach ($request->answer as $answer) {
-            $userAnswer[$answer['quiz_id']]['user_answer'] = $answer['answer'];
+        foreach ($request->answer as $index => $answer) {
+            $userAnswer[$index]['user_answer'] = $answer;
         }
 
         $task->exam->update(['quizzes' => $userAnswer]);
 
         if ($request->status == 0) {
             $task->status = Task::STATUS_ON_PROGRESS;
+            $task->save();
         }
 
         if ($request->status == 1) {
             $task->status = Task::STATUS_FINISHED;
+            $task->save();
+            event(new TaskFinishedEvent($task));
         }
-
-        $task->save();
 
         return ['message' => 'Your answer has been saved'];
     }

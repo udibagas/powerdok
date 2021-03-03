@@ -1,0 +1,15 @@
+POST http://localhost:8000/api/token
+Content-Type: application/json
+
+{
+    "email": "admin@mail.com",
+    "password": "admin123",
+    "device_name": "nama_device"
+}
+
+###
+
+POST http://localhost:8000/api/logout
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer 1|SfLBXJeJRqCxIE9QsaXzjLavF1h1MBLJJJjAXLNc
