@@ -70,6 +70,7 @@ class TaskController extends Controller
                                 'question' => $item->question,
                                 'choices' => $item->choices,
                                 'correct_answer' => $item->correct_answer,
+                                'user_answer' => null
                             ];
                         })
                     ]);
@@ -144,7 +145,7 @@ class TaskController extends Controller
                                 'question' => $item->question,
                                 'choices' => $item->choices,
                                 'correct_answer' => $item->correct_answer,
-                                'user_anwer' => null
+                                'user_answer' => null
                             ];
                         })
                     ]);

@@ -17,7 +17,9 @@
           <div class="mt-3">
             <strong>{{ task.document.type_name }}</strong> &nbsp; No. {{ task.document.number }} &nbsp; Ver. {{ task.document.version }}
           </div>
-					<h5 class="mt-2">{{ task.document.title }}</h5>
+          <nuxt-link :to="`/documents/${task.document.slug}`" style="font-size: 18px">
+            {{ task.document.title }}
+          </nuxt-link>
 				</div>
 			</div>
 		</el-card>
