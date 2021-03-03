@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class DocumentQuiz extends Model
 {
     use HasFactory;
+
     use SoftDeletes;
 
     protected $fillable = [

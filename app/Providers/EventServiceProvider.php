@@ -4,8 +4,10 @@ namespace App\Providers;
 
 use App\Events\NewCommentEvent;
 use App\Events\NewTaskEvent;
+use App\Events\TaskFinishedEvent;
 use App\Listeners\NewCommentListener;
 use App\Listeners\NewTaskListener;
+use App\Listeners\TaskFinishedListener;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -21,7 +23,8 @@ class EventServiceProvider extends ServiceProvider
     protected $listen = [
         Registered::class => [SendEmailVerificationNotification::class],
         NewTaskEvent::class => [NewTaskListener::class],
-        NewCommentEvent::class => [NewCommentListener::class]
+        NewCommentEvent::class => [NewCommentListener::class],
+        TaskFinishedEvent::class => [TaskFinishedListener::class]
     ];
 
     /**

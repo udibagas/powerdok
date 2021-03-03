@@ -9,20 +9,25 @@ class DocumentExam extends Model
 {
     use HasFactory;
 
+    const STATUS_PASS = true;
+
+    const STATUS_FAILED = false;
+
     protected $fillable = [
         'task_id',
         'user_id',
         'document_id',
         'quizzes',
+        'minimum_score'
     ];
 
     protected $casts = ['quizzes' => 'json'];
 
-    protected $appends = ['score', 'status', 'correct_answer'];
+    protected $appends = ['score', 'passed', 'correct_answer'];
 
     public function getCorrectAnswerAttribute()
     {
-        return count(array_filter($this->quizzes, function($quiz) {
+        return count(array_filter($this->quizzes, function ($quiz) {
             return $quiz['correct_answer'] == $quiz['user_answer'];
         }));
     }
@@ -32,8 +37,8 @@ class DocumentExam extends Model
         return round(($this->correctAnswer / count($this->quizzes)), 2) * 100;
     }
 
-    public function getStatusAttribute()
+    public function getPassedAttribute()
     {
-        return $this->score >= 70 ? 'PASS' : 'FAILED';
+        return $this->score >= $this->minimum_score;
     }
 }

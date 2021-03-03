@@ -29,6 +29,7 @@ class CreateDocumentsTable extends Migration
             $table->tinyInteger('type')->default(0); // SOP or Policy
             $table->boolean('is_public')->default(false);
             $table->tinyInteger('status')->default(1);
+            $table->smallInteger('minimum_score')->nullable()->comment('untuk menentukan nilai minimal exam');
             $table->timestamps();
 
             $table->foreign('owner_id')->references('id')->on('users')->onDelete('cascade');
