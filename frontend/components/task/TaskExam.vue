@@ -19,84 +19,95 @@
 			</div>
 		</el-card>
 
-		<el-card header="Quiz">
-			<div
-				v-for="(e, index) in task.exam.quizzes"
-				:key="index"
-				class="d-flex mb-4 border p-3 rounded"
-				:class="{
-					'border-success':
-						e.correct_answer == e.user_answer &&
-						task.status == TASK_STATUS.FINISHED,
-					'border-danger':
-						e.correct_answer != e.user_answer &&
-						task.status == TASK_STATUS.FINISHED,
-				}"
-			>
-				<div class="mr-3">
-					<h4 class="text-muted">#{{ index + 1 }}</h4>
-				</div>
-				<div class="flex-grow-1">
-					<div class="d-flex">
-						<div class="mr-3 mb-3 flex-grow-1">
-							{{ e.question }}
+		<el-card
+      v-for="(e, index) in task.exam.quizzes"
+      class="mb-2"
+      :key="index"
+      :class="{
+        'border-success':
+          e.correct_answer == e.user_answer &&
+          task.status == TASK_STATUS.FINISHED,
+        'border-danger':
+          e.correct_answer != e.user_answer &&
+          task.status == TASK_STATUS.FINISHED,
+      }"
+    >
+      <div class="d-flex">
+        <div class="mr-3">
+          <h4 class="text-muted">#{{ index + 1 }}</h4>
+          <i class="el-icon-circle-check text-success" style="font-size:30px"></i>
+          <i class="el-icon-circle-close text-danger" style="font-size:30px"></i>
+        </div>
+        <div class="flex-grow-1">
+          <div class="d-flex">
+            <div class="mr-3 mb-3 flex-grow-1">
+              {{ e.question }}
 
-							<div class="d-flex flex-wrap">
-								<el-image
-									class="mb-3 border mr-3 rounded"
-									style="height: 250px"
-									v-for="(url, j) in e.attachments"
-									:src="url"
-									:key="j"
-								></el-image>
-							</div>
-						</div>
-					</div>
+              <div class="d-flex flex-wrap">
+                <img
+                  class="my-3 border mr-3 rounded"
+                  style="height: 250px"
+                  v-for="(url, j) in e.attachments"
+                  :src="url"
+                  :key="j"
+                />
+              </div>
+            </div>
+          </div>
 
-					<div class="row">
-						<div v-for="(c, i) in e.choices" :key="i" class="col-5 mb-3 d-flex">
-							<el-radio
-								v-model="e.user_answer"
-								:label="i"
-								:disabled="task.status == TASK_STATUS.FINISHED"
-							>
-								<span
-									:class="{
-										'bg-success p-1 rounded text-white': e.correct_answer == i,
-										'bg-danger text-white p-1 rounded':
-											i == e.user_answer && e.user_answer != e.correct_answer,
-									}"
-								>
-									<strong class="text-muted" style="display: inline-block">
-										{{ ["A", "B", "C", "D"][i] }}.
-									</strong>
-									{{ e.choices[i] }}
-								</span>
-							</el-radio>
-						</div>
-					</div>
-				</div>
-			</div>
+          <div class="row">
+            <div v-for="(c, i) in e.choices" :key="i" class="col-5 mb-3 d-flex">
+              <el-radio
+                v-model="e.user_answer"
+                :label="i"
+                :disabled="!allowSubmitTask"
+              >
+                <strong class="text-muted" style="display: inline-block">
+                  {{ ["A", "B", "C", "D"][i] }}.
+                </strong>
+                {{ e.choices[i] }}
+              </el-radio>
+            </div>
+          </div>
+        </div>
+      </div>
+    </el-card>
 
-			<div class="text-right" v-if="task.status != TASK_STATUS.FINISHED">
-				<el-button size="small" @click="submitExam(0)">
-					SAVE AS DRAFT
-				</el-button>
+    <el-card class="text-right" v-if="allowSubmitTask">
+      <el-button size="small" @click="submitExam(0)">
+        SAVE AS DRAFT
+      </el-button>
 
-				<el-button size="small" type="primary" @click="confirmSubmit(1)">
-					SUBMIT
-				</el-button>
-			</div>
-		</el-card>
+      <el-button size="small" type="primary" @click="confirmSubmit(1)">
+        SUBMIT
+      </el-button>
+    </el-card>
 	</div>
 </template>
 
 <script>
+import { TASK_STATUS, TASK_TYPE } from '@/store/modules/task'
+
 export default {
   props: ['task'],
 
+  data() {
+    return {
+      TASK_TYPE,
+      TASK_STATUS
+    }
+  },
+
   computed: {
-    ...mapState(['TASK_STATUS'])
+    allowSubmitTask() {
+      return this.task.assignee_id != this.$auth.user.id &&
+        [TASK_STATUS.SUBMITTED, TASK_STATUS.ON_PROGRESS].includes(this.task.status);
+    },
+
+    showCorrectAnswer() {
+      return [TASK_STATUS.FINISHED, TASK_STATUS.CLOSED].includes(this.task.status) &&
+        this.task.exam.correct_answer == this.task.exam.user_answer;
+    }
   },
 
   methods: {

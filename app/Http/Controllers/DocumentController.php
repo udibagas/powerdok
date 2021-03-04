@@ -108,6 +108,7 @@ class DocumentController extends Controller
     public function saveQuiz(Document $document, Request $request)
     {
         $request->validate([
+            'minimum_score' => 'required|numeric',
             'quizzes.*.question' => 'required',
             'quizzes.*.choices' => ['required', 'array', 'size:4', function($attribute, $value, $fail) {
                 $hasBlankAnswer = array_search("", $value);
@@ -138,6 +139,8 @@ class DocumentController extends Controller
                     }
                 }
             }
+
+            $document->update(['minimum_score' => $request->minimum_score]);
         });
 
         return ['message' => 'Question has been saved'];

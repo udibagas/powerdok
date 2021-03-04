@@ -3,22 +3,27 @@
 		<el-card>
 			<TaskSummary slot="header" :task="task" />
 			<div class="row px-3">
-				<div class="col-md-6">
-					<div class="text-muted">
-						{{ $t("Task Title") }}
-					</div>
-					<h3 class="mt-3">{{ task.title }}</h3>
-					<div class="mt-2">{{ task.description }}</div>
+				<div class="col">
+          <div class="text-muted">
+            {{ $t("Task Title") }}
+          </div>
+          <div class="mt-3">
+            <h4>{{ task.title }}</h4>
+          </div>
+          <div class="text-muted text-justify mt-3">
+            {{ task.description }}
+          </div>
 				</div>
-				<div class="col-md-6">
-					<div class="text-muted">
-						{{ $t("Related Document") }}
-					</div>
-					<div class="mt-3">
-						<strong>{{ task.document.type_name }}</strong> &nbsp; No.
-						{{ task.document.number }} &nbsp; Ver. {{ task.document.version }}
-					</div>
-					<h5 class="mt-2">{{ task.document.title }}</h5>
+        <div class="col">
+          <div class="text-muted">
+            {{ $t("Related Document") }}
+          </div>
+          <div class="mt-3">
+            <strong>{{ task.document.type_name }}</strong> &nbsp; No. {{ task.document.number }} &nbsp; Ver. {{ task.document.version }}
+          </div>
+          <nuxt-link :to="`/documents/${task.document.slug}`" style="font-size: 18px">
+            {{ task.document.title }}
+          </nuxt-link>
 				</div>
 			</div>
 		</el-card>
@@ -45,21 +50,19 @@
 <script>
 import CKEditor from "@ckeditor/ckeditor5-vue";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
-import { mapState } from 'vuex';
+import { TASK_STATUS, TASK_TYPE } from '@/store/modules/task'
 
 export default {
   components: {
     ckeditor: CKEditor.component
   },
 
-  computed: {
-    ...mapState(['TASK_STATUS', 'TASK_TYPE'])
-  },
-
   data() {
     return {
       document: '',
-      editor: ClassicEditor
+      editor: ClassicEditor,
+      TASK_TYPE,
+      TASK_STATUS
     }
   },
 

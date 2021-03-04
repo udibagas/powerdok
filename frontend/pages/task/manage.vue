@@ -131,7 +131,15 @@
         </table>
       </div>
     </div>
-		<TaskForm
+		<!-- <TaskFormEdit
+      v-if="task.id > 0"
+			:show="showForm"
+			:model="selectedData"
+			:url="url"
+			@close="showForm = false"
+			@refresh="refresh"
+		/> -->
+    <TaskForm
 			:show="showForm"
 			:model="selectedData"
 			:url="url"

@@ -50,10 +50,13 @@ Route::post('token', function (Request $request) {
 });
 
 Route::group(['middleware' => 'auth:sanctum'], function () {
-    Route::post('logout', [AuthController::class, 'logout']);
-    Route::get('me', [AuthController::class, 'me']);
-    Route::get('lang', [LanguageController::class, 'lang']);
-
+    Route::apiResources([
+        'department' => DepartmentController::class,
+        'document' => DocumentController::class,
+        'language' => LanguageController::class,
+        'task' => TaskController::class,
+        'user' => UserController::class,
+    ]);
 
     Route::prefix('document')->group(function () {
         Route::post('quiz/{document}', [DocumentController::class, 'saveQuiz']);
@@ -67,14 +70,6 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
         Route::post('submitExam/{task}', [TaskController::class, 'submitExam']);
     });
 
-    Route::apiResources([
-        'department' => DepartmentController::class,
-        'document' => DocumentController::class,
-        'language' => LanguageController::class,
-        'task' => TaskController::class,
-        'user' => UserController::class,
-    ]);
-
     Route::prefix('notification')->group(function () {
         Route::get('', [NotificationController::class, 'index']);
         Route::get('/getNewNotifications', [NotificationController::class, 'getNewNotifications']);
@@ -85,4 +80,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     });
 
     Route::post('upload', [AttachmentController::class, 'store']);
+    Route::get('lang', [LanguageController::class, 'lang']);
+    Route::get('me', [AuthController::class, 'me']);
+    Route::post('logout', [AuthController::class, 'logout']);
 });
