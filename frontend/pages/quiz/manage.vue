@@ -4,17 +4,46 @@
     <div class="card-body">
       <strong>{{ document.type_name }}</strong> &nbsp; No. {{ document.number }} &nbsp; Ver. {{ document.version }}
       <h2>{{ document.title }}</h2>
-      <div class="row">
-        <div class="col-md-4">
-          Effective Date : {{ readableDate(document.effective_date) }}
+      <div class="media mt-3">
+        <el-avatar class="mr-3"></el-avatar>
+        <div class="media-body">
+          <strong>{{ document.owner.name }}</strong>
+          <span class="text-muted">
+            &bull; {{ $moment(document.created_at).fromNow() }}
+          </span>
+          <div class="text-muted">
+            {{ document.owner.position }} |
+            {{ document.owner.department ? document.owner.department.name : "N/A" }}
+          </div>
         </div>
-        <div class="col-md-4">
-          Expired Date : {{ readableDate(document.expired_date) }}
+        <div class="media-body">
+          <div class="text-muted">
+            {{ $t("Effective Date") }}
+          </div>
+          <strong>{{ readableDate(document.effective_date) }}</strong>
         </div>
-        <div class="col-md-4">
-          Owner : {{ document.owner.name }}
+        <div class="media-body">
+          <div class="text-muted">
+            {{ $t("Expired Date") }}
+          </div>
+          <strong>{{ readableDate(document.expired_date) }}</strong>
         </div>
       </div>
+      <el-form class="mt-5" label-width="130px" label-position="left">
+        <el-form-item label="* Minimum Score :" :class="{ 'is-error': errors.minimum_score }">
+            <el-input
+              type="number"
+              :max="100"
+              :placeholder="$t('Min. Score')"
+              v-model="document.minimum_score"
+              class="col-2"
+            ></el-input>
+
+            <div class="el-form-item__error ml-2" v-if="errors.minimum_score">
+              {{ errors.minimum_score.join(", ") }}
+            </div>
+        </el-form-item>
+      </el-form>
     </div>
     <div class="card-body">
 			<div v-for="(q, index) in quizzes" :key="index" class="d-flex mb-4">
@@ -156,6 +185,7 @@ export default {
   data() {
     return {
       loading: false,
+      minimum_score: '',
       quizzes: [],
       errors: {}
     }
@@ -198,7 +228,7 @@ export default {
     },
     save() {
       this.loading = true;
-      const data = { document_id: this.document.id, quizzes: this.quizzes };
+      const data = { document_id: this.document.id, quizzes: this.quizzes, minimum_score: this.document.minimum_score };
       this.$axios.$post(`/api/document/quiz/${this.document.id}`, data).then(response => {
         this.$message({
           message: response.message,

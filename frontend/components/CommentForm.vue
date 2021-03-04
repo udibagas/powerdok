@@ -1,56 +1,13 @@
 <template>
-	<div class="media my-3 pt-3">
-		<el-avatar class="mr-3"></el-avatar>
-		<div class="media-body">
-			<el-form>
-				<el-form-item>
+	<div >
+		<el-form label-position="left" label-width="150px">
+				<el-form-item label="Your comment">
 					<el-input
 						v-model="form.body"
 						type="textarea"
 						rows="5"
 						placeholder="Type your comment here"
 					></el-input>
-				</el-form-item>
-
-				<el-form-item label="Assignees">
-					<el-select
-						style="width: 100%"
-						v-model="form.assignees"
-						placeholder="Assignees"
-						filterable
-						default-first-option
-						clearable
-						remote
-						multiple
-						:remote-method="(q) => getList('/api/user', 'userList', q)"
-					>
-						<el-option
-							v-for="user in userList"
-							:key="user.id"
-							:value="user.id"
-							:label="`${user.name} | ${user.position ? user.position : ''}  (${
-								user.department_id ? user.department.name : 'N/A'
-							})`"
-						>
-							<span style="float: left">{{ user.name }}</span>
-							<span
-								style="
-									float: right;
-									color: #8492a6;
-									font-size: 13px;
-									margin-right: 20px;
-								"
-							>
-								{{ user.position }} ({{
-									user.department_id ? user.department.name : "N/A"
-								}})
-							</span>
-						</el-option>
-					</el-select>
-
-					<div class="el-form-item__error" v-if="errors.assignees">
-						{{ errors.assignees.join(", ") }}
-					</div>
 				</el-form-item>
 
 				<el-form-item label="Due Date" :class="{ 'is-error': errors.due_date }">
@@ -100,7 +57,6 @@
 						DECLINE
 					</el-button> -->
 			</div>
-		</div>
 	</div>
 </template>
 

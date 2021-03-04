@@ -83,10 +83,10 @@
 					</div>
 				</el-form-item>
 
-				<el-form-item label="Assignees" :class="{ 'is-error': errors.assignees }">
+				<el-form-item label="Assignees" :class="{ 'is-error': errors.assignee_id }">
 					<el-select
 						style="width: 100%"
-						v-model="formModel.assignees"
+						v-model="formModel.assignee_id"
 						placeholder="Assignees"
 						filterable
 						default-first-option
@@ -213,15 +213,14 @@ export default {
     },
     documentUrl() {
       if (this.model.type == 3) {
-        return `/api/document?has_quizzes=true`
+        return '/api/document?has_quizzes=true'
       }
-
-      return `/api/document`
+      return '/api/document'
     }
   },
   mounted() {
-		this.getList('/api/user', 'userList'),
-		this.getList(this.documentUrl, 'documentList');
+		this.getList('/api/user', 'userList')
+		this.getList(this.documentUrl, 'documentList')
   }
 }
 </script>
