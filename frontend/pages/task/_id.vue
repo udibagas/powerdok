@@ -2,30 +2,6 @@
 	<div>
 		<el-card>
 			<TaskSummary slot="header" :task="task" />
-			<div class="row px-3">
-				<div class="col">
-          <div class="text-muted">
-            {{ $t("Task Title") }}
-          </div>
-          <div class="mt-3">
-            <h4>{{ task.title }}</h4>
-          </div>
-          <div class="text-muted text-justify mt-3">
-            {{ task.description }}
-          </div>
-				</div>
-        <div class="col">
-          <div class="text-muted">
-            {{ $t("Related Document") }}
-          </div>
-          <div class="mt-3">
-            <strong>{{ task.document.type_name }}</strong> &nbsp; No. {{ task.document.number }} &nbsp; Ver. {{ task.document.version }}
-          </div>
-          <nuxt-link :to="`/documents/${task.document.slug}`" style="font-size: 18px">
-            {{ task.document.title }}
-          </nuxt-link>
-				</div>
-			</div>
 		</el-card>
 
 		<div class="mt-3">
