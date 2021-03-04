@@ -30,7 +30,7 @@ class TaskFactory extends Factory
             'user_id' => rand(1, 10),
             'due_date' => $this->faker->date('Y-m-d', now()->addMonth()->format('Y-m-d')),
             'priority' => rand(0, 3),
-            'status' => rand(0, 6),
+            'status' => rand(1, 6),
             'custom_fields' => ['Field' => 'Value'],
         ];
     }
