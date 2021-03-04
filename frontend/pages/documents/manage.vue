@@ -131,7 +131,7 @@
                     >
                     <el-dropdown-item
                       icon="el-icon-document"
-                      @click.native="$router.push(`/quiz/manage?slug=${doc.slug}`)"
+                      @click.native="$router.push(`/documents/quiz?id=${doc.id}`)"
                       >Manage Quiz</el-dropdown-item
                     >
                     <el-dropdown-item

@@ -7,7 +7,6 @@ use App\Events\NewTaskEvent;
 use App\Events\TaskFinishedEvent;
 use App\Http\Requests\TaskRequest;
 use App\Http\Resources\TaskCollection;
-use App\Models\DocumentExam;
 use App\Models\Task;
 use App\Models\TaskApproval;
 use Illuminate\Http\Request;
@@ -23,13 +22,23 @@ class TaskController extends Controller
     public function index(Request $request)
     {
         return new TaskCollection(
-            Task::with(['attachments'])->when($request->keyword, function ($q) use ($request) {
+            Task::with(['attachments'])->where(function ($q) {
+                $q->where('user_id', auth()->id())
+                    ->orWhere('assignee_id', auth()->id());
+            })->when($request->owned, function ($q) {
+                return $q->where('user_id', auth()->id());
+            })->when($request->assigned, function ($q) {
+                return $q->where('assignee_id', auth()->id());
+            })->when($request->type, function ($q) use ($request) {
+                $q->whereIn('type', $request->type);
+            })->when($request->priority, function ($q) use ($request) {
+                $q->whereIn('priority', $request->priority);
+            })->when($request->status, function ($q) use ($request) {
+                $q->whereIn('status', $request->status);
+            })->when($request->keyword, function ($q) use ($request) {
                 $q->where(function ($q) use ($request) {
                     $q->where('title', 'ILIKE', "%{$request->keyword}%")
-                        ->orWhere('description', 'ILIKE', "%{$request->keyword}%")
-                        ->orWhereHas('assignees', function ($q) use ($request) {
-                            $q->where('name', 'ILIKE', "%{$request->keyword}%");
-                        });
+                        ->orWhere('description', 'ILIKE', "%{$request->keyword}%");
                 });
             })->orderBy(
                 $request->sort_field ?: 'updated_at',

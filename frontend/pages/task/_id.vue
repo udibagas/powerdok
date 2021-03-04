@@ -1,7 +1,74 @@
 <template>
 	<div>
 		<el-card>
-			<TaskSummary slot="header" :task="task" />
+      <TaskSummary slot="header" :task="task" />
+      <div class="row mr-2">
+        <div class="col text-justify">
+          <h2>{{ task.title }}</h2>
+
+          <div class="mt-2 text-muted text-justify">
+            {{ task.description }}
+          </div>
+        </div>
+      </div>
+      <div class="row mt-4">
+        <div class="col-md-5">
+          <div class="text-muted">
+            <i class="el-icon-document"></i>
+            {{ $t("Related Document") }}
+          </div>
+          <div class="mt-1">
+            <strong>{{ task.document.type_name }}</strong> &nbsp; No.
+            {{ task.document.number }} &nbsp; Ver. {{ task.document.version }}
+          </div>
+          <nuxt-link :to="`/documents/${task.document.slug}`" style="font-size: 16px">
+            {{ task.document.title }}
+          </nuxt-link>
+        </div>
+        <div class="col">
+          <div class="text-muted">
+            <i class="uil-user-check"></i>
+            {{ $t("Assigned to") }}
+          </div>
+          <div class="media mt-1">
+            <el-avatar class="mr-3"></el-avatar>
+            <div class="media-body">
+              <div v-if="task.assignee_id == $auth.user.id">
+                <strong>You</strong>
+              </div>
+              <div v-else>
+                <strong>{{ task.assignee.name }}</strong>
+              </div>
+              <div class="text-muted">
+                {{ task.assignee.position }} |
+                {{ task.assignee.department ? task.assignee.department.name : "N/A" }}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="text-muted">
+            <i class="uil-user"></i>
+            {{ $t("Creator") }}
+          </div>
+          <div class="media mt-1">
+            <el-avatar class="mr-3"></el-avatar>
+            <div class="media-body">
+              <strong>{{ task.user.name }}</strong>
+              <span class="text-muted">
+                &bull; {{ $moment(task.created_at).fromNow() }}
+              </span>
+              <div class="text-muted">
+                {{ task.user.position }} |
+                {{ task.user.department ? task.user.department.name : "N/A" }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <hr>
+
+      <Attachments class="mt-3" :attachments="task.attachments" />
 		</el-card>
 
 		<div class="mt-3">
@@ -26,40 +93,37 @@
 <script>
 import CKEditor from "@ckeditor/ckeditor5-vue";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
-import { TASK_STATUS, TASK_TYPE } from '@/store/modules/task'
+import { TASK_STATUS, TASK_TYPE } from "@/store/modules/task";
 
 export default {
-  components: {
-    ckeditor: CKEditor.component
-  },
+	components: {
+		ckeditor: CKEditor.component
+	},
 
-  data() {
-    return {
-      document: '',
-      editor: ClassicEditor,
-      TASK_TYPE,
-      TASK_STATUS
-    }
-  },
+	data() {
+		return {
+			document: "",
+			editor: ClassicEditor,
+			TASK_TYPE,
+			TASK_STATUS
+		};
+	},
 
-  async asyncData({$axios, params}) {
-    const task = await $axios.$get(`/api/task/${params.id}`);
-    return { task };
-  },
+	async asyncData({ $axios, params }) {
+		const task = await $axios.$get(`/api/task/${params.id}`);
+		return { task };
+	},
 
-  head() {
-    return {
-      title: `Powerdok | Task - ${this.task.title}`,
-    };
-  },
+	head() {
+		return {
+			title: `Powerdok | Task - ${this.task.title}`
+		};
+	},
 
-  methods: {
-    async fetchData() {
-      this.task = await this.$axios.$get(`/api/task/${this.task.id}`);
-    }
-  }
-}
+	methods: {
+		async fetchData() {
+			this.task = await this.$axios.$get(`/api/task/${this.task.id}`);
+		}
+	}
+};
 </script>
-
-<style>
-</style>

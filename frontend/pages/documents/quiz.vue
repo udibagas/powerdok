@@ -174,7 +174,7 @@ import moment from 'moment'
 export default {
 	mixins: [dropdown],
   async asyncData({$axios, query}) {
-    const document = await $axios.$get(`/api/document/${query.slug}`);
+    const document = await $axios.$get(`/api/document/${query.id}`);
     return { document };
   },
   head() {

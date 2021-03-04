@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Storage;
+use League\Flysystem\Util\MimeType;
 
 class Attachment extends Model
 {
@@ -18,7 +19,7 @@ class Attachment extends Model
         'path'
     ];
 
-    protected $appends = ['url'];
+    protected $appends = ['url', 'size'];
 
     public function user()
     {
@@ -33,5 +34,10 @@ class Attachment extends Model
     public function attachable()
     {
         return $this->morphTo();
+    }
+
+    public function getSizeAttribute()
+    {
+        return Storage::size($this->path);
     }
 }
