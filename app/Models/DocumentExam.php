@@ -52,7 +52,7 @@ class DocumentExam extends Model
                 $this->task->status,
                 [Task::STATUS_DRAFT, Task::STATUS_ON_PROGRESS, Task::STATUS_SUBMITTED, Task::STATUS_VOID]
             )
-            && $this->user_id !== auth()->id()
+            && $this->user_id != auth()->id()
         ) {
             return array_map(function ($quiz) {
                 $quiz->correct_answer = null;

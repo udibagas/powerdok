@@ -19,7 +19,7 @@ class Attachment extends Model
         'path'
     ];
 
-    protected $appends = ['url', 'size'];
+    protected $appends = ['url', 'size', 'is_image'];
 
     public function user()
     {
@@ -39,5 +39,12 @@ class Attachment extends Model
     public function getSizeAttribute()
     {
         return Storage::size($this->path);
+    }
+
+    public function getIsImageAttribute()
+    {
+        $extension = pathinfo($this->path, PATHINFO_EXTENSION);
+        $imageExtensions = ['png', 'jpg', 'jpeg', 'bmp', 'svg', 'ico'];
+        return in_array($extension, $imageExtensions);
     }
 }
