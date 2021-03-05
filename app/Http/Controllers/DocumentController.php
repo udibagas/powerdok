@@ -108,7 +108,8 @@ class DocumentController extends Controller
     public function saveQuiz(Document $document, Request $request)
     {
         $request->validate([
-            'minimum_score' => 'required|numeric',
+            'exam_minimum_score' => 'required|numeric',
+            'exam_max_duration' => 'required|numeric',
             'quizzes.*.question' => 'required',
             'quizzes.*.choices' => ['required', 'array', 'size:4', function($attribute, $value, $fail) {
                 $hasBlankAnswer = array_search("", $value);
@@ -118,6 +119,8 @@ class DocumentController extends Controller
             }],
             'quizzes.*.correct_answer' => 'required',
         ], [
+            'exam_minimum_score.required' => 'Minimum score is required',
+            'exam_max_duration.required' => 'Maximum duration is required',
             'quizzes.*.question.required' => 'Question is required',
             'quizzes.*.choices.required' => 'Choices is required',
             'quizzes.*.correct_answer.required' => 'Correct Answer is required',
@@ -140,7 +143,10 @@ class DocumentController extends Controller
                 }
             }
 
-            $document->update(['minimum_score' => $request->minimum_score]);
+            $document->update([
+                'exam_minimum_score' => $request->exam_minimum_score,
+                'exam_max_duration' => $request->exam_max_duration
+            ]);
         });
 
         return ['message' => 'Question has been saved'];

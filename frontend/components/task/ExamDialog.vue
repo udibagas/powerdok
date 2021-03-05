@@ -3,7 +3,7 @@
     <el-card>
       <div class="d-flex justify-content-between">
         <div>
-          <div class="text-muted">Minimum Score</div>
+          <div class="text-muted">{{ $t("Minimum Score") }}</div>
           <h4>{{ task.exam.exam_minimum_score }}</h4>
         </div>
 
@@ -11,7 +11,7 @@
           <h1>{{timer}}</h1>
         </div>
         <div>
-          <div class="text-muted">Duration</div>
+          <div class="text-muted">{{ $t("Duration") }}</div>
           <h4> {{ task.exam.exam_max_duration || '0' }} {{$t('minutes')}}</h4>
         </div>
       </div>

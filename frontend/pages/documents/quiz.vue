@@ -57,8 +57,8 @@
                 step-strictly
                 size="small"
                 class="mr-2"
-              ></el-input-number>minutes
-
+              ></el-input-number>
+              {{ $t("minutes") }}
               <div class="el-form-item__error ml-2" v-if="errors.exam_max_duration">
                 {{ errors.exam_max_duration.join(", ") }}
               </div>
@@ -251,7 +251,12 @@ export default {
     },
     save() {
       this.loading = true;
-      const data = { document_id: this.document.id, quizzes: this.quizzes, minimum_score: this.document.minimum_score };
+      const data = {
+        document_id: this.document.id,
+        quizzes: this.quizzes,
+        exam_minimum_score: this.document.exam_minimum_score,
+        exam_max_duration: this.document.exam_max_duration
+      };
       this.$axios.$post(`/api/document/quiz/${this.document.id}`, data).then(response => {
         this.$message({
           message: response.message,

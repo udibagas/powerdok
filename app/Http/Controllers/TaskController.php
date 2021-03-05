@@ -72,7 +72,8 @@ class TaskController extends Controller
                     $task->document->exams()->create([
                         'task_id' => $task->id,
                         'user_id' => $assignee,
-                        'minimum_score' => $task->document->minimum_score,
+                        'exam_minimum_score' => $task->document->exam_minimum_score,
+                        'exam_max_duration' => $task->document->exam_max_duration,
                         'quizzes' => $task->document->quizzes->map(function ($item) {
                             return [
                                 'question' => $item->question,
