@@ -1,6 +1,6 @@
 <template>
 	<div>
-    <el-card v-if="!start" class="mb-3 text-center" shadow="hover">
+    <el-card v-if="task.status != TASK_STATUS.FINISHED" class="mb-3 text-center" shadow="hover">
       <a href="#" @click.prevent="confirmStart">
         <h3> START EXAM</h3>
       </a>
@@ -11,7 +11,7 @@
 		<el-card class="mb-3" v-if="task.status == TASK_STATUS.FINISHED">
 			<div class="d-flex justify-content-between">
 				<h1>
-					{{ $t("SCORE") }}: {{ task.exam.score }}%
+					{{ $t("SCORE") }}: {{ task.exam.score }}
 					<small>
 						({{ task.exam.correct_answer }}/{{ task.exam.quizzes.length }})
 					</small>

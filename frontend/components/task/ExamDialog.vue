@@ -68,7 +68,7 @@
       </div>
       <div class="text-center">
         <h3>
-        <el-input style="width:70px" v-model="page"></el-input>/{{task.exam.quizzes.length}}
+        <el-input style="width:70px" v-model="page"></el-input> / {{task.exam.quizzes.length}}
         </h3>
       </div>
       <div>
