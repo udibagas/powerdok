@@ -5,6 +5,9 @@
         <h3> START EXAM</h3>
       </a>
     </el-card>
+
+    <ExamDialog :task="task" :show="showDialog" />
+
 		<el-card class="mb-3" v-if="task.status == TASK_STATUS.FINISHED">
 			<div class="d-flex justify-content-between">
 				<h1>
@@ -24,7 +27,7 @@
 			</div>
 		</el-card>
 
-    <div v-if="start">
+    <div v-if="task.status == TASK_STATUS.FINISHED || task.status == TASK_STATUS.CLOSED">
       <el-card
         v-for="(e, index) in task.exam.quizzes"
         class="mb-2"
@@ -84,24 +87,6 @@
           </div>
         </div>
       </el-card>
-
-      <el-card  v-if="allowSubmitTask">
-        <div class="d-flex justify-content-between">
-          <div>
-            <el-button icon="el-icon-back" size="small" type="danger">
-              BACK
-            </el-button>
-          </div>
-          <div>
-            <el-button size="small" type="primary">
-              NEXT <i class="el-icon-right ml-1"></i>
-            </el-button>
-            <el-button icon="el-icon-finished" size="small" type="success" @click="confirmSubmit(1)">
-              SUBMIT
-            </el-button>
-          </div>
-        </div>
-      </el-card>
     </div>
 	</div>
 </template>
@@ -120,7 +105,8 @@ export default {
       index: 0,
       start: false,
       time_start: null,
-      time_finished: null
+      time_finished: null,
+      showDialog: false
     }
   },
 
@@ -136,33 +122,8 @@ export default {
       // TODO
       this.start = true;
       this.time_start = new Date();
+      this.showDialog = true
     },
-
-    submitExam() {
-      this.time_finished = new Date();
-      const answer = this.task.exam.quizzes.map(q => q.user_answer);
-      this.$axios.$post(`/api/task/submitExam/${this.task.id}`, { answer }).then(response => {
-        this.$message({
-          message: response.message,
-          type: 'success',
-          showClose: true
-        })
-      }).catch(e => {
-        this.$message({
-          message: e.response.data.message,
-          type: 'error',
-          showClose: true
-        });
-
-        if (e.response.status == 422) {
-          this.errors = e.response.data.errors
-        }
-      })
-    },
-
-    confirmSubmit() {
-      this.$confirm('Are you sure want to submit your answer ?', 'Confirm').then(() => this.submitExam(status))
-    }
   }
 }
 </script>
