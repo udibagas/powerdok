@@ -19,6 +19,7 @@
         "laravel/sanctum": "^2.6",
         "laravel/telescope": "^4.4",
         "laravel/tinker": "^2.5",
+        "musonza/chat": "^4.5",
         "orangehill/iseed": "^3.0",
         "pusher/pusher-php-server": "~4.0",
         "spatie/laravel-permission": "^4.0",
