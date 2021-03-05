@@ -1,17 +1,17 @@
 <template>
   <div>
-    <div class="text-muted mb-2">
+    <div class="text-muted my-3">
       <i class="el-icon-paperclip"></i>
       {{ $t("Attachments") }}
     </div>
 
     <div class="row">
-      <div class="col-md-4">
-        <div class="media border rounded p-2 mb-2" v-for="(attachment, i) in attachments" :key="attachment.id">
+      <div class="col-md-4" v-for="(attachment, i) in attachments" :key="attachment.id">
+        <div class="media border rounded p-2 mb-3">
           <a href="#" @click.prevent="index = i; visible = true">
             <el-image
               fit="cover"
-              class="mr-3 border"
+              class="mr-2 border"
               style="height: 50px;width:50px"
               :src="attachment.url"
             >
@@ -20,14 +20,16 @@
             </div>
             </el-image>
           </a>
-          <div class="media-body d-flex justify-content-between">
-            <div>
-              <strong> {{attachment.name}} </strong>
-              <div class="text-muted"> {{bytesToSize(attachment.size)}} </div>
-              <div class="text-muted"> {{attachment.type}} </div>
+          <div class="media-body text-truncate">
+            <div class="font-weight-bold"> {{attachment.name}} </div>
+            <div class="text-muted">
+              {{attachment.type}}
             </div>
-            <div>
-              <el-button @click="download(attachment.url)" icon="el-icon-download"></el-button>
+            <div class="text-muted">
+              {{bytesToSize(attachment.size)}}
+              <a href="#" class="ml-3" @click.prevent="download(attachment.id)">
+                <i class="el-icon-download"></i>
+              </a>
             </div>
           </div>
         </div>
@@ -61,8 +63,8 @@ export default {
       return Math.round(bytes / Math.pow(1024, i), 2) + ' ' + sizes[i];
     },
 
-    download(url) {
-      window.open(url, '_blank');
+    download(id) {
+      window.open(`${this.$axios.defaults.baseURL}/api/download/${id}`, '_blank');
     }
   }
 }

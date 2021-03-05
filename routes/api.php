@@ -79,6 +79,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
         Route::delete('/destroy', [NotificationController::class, 'destroyAll']);
     });
 
+    Route::get('download/{attachment}', [AttachmentController::class, 'download']);
     Route::post('upload', [AttachmentController::class, 'store']);
     Route::get('lang', [LanguageController::class, 'lang']);
     Route::get('me', [AuthController::class, 'me']);

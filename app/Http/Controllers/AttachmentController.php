@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Attachment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -20,5 +21,12 @@ class AttachmentController extends Controller
             'url' => Storage::url($path),
             'data' => $request->data
         ];
+    }
+
+    public function download(Attachment $attachment)
+    {
+        return response()->streamDownload(function() use ($attachment) {
+            echo Storage::get($attachment->path);
+        }, $attachment->name);
     }
 }

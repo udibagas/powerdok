@@ -29,20 +29,42 @@
           <strong>{{ readableDate(document.expired_date) }}</strong>
         </div>
       </div>
-      <el-form class="mt-5" label-width="130px" label-position="left">
-        <el-form-item label="* Minimum Score :" :class="{ 'is-error': errors.minimum_score }">
-            <el-input
-              type="number"
-              :max="100"
-              :placeholder="$t('Min. Score')"
-              v-model="document.minimum_score"
-              class="col-2"
-            ></el-input>
+      <el-form class="mt-5" label-width="160px" label-position="left">
+        <div class="row">
+          <div class="col">
+            <el-form-item label="* Minimum Score :" :class="{ 'is-error': errors.exam_minimum_score }">
+              <el-input-number
+                v-model="document.exam_minimum_score"
+                :step="5"
+                :max="100"
+                :min="0"
+                step-strictly
+                size="small"
+              ></el-input-number>
 
-            <div class="el-form-item__error ml-2" v-if="errors.minimum_score">
-              {{ errors.minimum_score.join(", ") }}
-            </div>
-        </el-form-item>
+                <div class="el-form-item__error ml-2" v-if="errors.exam_minimum_score">
+                  {{ errors.exam_minimum_score.join(", ") }}
+                </div>
+            </el-form-item>
+          </div>
+          <div class="col">
+            <el-form-item label="* Maximum Duration :" :class="{ 'is-error': errors.exam_max_duration }">
+              <el-input-number
+                v-model="document.exam_max_duration"
+                :step="5"
+                :max="120"
+                :min="0"
+                step-strictly
+                size="small"
+                class="mr-2"
+              ></el-input-number>minutes
+
+              <div class="el-form-item__error ml-2" v-if="errors.exam_max_duration">
+                {{ errors.exam_max_duration.join(", ") }}
+              </div>
+            </el-form-item>
+          </div>
+        </div>
       </el-form>
     </div>
     <div class="card-body">
@@ -185,7 +207,8 @@ export default {
   data() {
     return {
       loading: false,
-      minimum_score: '',
+      exam_minimum_score: '',
+      exam_max_duration: '',
       quizzes: [],
       errors: {}
     }
