@@ -178,6 +178,7 @@ return [
         App\Providers\JetstreamServiceProvider::class,
 
         Spatie\Permission\PermissionServiceProvider::class,
+        Orangehill\Iseed\IseedServiceProvider::class,
 
     ],
 

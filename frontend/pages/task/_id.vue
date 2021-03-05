@@ -12,7 +12,7 @@
         </div>
       </div>
       <div class="row mt-4">
-        <div class="col-md-5">
+        <div class="col">
           <div class="text-muted">
             <i class="el-icon-document"></i>
             {{ $t("Related Document") }}
@@ -67,8 +67,7 @@
         </div>
       </div>
       <hr>
-
-      <Attachments class="mt-3" :attachments="task.attachments" />
+      <Attachments :attachments="task.attachments" />
 		</el-card>
 
 		<div class="mt-3">

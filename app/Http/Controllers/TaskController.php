@@ -195,30 +195,17 @@ class TaskController extends Controller
     public function submitExam(Task $task, Request $request)
     {
         $this->authorize('submitExam', $task);
-
-        $request->validate([
-            'answer' => 'required|array',
-            'status' => 'required|in:0,1'
-        ]);
-
+        $request->validate(['answer' => 'required|array']);
         $userAnswer = $task->exam->quizzes;
 
         foreach ($request->answer as $index => $answer) {
-            $userAnswer[$index]['user_answer'] = $answer;
+            $userAnswer[$index]->user_answer = $answer;
         }
 
         $task->exam->update(['quizzes' => $userAnswer]);
-
-        if ($request->status == 0) {
-            $task->status = Task::STATUS_ON_PROGRESS;
-            $task->save();
-        }
-
-        if ($request->status == 1) {
-            $task->status = Task::STATUS_FINISHED;
-            $task->save();
-            event(new TaskFinishedEvent($task));
-        }
+        $task->status = Task::STATUS_FINISHED;
+        $task->save();
+        event(new TaskFinishedEvent($task));
 
         return ['message' => 'Your answer has been saved'];
     }
