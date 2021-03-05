@@ -29,14 +29,61 @@
 					}
 				"
 			></el-input>
-			<el-button icon="uil-filter" size="small" class="ml-2"></el-button>
 			<el-button
-				icon="uil-refresh"
+				icon="el-icon-refresh"
 				size="small"
 				class="ml-2"
 				@click="refresh"
 			></el-button>
+		</div>
+
+		<el-table stripe :data="tableData" v-loading="loading">
+			<el-table-column label="#" type="index" :index="pagination.form">
+			</el-table-column>
+
+			<el-table-column label="Title">
+				<template slot-scope="scope">
+					<nuxt-link :to="`/task/${scope.row.id}`">{{
+						scope.row.title
+					}}</nuxt-link>
+				</template>
+			</el-table-column>
+
+      <el-table-column prop="assignee.name" label="Assignee"></el-table-column>
+
+			<el-table-column
+				prop="type_name"
+				label="Type"
+				width="150"
+			></el-table-column>
+
+			<el-table-column :label="$t('Priority')" width="150">
+				<template slot-scope="scope">
+					<span :class="`text-${priorityColors[scope.row.priority]}`">{{
+						scope.row.priority_label
+					}}</span>
+				</template>
+			</el-table-column>
+
+			<el-table-column prop="due_date" label="Due Date" width="150">
+				<template slot-scope="scope">
+					{{ $moment(scope.row.due_date).fromNow() }}
+				</template>
+			</el-table-column>
+
+			<el-table-column label="Status" width="150">
+				<template slot-scope="scope">
+					<span :class="`text-${statusColors[scope.row.status]}`">{{
+						scope.row.status_label
+					}}</span>
+				</template>
+			</el-table-column>
+		</el-table>
+
+		<div class="d-flex p-3">
 			<el-pagination
+				class="flex-grow-1"
+				background
 				@current-change="
 					(p) => {
 						pagination.current_page = p;
@@ -49,7 +96,7 @@
 						fetchData();
 					}
 				"
-				layout="prev, next"
+				layout="prev, pager, next"
 				:page-size="Number(pagination.per_page)"
 				:page-sizes="pageSizes"
 				:total="pagination.total"
@@ -61,79 +108,6 @@
 			</div>
 		</div>
 
-		<div class="card-body p-0">
-			<div class="table-responsive mb-0" v-loading="loading">
-				<table class="table table-hover table-striped">
-					<thead>
-						<tr>
-							<th>#</th>
-							<th style="width: 200px">Title</th>
-							<th>Assignee</th>
-							<th>Type</th>
-							<th class="text-center">Due Date</th>
-							<th class="text-center">Priority</th>
-							<th class="text-center">Status</th>
-							<th class="text-center">Action</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr
-							v-for="(task, index) in tableData"
-							:key="task.id"
-							:class="{ 'table-danger': task.overdue }"
-						>
-							<td>{{ pagination.from + index }}</td>
-							<td>
-								<nuxt-link class="text-nowrap" :to="`/task/${task.id}`">{{
-									task.title
-								}}</nuxt-link>
-							</td>
-							<td>{{ task.assignee.name }}</td>
-							<td>{{ task.type_name }}</td>
-							<td class="text-center">
-								{{ $moment(task.due_date).fromNow() }}
-							</td>
-							<td class="text-center">
-								<span
-									:class="`badge badge-${priorityColors[task.priority_label]}`"
-									>{{ task.priority_label }}</span
-								>
-							</td>
-							<td class="text-center">
-								<span
-									:class="`badge badge-${statusColors[task.status_label]}`"
-									>{{ task.status_label }}</span
-								>
-							</td>
-							<td class="text-center">
-								<el-dropdown>
-									<span class="el-dropdown-link">
-										<i class="el-icon-more"></i>
-									</span>
-									<el-dropdown-menu slot="dropdown">
-										<el-dropdown-item
-											icon="el-icon-view"
-											@click.native="$router.push(`/task/${task.id}`)"
-											>Show</el-dropdown-item
-										>
-										<el-dropdown-item
-											icon="el-icon-edit"
-											@click.native.prevent="editData(task)"
-											>Edit</el-dropdown-item
-										>
-										<el-dropdown-item
-											icon="el-icon-delete"
-											@click.native.prevent="deleteData(task.id)"
-											>Delete</el-dropdown-item
-										>
-									</el-dropdown-menu>
-								</el-dropdown>
-							</td>
-						</tr>
-					</tbody>
-				</table>
-			</div>
-		</div>
 		<TaskForm
 			:show="showForm"
 			:model="selectedData"

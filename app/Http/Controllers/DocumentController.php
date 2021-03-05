@@ -56,7 +56,7 @@ class DocumentController extends Controller
      */
     public function show(Document $document)
     {
-        $this->authorize('view', $document);
+        // $this->authorize('view', $document);
         return $document;
     }
 

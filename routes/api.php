@@ -62,7 +62,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
         Route::post('quiz/{document}', [DocumentController::class, 'saveQuiz']);
         Route::get('quiz/{document}', [DocumentController::class, 'getQuiz']);
         Route::delete('quiz/{documentQuiz}', [DocumentController::class, 'deleteQuiz']);
-        Route::get('{slug}', [DocumentController::class, 'slug']);
+        Route::get('slug/{slug}', [DocumentController::class, 'slug']);
     });
 
     Route::prefix('task')->group(function () {
