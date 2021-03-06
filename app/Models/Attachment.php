@@ -38,7 +38,11 @@ class Attachment extends Model
 
     public function getSizeAttribute()
     {
-        return Storage::size($this->path);
+        if (Storage::exists($this->path)) {
+            return Storage::size($this->path);
+        }
+
+        return 0;
     }
 
     public function getIsImageAttribute()

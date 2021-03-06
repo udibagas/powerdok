@@ -28,7 +28,8 @@ class Document extends Model
         'owner_id',
         'favourites',
         'is_public',
-        'minimum_score'
+        'exam_minimum_score',
+        'exam_max_duration'
     ];
 
     protected $casts = [
