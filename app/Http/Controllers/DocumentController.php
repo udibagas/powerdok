@@ -26,7 +26,7 @@ class DocumentController extends Controller
                     $q->where('title', 'ILIKE', "%{$request->keyword}%")
                         ->orWhere('number', 'ILIKE', "%{$request->keyword}%");
                 });
-            })->when($request->has_quizzes, function($q) use ($request) {
+            })->when($request->has_quizzes, function ($q) {
                 $q->whereHas('quizzes');
             })->orderBy(
                 $request->sort_field ?: 'title',
@@ -111,7 +111,7 @@ class DocumentController extends Controller
             'exam_minimum_score' => 'required|numeric',
             'exam_max_duration' => 'required|numeric',
             'quizzes.*.question' => 'required',
-            'quizzes.*.choices' => ['required', 'array', 'size:4', function($attribute, $value, $fail) {
+            'quizzes.*.choices' => ['required', 'array', 'size:4', function ($attribute, $value, $fail) {
                 $hasBlankAnswer = array_search("", $value);
                 if ($hasBlankAnswer !== false) {
                     $fail('Choices is required');
