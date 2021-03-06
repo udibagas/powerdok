@@ -18,7 +18,10 @@ class DocumentExam extends Model
         'user_id',
         'document_id',
         'quizzes',
-        'minimum_score'
+        'exam_minimum_score',
+        'exam_max_duration',
+        'time_start',
+        'time_finished'
     ];
 
     protected $appends = ['score', 'passed', 'correct_answer'];
@@ -42,7 +45,7 @@ class DocumentExam extends Model
 
     public function getPassedAttribute()
     {
-        return $this->score >= $this->minimum_score;
+        return $this->score >= $this->exam_minimum_score;
     }
 
     public function getQuizzesAttribute($value)

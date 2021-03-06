@@ -34,7 +34,7 @@
             <el-avatar class="mr-3"></el-avatar>
             <div class="media-body">
               <div v-if="task.assignee_id == $auth.user.id">
-                <strong>You</strong>
+                <strong>Me</strong>
               </div>
               <div v-else>
                 <strong>{{ task.assignee.name }}</strong>

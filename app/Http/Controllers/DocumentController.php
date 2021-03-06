@@ -119,6 +119,8 @@ class DocumentController extends Controller
             }],
             'quizzes.*.correct_answer' => 'required',
         ], [
+            'exam_minimum_score.required' => 'Minimum score is required',
+            'exam_max_duration.required' => 'Maximum duration is required',
             'quizzes.*.question.required' => 'Question is required',
             'quizzes.*.choices.required' => 'Choices is required',
             'quizzes.*.correct_answer.required' => 'Correct Answer is required',
@@ -143,7 +145,7 @@ class DocumentController extends Controller
 
             $document->update([
                 'exam_minimum_score' => $request->exam_minimum_score,
-                'exam_max_duration' => $request->exam_max_duration,
+                'exam_max_duration' => $request->exam_max_duration
             ]);
         });
 
