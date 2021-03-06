@@ -71,7 +71,12 @@
 				<div class="mr-3">
 					<h4 class="text-muted">#{{ index + 1 }}</h4>
 				</div>
-				<SingleQuizForm :index="index" :quiz="q" :errors="errors" @delete="deleteQuiz" />
+				<SingleQuizForm
+					:index="index"
+					:quiz="q"
+					:errors="errors"
+					@delete="deleteQuiz"
+				/>
 			</div>
 		</el-card>
 

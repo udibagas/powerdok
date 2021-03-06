@@ -23,9 +23,22 @@ class AttachmentController extends Controller
         ];
     }
 
+    public function deleteByPath(Request $request)
+    {
+        $request->validate(['path' => 'required']);
+
+        if (Storage::exists($request->path)) {
+            Storage::delete($request->path);
+            Attachment::wherePath($request->path)->delete();
+            return ['message' => 'File has been deleted'];
+        }
+
+        return ['message' => 'File not found'];
+    }
+
     public function download(Attachment $attachment)
     {
-        return response()->streamDownload(function() use ($attachment) {
+        return response()->streamDownload(function () use ($attachment) {
             echo Storage::get($attachment->path);
         }, $attachment->name);
     }

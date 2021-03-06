@@ -81,6 +81,8 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
 
     Route::get('download/{attachment}', [AttachmentController::class, 'download']);
     Route::post('upload', [AttachmentController::class, 'store']);
+    Route::delete('attachment/deleteByPath', [AttachmentController::class, 'deleteByPath']);
+
     Route::get('lang', [LanguageController::class, 'lang']);
     Route::get('me', [AuthController::class, 'me']);
     Route::post('logout', [AuthController::class, 'logout']);

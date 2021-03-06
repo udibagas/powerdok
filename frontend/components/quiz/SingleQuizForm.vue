@@ -38,6 +38,7 @@
 						multiple
 						:on-success="handleUploadFileSuccess"
 						:on-error="handleUploadFileError"
+						:before-upload="handleBeforeUpload"
 						:http-request="upload"
 						:file-list="fileList"
 					>
@@ -130,8 +131,14 @@ export default {
 	},
 
 	methods: {
-		beforeUpload() {
-			// TODO: check extension
+		handleBeforeUpload(file) {
+			const isImage = file.type.includes("image");
+
+			if (!isImage) {
+				this.$message.error("Only image allowed!");
+			}
+
+			return isImage;
 		},
 
 		upload(params) {
@@ -159,12 +166,36 @@ export default {
 		},
 
 		handleRemove(file) {
-			// console.log(file, this.fileList);
-			this.fileList = this.fileList.filter(f => f.uid != file.uid);
-			this.quiz.attachments = this.fileList.map(file => {
-				const { name, path, url, user_id } = file;
-				return { name, path, url, user_id };
-			});
+			this.$confirm(this.$t("Are you sure?"), this.$t("Confirm"), {
+				type: "warning"
+			})
+				.then(() => {
+					this.fileList = this.fileList.filter(f => f.uid != file.uid);
+					this.quiz.attachments = this.fileList.map(file => {
+						const { name, path, url, user_id } = file;
+						return { name, path, url, user_id };
+					});
+
+					const params = { path: file.path };
+
+					this.$axios
+						.$delete(`/api/attachment/deleteByPath`, { params })
+						.then(response => {
+							this.$message({
+								message: this.$t(response.message),
+								type: "success",
+								showClose: true
+							});
+						})
+						.catch(e => {
+							this.$message({
+								message: this.$t(e.response.data.message),
+								type: "error",
+								showClose: true
+							});
+						});
+				})
+				.catch(e => console.log(e));
 		},
 
 		handleUploadFileSuccess(res, file, fileList) {
