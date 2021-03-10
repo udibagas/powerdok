@@ -66,6 +66,7 @@ export default {
         page: this.pagination.current_page,
         sort_field: this.sort_field,
         sort_direction: this.sort_direction,
+        paginated: true,
         ...this.filters,
         ...this.pagination
       }

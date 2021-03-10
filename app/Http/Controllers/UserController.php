@@ -15,7 +15,7 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-        return User::when($request->keyword, function ($q) use ($request) {
+        $data = User::when($request->keyword, function ($q) use ($request) {
             $q->where(function ($q) use ($request) {
                 $q->where('name', 'ILIKE', "%{$request->keyword}%")
                     ->orWhere('email', 'ILIKE', "%{$request->keyword}%")
@@ -24,7 +24,9 @@ class UserController extends Controller
                         $q->where('name', 'ILIKE', "%{$request->keyword}%");
                     });
             });
-        })->paginate($request->pageSize);
+        })->orderBy($request->sort_field ?: 'name', $request->sort_direction ?: 'asc');
+
+        return $request->paginated ? $data->paginate($request->per_page) : $data->get();
     }
 
     /**
