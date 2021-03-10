@@ -16,6 +16,7 @@ class CreateTaskApprovalsTable extends Migration
         Schema::create('task_approvals', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('task_id');
+            $table->tinyInteger('level');
             $table->unsignedBigInteger('user_id');
             $table->boolean('status')->nullable()->comment('true = approved, false = declined');
             $table->text('note')->nullable();

@@ -23,8 +23,7 @@ class DocumentController extends Controller
         return new DocumentCollection(
             Document::when($request->keyword, function ($q) use ($request) {
                 $q->where(function ($q) use ($request) {
-                    $q->where('title', 'ILIKE', "%{$request->keyword}%")
-                        ->orWhere('number', 'ILIKE', "%{$request->keyword}%");
+                    $q->where('title', 'ILIKE', "%{$request->keyword}%");
                 });
             })->when($request->has_quizzes, function ($q) {
                 $q->whereHas('quizzes');

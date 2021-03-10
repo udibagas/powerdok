@@ -7,6 +7,7 @@ use App\Events\NewTaskEvent;
 use App\Events\TaskFinishedEvent;
 use App\Http\Requests\TaskRequest;
 use App\Http\Resources\TaskCollection;
+use App\Models\Document;
 use App\Models\Task;
 use App\Models\TaskApproval;
 use Illuminate\Http\Request;
@@ -189,8 +190,33 @@ class TaskController extends Controller
             $comment->attachments()->createMany($request->attachments);
         }
 
+        if ($request->approval) {
+            $approval = $task->approvals()->where('user_id', auth()->id())->first();
+            if ($approval->status !== null) {
+                // error
+            } else {
+                $approval->update([
+                    'status' => $request->approval_status,
+                    'note' => $request->body
+                ]);
+
+                // todo ; raise event
+            }
+        }
+
         event(new NewCommentEvent($comment));
         return ['message' => 'Comment has been saved',];
+    }
+
+    public function requestApproval(Task $task, Request $request)
+    {
+        $task->approvals()->createMany($request->approvals);
+        return ['message' => 'Approvals has been saved'];
+    }
+
+    public function deleteApproval(TaskApproval $taskApproval)
+    {
+        $taskApproval->delete();
     }
 
     public function submitExam(Task $task, Request $request)
@@ -209,6 +235,34 @@ class TaskController extends Controller
         event(new TaskFinishedEvent($task));
 
         return ['message' => 'Your answer has been saved'];
+    }
+
+    public function updateDocument(Task $task, Request $request)
+    {
+        $this->authorize('updateDocument', $task);
+
+        $request->validate([
+            'title' => 'required',
+            'type' => 'required',
+            'departments' => 'required',
+            'body' => 'required'
+        ]);
+
+        if (!$task->document_id) {
+            $document = Document::create($request->all());
+            $document->versions()->create([
+                'body' => $request->body,
+                'owner_id' => auth()->id(),
+                'status' => $request->status ?: 0
+            ]);
+
+            $task->update(['document_id' => $document->id]);
+        } else  {
+            $task->document->update($request->all());
+            $task->document->latest_version->update(['body' => $request->body]);
+        }
+
+        return ['message' => 'Document has been saved'];
     }
 
     public function getPendingApproval(Request $request)

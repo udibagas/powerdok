@@ -10,10 +10,13 @@ class TaskApproval extends Model
     use HasFactory;
 
     protected $fillable = [
+        'level',
         'user_id',
         'status',
         'note'
     ];
+
+    protected $with = ['user'];
 
     public function user()
     {

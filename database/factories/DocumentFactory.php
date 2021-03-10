@@ -25,12 +25,7 @@ class DocumentFactory extends Factory
             'title' => $this->faker->sentence(),
             'categories' => [$this->faker->word(), $this->faker->word()],
             'tags' => [$this->faker->word(), $this->faker->word()],
-            'number' => $this->faker->randomDigit,
-            'version' => $this->faker->randomDigit,
             'departments' => [1, 3, 2],
-            'effective_date' => $this->faker->dateTime,
-            'expired_date' => $this->faker->dateTime,
-            'owner_id' => 1,
             'favourites' => [3, 2, 4],
             'type' => rand(0, 1),
             'is_public' => !!rand(0, 1)

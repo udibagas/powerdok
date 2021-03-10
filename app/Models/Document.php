@@ -4,11 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
 
 class Document extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     const TYPE_SOP = 0;
 
@@ -20,12 +21,7 @@ class Document extends Model
         'categories',
         'tags',
         'type',
-        'number',
-        'version',
         'departments',
-        'effective_date',
-        'expired_date',
-        'owner_id',
         'favourites',
         'is_public',
         'exam_minimum_score',
@@ -39,14 +35,9 @@ class Document extends Model
         'favourites' => 'json'
     ];
 
-    protected $with = ['owner'];
+    protected $with = ['versions'];
 
-    protected $appends = ['last_update', 'type_name'];
-
-    public function owner()
-    {
-        return $this->belongsTo(User::class, 'owner_id');
-    }
+    protected $appends = ['last_update', 'type_name', 'latest_version'];
 
     public function quizzes()
     {
@@ -74,5 +65,15 @@ class Document extends Model
     public function exams()
     {
         return $this->hasMany(DocumentExam::class);
+    }
+
+    public function versions()
+    {
+        return $this->hasMany(DocumentVersion::class);
+    }
+
+    public function getLatestVersionAttribute()
+    {
+        return $this->versions()->latest()->first();
     }
 }
