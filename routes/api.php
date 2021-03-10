@@ -71,6 +71,12 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
         Route::post('updateDocument/{task}', [TaskController::class, 'updateDocument']);
         Route::post('approval/{task}', [TaskController::class, 'requestApproval']);
         Route::delete('approval/{taskApproval}', [TaskController::class, 'deleteApproval']);
+        Route::post('approve/{task}', [TaskController::class, 'approve']);
+        Route::get('approvals/{task}', [TaskController::class, 'approvals']);
+        Route::get('attachments/{task}', [TaskController::class, 'attachments']);
+        Route::get('comments/{task}', [TaskController::class, 'comments']);
+        Route::get('exam/{task}', [TaskController::class, 'exam']);
+        Route::get('document/{task}', [TaskController::class, 'document']);
     });
 
     Route::prefix('notification')->group(function () {

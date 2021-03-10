@@ -5,6 +5,7 @@ export default {
 		document.body.removeAttribute("data-layout");
 		document.body.removeAttribute("data-topbar");
 		this.$store.dispatch("fetchUsers");
+		this.$store.dispatch("fetchDepartments");
 	},
 
 	methods: {
