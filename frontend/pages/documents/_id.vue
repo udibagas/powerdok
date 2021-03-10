@@ -77,7 +77,7 @@
 <script>
 export default {
   async asyncData({$axios, params}) {
-    const doc = await $axios.$get(`/api/document/${params.slug}`);
+    const doc = await $axios.$get(`/api/document/${params.id}`);
     return { doc };
   }
 }

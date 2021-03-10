@@ -17,7 +17,12 @@ class DocumentCollection extends ResourceCollection
     {
         return [
             'data' => $this->collection->map(function ($item) {
-                $item->departments = Department::whereIn('id', $item->departments)->pluck('name', 'id');
+                if ($item->departments !== null) {
+                    $item->departments = Department::whereIn('id', $item->departments)->pluck('name', 'id');
+                } else {
+                    $item->departments = [];
+                }
+
                 return $item;
             })
         ];

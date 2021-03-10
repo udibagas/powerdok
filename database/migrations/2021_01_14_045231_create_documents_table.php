@@ -19,21 +19,14 @@ class CreateDocumentsTable extends Migration
             $table->text('slug');
             $table->json('tags')->nullable();
             $table->json('categories')->nullable();
-            $table->string('number');
-            $table->string('version');
             $table->json('departments')->nullable();
-            $table->date('effective_date')->nullable();
-            $table->date('expired_date')->nullable();
-            $table->unsignedBigInteger('owner_id');
-            $table->json('favourites');
+            $table->json('favourites')->nullable();
             $table->tinyInteger('type')->default(0); // SOP or Policy
             $table->boolean('is_public')->default(false);
-            $table->tinyInteger('status')->default(1);
             $table->smallInteger('exam_minimum_score')->nullable()->comment('untuk menentukan nilai minimal exam');
             $table->smallInteger('exam_max_duration')->nullable();
             $table->timestamps();
-
-            $table->foreign('owner_id')->references('id')->on('users')->onDelete('cascade');
+            $table->softDeletes();
         });
     }
 

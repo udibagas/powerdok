@@ -66,6 +66,7 @@
 						default-first-option
 						clearable
 						remote
+            :disabled="formModel.type == null"
 						:remote-method="(q) => getList(documentUrl, 'documentList', q)"
 					>
 						<el-option
@@ -81,8 +82,8 @@
 									font-size: 13px;
 									margin-right: 20px;
 								"
-								>{{ doc.type_name }} | No. {{ doc.number }} Ver.
-								{{ doc.version }}</span
+								>{{ doc.versions.type_name }} | No. {{ doc.versions.number }} Ver.
+								{{ doc.versions.version }}</span
 							>
 							<span style="float: right; font-size: 14px"
 								>{{ doc.title }}
@@ -114,7 +115,7 @@
 							v-for="user in userList"
 							:key="user.id"
 							:value="user.id"
-							:label="user.name"
+							:label="`${user.name} | ${user.position} (${user.department ? user.department.name : 'N/A'})`"
 						>
 							<span style="float: left">{{ user.name }}</span>
 							<span
@@ -126,7 +127,7 @@
 								"
 							>
 								{{ user.position }} ({{
-									user.department ? user.department.name : "N/A"
+									user.department ? user.department.name : 'N/A'
 								}})
 							</span>
 						</el-option>
@@ -227,7 +228,7 @@ export default {
 			return this.model.attachments || [];
 		},
 		documentUrl() {
-			if (this.model.type == 3) {
+      if (this.model.type == 3) {
 				return "/api/document?has_quizzes=true";
 			}
 			return "/api/document";

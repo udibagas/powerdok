@@ -4,16 +4,9 @@
 			<div class="flex-grow-1" style="line-height: 30px">
 				<h4 class="text-primary m-0 p-0">
           <i class="uil-file-alt"></i>
-          Manage SOP / Policy
+          Manage Document
         </h4>
 			</div>
-      <el-button
-        class="mr-2 btn-primary"
-        size="mini"
-        icon="el-icon-plus"
-        @click="addData"
-      >Create New
-      </el-button>
 			<el-input
 				:placeholder="$t('Search')"
 				v-model="keyword"
@@ -66,12 +59,12 @@
 						<tr>
 							<th scope="col" style="width: 35px"></th>
 							<th class="text-nowrap" scope="col">Title</th>
-							<th class="text-nowrap" scope="col">Departments</th>
+							<!-- <th class="text-nowrap" scope="col">Departments</th>
 							<th class="text-nowrap" scope="col">Effective Date</th>
 							<th class="text-nowrap" scope="col">Expired Date</th>
 							<th class="text-nowrap" scope="col">Owner</th>
 							<th class="text-nowrap" scope="col">Last Update</th>
-              <th></th>
+              <th>Action</th> -->
 						</tr>
 					</thead>
 					<tbody>
@@ -81,11 +74,12 @@
 							</td>
 							<td class="text-nowrap">
 								<strong class="text-muted">
-									{{ doc.type_name }} &nbsp; No. {{ doc.number }} &nbsp; Ver. {{ doc.version }}
+									{{ doc.type_name }} &nbsp; No. {{ doc.versions.number }} &nbsp; Ver.
+									{{ doc.versions.version }}
 								</strong>
 								<br />
 								<nuxt-link
-									:to="`/documents/${doc.slug}`"
+									:to="`/documents/${doc.id}`"
 									style="font-size: 17px"
 								>
 									{{ doc.title }}
@@ -93,7 +87,7 @@
 								<br />
 								<em>{{ doc.categories.join(", ") }}</em>
 							</td>
-							<td>
+							<!-- <td>
 								<nuxt-link
 									class="mr-1"
 									v-for="(name, id) in doc.departments"
@@ -102,12 +96,10 @@
 									>{{ name }}</nuxt-link
 								>
 							</td>
-							<td class="text-nowrap">
-								{{ readableDate(doc.effective_date) }}
-							</td>
-							<td class="text-nowrap">{{ readableDate(doc.expired_date) }}</td>
-							<td class="text-nowrap">{{ doc.owner.name }}</td>
-							<td class="text-nowrap">{{ doc.last_update }}</td>
+							<td class="text-nowrap">{{ readableDate(doc.versions.effective_date) }}</td>
+							<td class="text-nowrap">{{ readableDate(doc.versions.expired_date) }}</td>
+							<td class="text-nowrap">{{ doc.versions.owner.name }}</td>
+							<td class="text-nowrap">{{ doc.last_update }}</td> -->
               <td class="text-center">
                 <el-dropdown>
                   <span class="el-dropdown-link">
@@ -116,7 +108,7 @@
                   <el-dropdown-menu slot="dropdown">
                     <el-dropdown-item
                       icon="el-icon-view"
-                      @click.native="$router.push(`/documents/${doc.slug}`)"
+                      @click.native="$router.push(`/documents/${doc.id}`)"
                     >Show</el-dropdown-item
                     >
                     <el-dropdown-item
@@ -166,7 +158,7 @@ export default {
   data() {
     return {
       url: '/api/document',
-      title: "Powerdok | Manage SOP / Policy",
+      title: "Powerdok | Manage Document",
     }
   },
 

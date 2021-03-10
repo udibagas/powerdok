@@ -47,7 +47,7 @@
 			</el-form>
 
 			<div class="text-right">
-				<el-button class="btn-primary" @click="save">
+				<el-button size="small" class="btn-primary" @click="save">
 					<i class="uil-comment-dots mr-1"></i> {{ $t("COMMENT") }}
 				</el-button>
 				<!-- <el-button class="btn-success" icon="el-icon-check">

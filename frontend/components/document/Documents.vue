@@ -3,9 +3,9 @@
 		<div class="card-header bg-white d-flex">
 			<div class="flex-grow-1" style="line-height: 30px">
 				<h4 class="text-primary m-0 p-0">
-					<i :class="icon"></i>
-					{{ header }}
-				</h4>
+          <i class="uil-file-alt"></i>
+          Manage Document
+        </h4>
 			</div>
 			<el-input
 				:placeholder="$t('Search')"
@@ -73,12 +73,12 @@
 							</td>
 							<td class="text-nowrap">
 								<strong class="text-muted">
-									{{ doc.type_name }} No. {{ doc.number }} Ver.
-									{{ doc.version }}
+									{{ doc.type_name }} &nbsp; No. {{ doc.versions.number }} &nbsp; Ver.
+									{{ doc.versions.version }}
 								</strong>
 								<br />
 								<nuxt-link
-									:to="`/documents/${doc.slug}`"
+									:to="`/documents/${doc.id}`"
 									style="font-size: 17px"
 								>
 									{{ doc.title }}
@@ -95,11 +95,9 @@
 									>{{ name }}</nuxt-link
 								>
 							</td>
-							<td class="text-nowrap">
-								{{ readableDate(doc.effective_date) }}
-							</td>
-							<td class="text-nowrap">{{ readableDate(doc.expired_date) }}</td>
-							<td class="text-nowrap">{{ doc.owner.name }}</td>
+							<td class="text-nowrap">{{ readableDate(doc.versions.effective_date) }}</td>
+							<td class="text-nowrap">{{ readableDate(doc.versions.expired_date) }}</td>
+							<td class="text-nowrap">{{ doc.versions.owner.name }}</td>
 							<td class="text-nowrap">{{ doc.last_update }}</td>
 						</tr>
 					</tbody>
