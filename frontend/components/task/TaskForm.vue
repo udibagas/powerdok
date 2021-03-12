@@ -108,8 +108,6 @@
 						default-first-option
 						clearable
 						multiple
-						remote
-						:remote-method="(q) => getList('/api/user', 'userList', q)"
 					>
 						<el-option
 							v-for="user in userList"
@@ -235,7 +233,6 @@ export default {
 		}
 	},
 	mounted() {
-		this.getList("/api/user", "userList");
 		this.getList(this.documentUrl, "documentList");
 	}
 };

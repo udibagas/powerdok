@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\DepartmentRequest;
-use App\Http\Resources\DepartmentCollection;
 use App\Models\Department;
 use Illuminate\Http\Request;
 
@@ -16,16 +15,16 @@ class DepartmentController extends Controller
      */
     public function index(Request $request)
     {
-        return new DepartmentCollection(
-            Department::when($request->keyword, function ($q) use ($request) {
-                $q->where(function ($q) use ($request) {
-                    $q->where('name', 'ILIKE', "%{$request->keyword}%");
-                });
-            })->orderBy(
-                $request->sort_field ?: 'name',
-                $request->sort_direction ?: 'asc'
-            )->paginate($request->per_page)
+        $data =  Department::when($request->keyword, function ($q) use ($request) {
+            $q->where(function ($q) use ($request) {
+                $q->where('name', 'ILIKE', "%{$request->keyword}%");
+            });
+        })->orderBy(
+            $request->sort_field ?: 'name',
+            $request->sort_direction ?: 'asc'
         );
+
+        return $request->paginated ? $data->paginate($request->per_page) : $data->get();
     }
 
     /**

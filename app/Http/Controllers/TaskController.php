@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\ApprovalRequestEvent;
 use App\Events\NewCommentEvent;
 use App\Events\NewTaskEvent;
 use App\Events\TaskFinishedEvent;
@@ -115,12 +116,6 @@ class TaskController extends Controller
         return $task->load([
             'user',
             'assignee',
-            'attachments',
-            'document',
-            'comments',
-            'approvals',
-            'trackings',
-            'exam'
         ]);
     }
 
@@ -163,14 +158,40 @@ class TaskController extends Controller
         return ['message' => 'Data has been deleted', 'data' => $task];
     }
 
+    public function requestApproval(Task $task, Request $request)
+    {
+        foreach ($request->approvals as $approval) {
+            if (isset($approval['id'])) {
+                $task->approvals()->where('id', $approval['id'])->update($approval);
+            } else {
+                $task->approvals()->create($approval);
+            }
+        }
+
+        event(new ApprovalRequestEvent($task));
+        return ['message' => "Approvals has been saved"];
+    }
+
+    public function deleteApproval(TaskApproval $taskApproval)
+    {
+        $taskApproval->delete();
+        return ['message' => "Approval has been deleted"];
+    }
+
     public function approve(Task $task, Request $request)
     {
-        $this->authorize('approve', $task);
-        $request->validate(['status' => 'required|boolean']);
+        // $this->authorize('approve', $task);
+        $request->validate([
+            'status' => 'required|boolean',
+            'note' => 'required'
+        ]);
 
         $task->approvals()
             ->where('user_id', $request->user()->id)
             ->update($request->all());
+
+        // todo: raise event taskapproved
+        // event(new DocumentApprovedEvent($task));
 
         return ['message' => 'Approval has been saved'];
     }
@@ -206,17 +227,6 @@ class TaskController extends Controller
 
         event(new NewCommentEvent($comment));
         return ['message' => 'Comment has been saved',];
-    }
-
-    public function requestApproval(Task $task, Request $request)
-    {
-        $task->approvals()->createMany($request->approvals);
-        return ['message' => 'Approvals has been saved'];
-    }
-
-    public function deleteApproval(TaskApproval $taskApproval)
-    {
-        $taskApproval->delete();
     }
 
     public function submitExam(Task $task, Request $request)
@@ -279,5 +289,30 @@ class TaskController extends Controller
         })->where('status', Task::STATUS_SUBMITTED);
 
         return $request->count_only ? $data->count() : $data->get();
+    }
+
+    public function approvals(Task $task)
+    {
+        return $task->approvals;
+    }
+
+    public function comments(Task $task)
+    {
+        return $task->comments;
+    }
+
+    public function attachments(Task $task)
+    {
+        return $task->attachments;
+    }
+
+    public function exam(Task $task)
+    {
+        return $task->exam;
+    }
+
+    public function document(Task $task)
+    {
+        return $task->document;
     }
 }

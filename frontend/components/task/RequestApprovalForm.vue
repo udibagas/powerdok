@@ -4,9 +4,10 @@
 		:visible.sync="show"
 		:before-close="() => {$emit('close')}"
 		:close-on-click-modal="false"
+    width="700px"
   >
 
-    <el-table :data="task.approvals">
+    <el-table :data="approvals">
       <el-table-column label="Level" width="120px">
         <template slot-scope="scope">
           <el-select
@@ -15,6 +16,7 @@
             v-model="scope.row.level"
             default-first-option
             clearable
+            :disabled="scope.row.status != null"
           >
             <el-option v-for="i in 5" :value="i" :label="i" :key="i"></el-option>
           </el-select>
@@ -32,8 +34,7 @@
             filterable
             default-first-option
             clearable
-            remote
-            :remote-method="(q) => getList('/api/user', 'userList', q)"
+            :disabled="scope.row.status != null"
           >
             <el-option
               v-for="user in userList"
@@ -64,10 +65,11 @@
             @click="addApproval"
           ></el-button>
         </template>
-        <template>
+        <template slot-scope="scope">
           <el-button
+            v-if="scope.row.status == null"
             icon="el-icon-delete"
-            @click="deleteApproval"
+            @click="deleteApproval(scope.$index, scope.row.id)"
             type="text"
           ></el-button>
         </template>
@@ -88,6 +90,7 @@
 				icon="el-icon-success"
 				@click="submit"
 				:loading="loading"
+        type="primary"
 			>{{ $t('SUBMIT') }}
 			</el-button>
 		</div>
@@ -95,20 +98,22 @@
 </template>
 
 <script>
-import dropdown from "~/mixins/dropdown";
-
+import { mapState } from 'vuex';
 export default {
-	props: ['show', 'task'],
-	mixins: [dropdown],
+	props: ['show', 'task', 'approvals', 'action'],
   data() {
     return {
       loading: false,
       errors: {}
     }
   },
+  computed: {
+    ...mapState(['userList'])
+  },
+
   methods: {
     addApproval() {
-      this.task.approvals.push({
+      this.approvals.push({
         level: '',
         user_id: '',
       })
@@ -123,7 +128,7 @@ export default {
               type: "success",
               showClose: true
             });
-            this.task.approvals.splice(index, 1);
+            this.approvals.splice(index, 1);
           })
           .catch(e => {
             this.$message({
@@ -134,21 +139,21 @@ export default {
           })
           .finally(() => (this.loading = false));
         } else {
-          this.task.approvals.splice(index, 1);
+          this.approvals.splice(index, 1);
         }
       });
     },
     submit() {
-      this.$axios.$post(`/api/task/approval/${this.task.id}`, { approvals: this.task.approvals }).then(response => {
+      this.$axios.$post(`/api/task/approval/${this.task.id}`, { approvals: this.approvals }).then(response => {
         this.$message({
           message: response.message,
           type: 'success',
           showClose: true
         });
 
-        this.task.approvals = {};
         this.errors = {};
-        this.$emit('refresh', response.task.approvals);
+        this.$emit('close');
+        this.$emit('refresh');
       }).catch(e => {
         if (e.response.status == 422) {
           this.errors = e.response.data.errors;
@@ -161,9 +166,6 @@ export default {
         });
       })
     },
-  },
-  mounted() {
-		this.getList("/api/user", "userList");
   }
 }
 </script>

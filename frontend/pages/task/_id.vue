@@ -62,10 +62,10 @@
         </div>
       </div>
       <hr>
-      <Attachments :attachments="task.attachments" />
+      <!-- <Attachments :attachments="task.attachments" /> -->
 		</el-card>
 
-    <TaskApproval :task="task" />
+    <TaskApproval :task="task" @refresh="fetchData" />
 
 		<div class="mt-3">
       <DocumentForm v-if="task.type == TASK_TYPE.DOCUMENT_REVIEW" :task="task" @refresh="fetchData" />
@@ -77,7 +77,7 @@
 		</el-card>
 
 		<el-card :header="$t('Comments')" class="my-3">
-			<Comments :comments="task.comments" />
+			<!-- <Comments :comments="task.comments" /> -->
 		</el-card>
 	</div>
 </template>
