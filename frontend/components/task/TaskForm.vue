@@ -82,8 +82,8 @@
 									font-size: 13px;
 									margin-right: 20px;
 								"
-								>{{ doc.versions.type_name }} | No. {{ doc.versions.number }} Ver.
-								{{ doc.versions.version }}</span
+								>{{ doc.type_name }} | No. {{ doc.latest_version.number }} Ver.
+								{{ doc.latest_version.version }}</span
 							>
 							<span style="float: right; font-size: 14px"
 								>{{ doc.title }}
@@ -214,6 +214,7 @@
 <script>
 import form from "~/mixins/form";
 import dropdown from "~/mixins/dropdown";
+import { mapState } from 'vuex';
 
 export default {
 	props: ["show", "model", "url"],
@@ -230,7 +231,8 @@ export default {
 				return "/api/document?has_quizzes=true";
 			}
 			return "/api/document";
-		}
+		},
+    ...mapState(['userList'])
 	},
 	mounted() {
 		this.getList(this.documentUrl, "documentList");

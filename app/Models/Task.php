@@ -106,7 +106,7 @@ class Task extends Model
 
     public function approvals()
     {
-        return $this->hasMany(TaskApproval::class);
+        return $this->hasMany(TaskApproval::class)->orderBy('level', 'asc');
     }
 
     public function trackings()

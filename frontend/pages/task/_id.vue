@@ -19,7 +19,7 @@
           </div>
           <div class="mt-1">
             <strong>{{ task.document.type_name }}</strong> &nbsp; No.
-            {{ task.document.versions.number }} &nbsp; Ver. {{ task.document.versions.version }}
+            {{ task.document.latest_version.number }} &nbsp; Ver. {{ task.document.latest_version.version }}
           </div>
           <nuxt-link :to="`/documents/${task.document.id}`" style="font-size: 16px">
             {{ task.document.title }}
