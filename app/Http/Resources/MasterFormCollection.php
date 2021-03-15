@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
-class UserGroupCollection extends ResourceCollection
+class MasterFormCollection extends ResourceCollection
 {
     /**
      * Transform the resource collection into an array.

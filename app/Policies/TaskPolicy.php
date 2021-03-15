@@ -86,7 +86,7 @@ class TaskPolicy
 
     public function comment(User $user, Task $task)
     {
-        return $this->view($user, $task) && !in_array($task->status, [Task::STATUS_SUBMITTED, Task::STATUS_ON_PROGRESS, Task::STATUS_FINISHED]);
+        return $this->view($user, $task) && in_array($task->status, [Task::STATUS_SUBMITTED, Task::STATUS_ON_PROGRESS, Task::STATUS_FINISHED]);
     }
 
     public function submitExam(User $user, Task $task)

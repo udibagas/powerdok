@@ -1,9 +1,6 @@
 export default {
   data() {
     return {
-      // REGISTER ALL LIST HERE
-      departmentList: [],
-      userList: [],
       documentList: [],
     }
   },

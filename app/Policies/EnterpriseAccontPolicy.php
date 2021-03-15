@@ -3,11 +3,11 @@
 namespace App\Policies;
 
 use App\Models\AccessControl;
+use App\Models\EnterpriseAccont;
 use App\Models\User;
-use App\Models\UserGroup;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class UserGroupPolicy
+class EnterpriseAccontPolicy
 {
     use HandlesAuthorization;
 
@@ -19,19 +19,19 @@ class UserGroupPolicy
      */
     public function viewAny(User $user)
     {
-        return AccessControl::check($user, UserGroup::class, 'viewAny');
+        return AccessControl::check($user, EnterpriseAccont::class, 'viewAny');
     }
 
     /**
      * Determine whether the user can view the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\UserGroup  $userGroup
+     * @param  \App\Models\EnterpriseAccont  $enterpriseAccont
      * @return mixed
      */
-    public function view(User $user, UserGroup $userGroup)
+    public function view(User $user, EnterpriseAccont $enterpriseAccont)
     {
-        return AccessControl::check($user, UserGroup::class, 'view');
+        return AccessControl::check($user, EnterpriseAccont::class, 'view');
     }
 
     /**
@@ -42,54 +42,54 @@ class UserGroupPolicy
      */
     public function create(User $user)
     {
-        return AccessControl::check($user, UserGroup::class, 'create');
+        return AccessControl::check($user, EnterpriseAccont::class, 'create');
     }
 
     /**
      * Determine whether the user can update the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\UserGroup  $userGroup
+     * @param  \App\Models\EnterpriseAccont  $enterpriseAccont
      * @return mixed
      */
-    public function update(User $user, UserGroup $userGroup)
+    public function update(User $user, EnterpriseAccont $enterpriseAccont)
     {
-        return AccessControl::check($user, UserGroup::class, 'update');
+        return AccessControl::check($user, EnterpriseAccont::class, 'update');
     }
 
     /**
      * Determine whether the user can delete the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\UserGroup  $userGroup
+     * @param  \App\Models\EnterpriseAccont  $enterpriseAccont
      * @return mixed
      */
-    public function delete(User $user, UserGroup $userGroup)
+    public function delete(User $user, EnterpriseAccont $enterpriseAccont)
     {
-        return AccessControl::check($user, UserGroup::class, 'delete');
+        return AccessControl::check($user, EnterpriseAccont::class, 'delete');
     }
 
     /**
      * Determine whether the user can restore the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\UserGroup  $userGroup
+     * @param  \App\Models\EnterpriseAccont  $enterpriseAccont
      * @return mixed
      */
-    public function restore(User $user, UserGroup $userGroup)
+    public function restore(User $user, EnterpriseAccont $enterpriseAccont)
     {
-        return AccessControl::check($user, UserGroup::class, 'restore');
+        return AccessControl::check($user, EnterpriseAccont::class, 'restore');
     }
 
     /**
      * Determine whether the user can permanently delete the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\UserGroup  $userGroup
+     * @param  \App\Models\EnterpriseAccont  $enterpriseAccont
      * @return mixed
      */
-    public function forceDelete(User $user, UserGroup $userGroup)
+    public function forceDelete(User $user, EnterpriseAccont $enterpriseAccont)
     {
-        return AccessControl::check($user, UserGroup::class, 'forceDelete');
+        return AccessControl::check($user, EnterpriseAccont::class, 'forceDelete');
     }
 }

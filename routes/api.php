@@ -68,7 +68,8 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     });
 
     Route::prefix('task')->group(function () {
-        Route::post('comment/{task}', [TaskController::class, 'comment']);
+        Route::post('comments/{task}', [TaskController::class, 'comment']);
+        Route::get('comments/{task}', [TaskController::class, 'comments']);
         Route::post('submitExam/{task}', [TaskController::class, 'submitExam']);
         Route::post('updateDocument/{task}', [TaskController::class, 'updateDocument']);
         Route::post('approval/{task}', [TaskController::class, 'requestApproval']);
@@ -76,7 +77,6 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
         Route::post('approve/{task}', [TaskController::class, 'approve']);
         Route::get('approvals/{task}', [TaskController::class, 'approvals']);
         Route::get('attachments/{task}', [TaskController::class, 'attachments']);
-        Route::get('comments/{task}', [TaskController::class, 'comments']);
         Route::get('exam/{task}', [TaskController::class, 'exam']);
         Route::get('document/{task}', [TaskController::class, 'document']);
     });

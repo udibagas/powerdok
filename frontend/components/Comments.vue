@@ -1,11 +1,18 @@
 <template>
-	<div>
-		<div class="media mb-5" v-for="comment in comments" :key="comment.id">
-			<el-avatar
-				src="https://ckeditor.com/docs/ckeditor5/latest/assets/img/m_1.jpg"
-				class="mr-3"
-				:size="40"
-			></el-avatar>
+	<el-card :header="$t('COMMENTS')" class="my-3">
+		<CommentForm class="mb-5" :url="url" @refresh="fetchData" />
+
+		<content-placeholders v-if="fetching">
+			<content-placeholders-heading :img="true" />
+			<!-- <content-placeholders-text :lines="3" /> -->
+		</content-placeholders>
+		<div
+			v-else
+			class="media mb-4"
+			v-for="comment in comments"
+			:key="comment.id"
+		>
+			<el-avatar class="mr-3" :size="45" icon="el-icon-user"></el-avatar>
 			<div class="media-body">
 				<strong>{{ comment.user.name }}</strong>
 
@@ -13,28 +20,72 @@
 					&bull;
 					{{ comment.user.position }} |
 					{{ comment.user.department ? comment.user.department.name : "N/A" }}
-					&bull;
-					{{ $moment(comment.created_at).lang($i18n.locale).fromNow() }}
+					<br />
+					<i>
+						{{ $moment(comment.created_at).lang($i18n.locale).fromNow() }}
+					</i>
 				</span>
-				<span class="badge badge-success">Online</span>
 
-				<div class="mb-2">
-					{{ comment.body }}
+				<div class="my-2" v-html="comment.body"></div>
+
+				<!-- <el-input
+					class="my-3"
+					v-model="body"
+					type="textarea"
+					rows="3"
+					placeholder="Reply"
+				></el-input>
+
+				<div>
+					<el-button size="small" type="primary" @click="save">
+						<i class="uil-comment-dots mr-1"></i> {{ $t("COMMENT") }}
+					</el-button>
+					<el-button size="small" type="info" icon="el-icon-paperclip">
+						{{ $t("ATTACH") }}
+					</el-button>
+					<el-button size="small" type="danger" icon="el-icon-close">
+						{{ $t("CANCEL") }}
+					</el-button>
 				</div>
 
-				<!-- <el-button type="text">
+				<el-button type="text">
 					<i class="mdi mdi-reply mr-1"></i> {{ $t("Reply") }}
 				</el-button> -->
 			</div>
 		</div>
-	</div>
+	</el-card>
 </template>
 
 <script>
 export default {
-  props: ['comments'],
-}
-</script>
+	props: ["url"],
 
-<style>
-</style>
+	mounted() {
+		this.fetchData();
+	},
+
+	data() {
+		return {
+			comments: [],
+			fetching: true,
+			body: ""
+		};
+	},
+
+	methods: {
+		fetchData() {
+			this.$axios
+				.$get(this.url)
+				.then(response => (this.comments = response))
+				.catch(e => {
+					this.$message({
+						message: e.response.data.message,
+						type: "error",
+						showClose: true
+					});
+				})
+				.finally(() => (this.fetching = false));
+		}
+	}
+};
+</script>

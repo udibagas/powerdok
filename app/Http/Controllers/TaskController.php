@@ -211,20 +211,6 @@ class TaskController extends Controller
             $comment->attachments()->createMany($request->attachments);
         }
 
-        if ($request->approval) {
-            $approval = $task->approvals()->where('user_id', auth()->id())->first();
-            if ($approval->status !== null) {
-                // error
-            } else {
-                $approval->update([
-                    'status' => $request->approval_status,
-                    'note' => $request->body
-                ]);
-
-                // todo ; raise event
-            }
-        }
-
         event(new NewCommentEvent($comment));
         return ['message' => 'Comment has been saved',];
     }
@@ -267,7 +253,7 @@ class TaskController extends Controller
             ]);
 
             $task->update(['document_id' => $document->id]);
-        } else  {
+        } else {
             $task->document->update($request->all());
             $task->document->latest_version->update(['body' => $request->body]);
         }

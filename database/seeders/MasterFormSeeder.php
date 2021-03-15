@@ -4,7 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 
-class UserGroupSeeder extends Seeder
+class MasterFormSeeder extends Seeder
 {
     /**
      * Run the database seeds.
