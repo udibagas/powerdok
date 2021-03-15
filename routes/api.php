@@ -6,6 +6,7 @@ use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\DocumentQuizController;
 use App\Http\Controllers\LanguageController;
+use App\Http\Controllers\MasterFormController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\UserController;
@@ -56,6 +57,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
         'language' => LanguageController::class,
         'task' => TaskController::class,
         'user' => UserController::class,
+        'masterForm' => MasterFormController::class,
     ]);
 
     Route::prefix('document')->group(function () {
