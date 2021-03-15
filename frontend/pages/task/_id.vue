@@ -12,16 +12,16 @@
         </div>
       </div>
       <div class="row mt-4">
-        <div class="col">
+        <div class="col" v-if="task.document">
           <div class="text-muted">
             <i class="el-icon-document"></i>
             {{ $t("Related Document") }}
           </div>
           <div class="mt-1">
             <strong>{{ task.document.type_name }}</strong> &nbsp; No.
-            {{ task.document.number }} &nbsp; Ver. {{ task.document.version }}
+            {{ task.document.versions.number }} &nbsp; Ver. {{ task.document.versions.version }}
           </div>
-          <nuxt-link :to="`/documents/${task.document.slug}`" style="font-size: 16px">
+          <nuxt-link :to="`/documents/${task.document.id}`" style="font-size: 16px">
             {{ task.document.title }}
           </nuxt-link>
         </div>
@@ -33,12 +33,7 @@
           <div class="media mt-1">
             <el-avatar class="mr-3"></el-avatar>
             <div class="media-body">
-              <div v-if="task.assignee_id == $auth.user.id">
-                <strong>Me</strong>
-              </div>
-              <div v-else>
-                <strong>{{ task.assignee.name }}</strong>
-              </div>
+              <strong>{{ task.assignee_id == $auth.user.id ? "Me" : task.user.name }}</strong>
               <div class="text-muted">
                 {{ task.assignee.position }} |
                 {{ task.assignee.department ? task.assignee.department.name : "N/A" }}
@@ -54,7 +49,7 @@
           <div class="media mt-1">
             <el-avatar class="mr-3"></el-avatar>
             <div class="media-body">
-              <strong>{{ task.user.name }}</strong>
+              <strong>{{ task.assignee_id == $auth.user.id ? "Me" : task.user.name }}</strong>
               <span class="text-muted">
                 &bull; {{ $moment(task.created_at).fromNow() }}
               </span>
@@ -67,15 +62,13 @@
         </div>
       </div>
       <hr>
-      <Attachments :attachments="task.attachments" />
+      <!-- <Attachments :attachments="task.attachments" /> -->
 		</el-card>
 
+    <TaskApproval :task="task" @refresh="fetchData" />
+
 		<div class="mt-3">
-			<ckeditor
-				v-if="task.type == TASK_TYPE.DOCUMENT_REVIEW"
-				v-model="document"
-				:editor="editor"
-			></ckeditor>
+      <DocumentForm v-if="task.type == TASK_TYPE.DOCUMENT_REVIEW" :task="task" @refresh="fetchData" />
 			<TaskExam v-if="task.type == TASK_TYPE.EXAMINATION" :task="task" />
 		</div>
 
@@ -84,25 +77,18 @@
 		</el-card>
 
 		<el-card :header="$t('Comments')" class="my-3">
-			<Comments :comments="task.comments" />
+			<!-- <Comments :comments="task.comments" /> -->
 		</el-card>
 	</div>
 </template>
 
 <script>
-import CKEditor from "@ckeditor/ckeditor5-vue";
-import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import { TASK_STATUS, TASK_TYPE } from "@/store/modules/task";
 
 export default {
-	components: {
-		ckeditor: CKEditor.component
-	},
-
 	data() {
 		return {
 			document: "",
-			editor: ClassicEditor,
 			TASK_TYPE,
 			TASK_STATUS
 		};

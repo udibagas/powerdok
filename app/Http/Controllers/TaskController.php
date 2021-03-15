@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\ApprovalRequestEvent;
 use App\Events\NewCommentEvent;
 use App\Events\NewTaskEvent;
 use App\Events\TaskFinishedEvent;
 use App\Http\Requests\TaskRequest;
 use App\Http\Resources\TaskCollection;
+use App\Models\Document;
 use App\Models\Task;
 use App\Models\TaskApproval;
 use Illuminate\Http\Request;
@@ -114,12 +116,6 @@ class TaskController extends Controller
         return $task->load([
             'user',
             'assignee',
-            'attachments',
-            'document',
-            'comments',
-            'approvals',
-            'trackings',
-            'exam'
         ]);
     }
 
@@ -162,14 +158,40 @@ class TaskController extends Controller
         return ['message' => 'Data has been deleted', 'data' => $task];
     }
 
+    public function requestApproval(Task $task, Request $request)
+    {
+        foreach ($request->approvals as $approval) {
+            if (isset($approval['id'])) {
+                $task->approvals()->where('id', $approval['id'])->update($approval);
+            } else {
+                $task->approvals()->create($approval);
+            }
+        }
+
+        event(new ApprovalRequestEvent($task));
+        return ['message' => "Approvals has been saved"];
+    }
+
+    public function deleteApproval(TaskApproval $taskApproval)
+    {
+        $taskApproval->delete();
+        return ['message' => "Approval has been deleted"];
+    }
+
     public function approve(Task $task, Request $request)
     {
-        $this->authorize('approve', $task);
-        $request->validate(['status' => 'required|boolean']);
+        // $this->authorize('approve', $task);
+        $request->validate([
+            'status' => 'required|boolean',
+            'note' => 'required'
+        ]);
 
         $task->approvals()
             ->where('user_id', $request->user()->id)
             ->update($request->all());
+
+        // todo: raise event taskapproved
+        // event(new DocumentApprovedEvent($task));
 
         return ['message' => 'Approval has been saved'];
     }
@@ -187,6 +209,20 @@ class TaskController extends Controller
 
         if ($request->attachments) {
             $comment->attachments()->createMany($request->attachments);
+        }
+
+        if ($request->approval) {
+            $approval = $task->approvals()->where('user_id', auth()->id())->first();
+            if ($approval->status !== null) {
+                // error
+            } else {
+                $approval->update([
+                    'status' => $request->approval_status,
+                    'note' => $request->body
+                ]);
+
+                // todo ; raise event
+            }
         }
 
         event(new NewCommentEvent($comment));
@@ -211,6 +247,34 @@ class TaskController extends Controller
         return ['message' => 'Your answer has been saved'];
     }
 
+    public function updateDocument(Task $task, Request $request)
+    {
+        $this->authorize('updateDocument', $task);
+
+        $request->validate([
+            'title' => 'required',
+            'type' => 'required',
+            'departments' => 'required',
+            'body' => 'required'
+        ]);
+
+        if (!$task->document_id) {
+            $document = Document::create($request->all());
+            $document->versions()->create([
+                'body' => $request->body,
+                'owner_id' => auth()->id(),
+                'status' => $request->status ?: 0
+            ]);
+
+            $task->update(['document_id' => $document->id]);
+        } else  {
+            $task->document->update($request->all());
+            $task->document->latest_version->update(['body' => $request->body]);
+        }
+
+        return ['message' => 'Document has been saved'];
+    }
+
     public function getPendingApproval(Request $request)
     {
         $data = TaskApproval::whereNull('status')->where('user_id', $request->user()->id);
@@ -225,5 +289,30 @@ class TaskController extends Controller
         })->where('status', Task::STATUS_SUBMITTED);
 
         return $request->count_only ? $data->count() : $data->get();
+    }
+
+    public function approvals(Task $task)
+    {
+        return $task->approvals;
+    }
+
+    public function comments(Task $task)
+    {
+        return $task->comments;
+    }
+
+    public function attachments(Task $task)
+    {
+        return $task->attachments;
+    }
+
+    public function exam(Task $task)
+    {
+        return $task->exam;
+    }
+
+    public function document(Task $task)
+    {
+        return $task->document;
     }
 }

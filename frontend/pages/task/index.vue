@@ -45,7 +45,7 @@
 			<el-table-column
 				prop="type_name"
 				label="Type"
-				width="150"
+				width="200"
 			></el-table-column>
 
 			<el-table-column :label="$t('Priority')" width="150">
@@ -133,12 +133,6 @@ export default {
 			title: "Powerdok | My Task"
 		};
 	},
-	methods: {
-		addData() {
-			this.selectedData = { attachments: [] };
-			this.showForm = true;
-		}
-	}
 };
 </script>
 

@@ -93,4 +93,9 @@ class TaskPolicy
     {
         return ($user->id == $task->assignee_id) && in_array($task->status, [Task::STATUS_SUBMITTED, Task::STATUS_ON_PROGRESS]);
     }
+
+    public function updateDocument(User $user, Task $task)
+    {
+        return ($user->id == $task->assignee_id) && in_array($task->status, [Task::STATUS_SUBMITTED, Task::STATUS_ON_PROGRESS]);
+    }
 }

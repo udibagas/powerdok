@@ -24,10 +24,10 @@
 						{{ $t("Score") }}
 					</div>
 					<h1>
-						{{ task.exam.score }}
+						{{ exam.score }}
 						<small
-							>({{ task.exam.correct_answer }} /
-							{{ task.exam.quizzes.length }})</small
+							>({{ exam.correct_answer }} /
+							{{ exam.quizzes.length }})</small
 						>
 					</h1>
 				</div>
@@ -42,11 +42,11 @@
 					</div>
 					<h1
 						:class="{
-							'text-success': task.exam.passed,
-							'text-danger': !task.exam.passed,
+							'text-success': exam.passed,
+							'text-danger': !exam.passed,
 						}"
 					>
-						{{ task.exam.passed ? $t("PASSED") : $t("FAILED") }}
+						{{ exam.passed ? $t("PASSED") : $t("FAILED") }}
 					</h1>
 				</div>
 			</div>
@@ -58,7 +58,7 @@
 			"
 		>
 			<el-card
-				v-for="(e, index) in task.exam.quizzes"
+				v-for="(e, index) in exam.quizzes"
 				class="mb-2"
 				:key="index"
 				:class="{
@@ -160,9 +160,14 @@ export default {
 			start: false,
 			time_start: null,
 			time_finished: null,
-			showDialog: false
+			showDialog: false,
+      exam: {}
 		};
 	},
+
+  mounted() {
+    this.getData();
+  },
 
 	computed: {
 		allowSubmitTask() {
@@ -186,7 +191,11 @@ export default {
 			this.start = true;
 			this.time_start = new Date();
 			this.showDialog = true;
-		}
+		},
+
+    getData() {
+      this.$axios.$get(`/api/task/exam/${this.task.id}`).then(response => this.exam = response);
+    }
 	}
 };
 </script>

@@ -16,13 +16,15 @@ class CreateDocumentVersionsTable extends Migration
         Schema::create('document_versions', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('document_id');
-            $table->string('number');
-            $table->string('version');
+            $table->string('number')->nullable();
+            $table->string('version')->nullable();
             $table->date('effective_date')->nullable();
             $table->date('expired_date')->nullable();
             $table->unsignedBigInteger('owner_id');
             $table->text('body');
+            $table->tinyInteger('status')->default(0)->comment('0 = draft, 1 = on review, 2 = approve, 3 = publish, 4 = void, 5 = archive');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

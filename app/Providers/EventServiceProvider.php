@@ -2,9 +2,11 @@
 
 namespace App\Providers;
 
+use App\Events\ApprovalRequestEvent;
 use App\Events\NewCommentEvent;
 use App\Events\NewTaskEvent;
 use App\Events\TaskFinishedEvent;
+use App\Listeners\ApprovalRequestListener;
 use App\Listeners\NewCommentListener;
 use App\Listeners\NewTaskListener;
 use App\Listeners\TaskFinishedListener;
@@ -24,7 +26,8 @@ class EventServiceProvider extends ServiceProvider
         Registered::class => [SendEmailVerificationNotification::class],
         NewTaskEvent::class => [NewTaskListener::class],
         NewCommentEvent::class => [NewCommentListener::class],
-        TaskFinishedEvent::class => [TaskFinishedListener::class]
+        TaskFinishedEvent::class => [TaskFinishedListener::class],
+        ApprovalRequestEvent::class => [ApprovalRequestListener::class]
     ];
 
     /**
