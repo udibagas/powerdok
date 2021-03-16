@@ -11,7 +11,7 @@
 			</el-button>
 		</el-card>
 
-		<ExamDialog :task="task" :exam="exam" :show="showDialog" />
+		<ExamDialog v-if="start" :task="task" :exam="exam" :show="showDialog" />
 
 		<el-card
 			class="mb-3"

@@ -35,11 +35,11 @@
 			class="d-flex p-3 mt-3 border rounded shadow"
 			style="min-height: 400px"
 		>
-			<h4 style="width: 60px" class="text-muted">#{{ index + 1 }}</h4>
+			<h4 style="width: 150px" class="text-muted">#{{ index + 1 }}</h4>
 			<div class="flex-grow-1">
 				<div class="d-flex">
 					<div class="mr-3 mb-3 flex-grow-1">
-						<h4>{{ exam.quizzes[index].question }}</h4>
+						<h4 class="text-justify">{{ exam.quizzes[index].question }}</h4>
 
 						<div class="d-flex my-3">
 							<a
@@ -78,15 +78,22 @@
 						class="col-6 mb-3 d-flex"
 					>
 						<el-radio
+							class="mr-2"
 							v-model="exam.quizzes[index].user_answer"
 							:label="i"
-							:disabled="!allowSubmitTask"
+							:disabled="!allowSubmitExam"
+							@change="(answer) => submitExam(index, answer)"
 						>
-							<strong class="text-muted" style="display: inline-block">
+							<span
+								class="text-muted"
+								style="display: inline-block; font-size: 1.2rem"
+							>
 								{{ ["A", "B", "C", "D"][i] }}.
-							</strong>
-							{{ exam.quizzes[index].choices[i] }}
+							</span>
 						</el-radio>
+						<p class="text-justify" style="display: inline-block">
+							{{ exam.quizzes[index].choices[i] }}
+						</p>
 					</div>
 				</div>
 			</div>
@@ -114,18 +121,16 @@
 				>
 			</div>
 			<div class="col text-center">
-				<el-select
-					class="ml-3"
-					v-model="index"
-					style="width: 80px; border: none; font-size: 30px"
+				<el-pagination
+					class="mt-2"
+					background
+					@current-change="(c) => (index = c - 1)"
+					:current-page.sync="page"
+					:page-size="1"
+					layout="prev, pager, next, jumper"
+					:total="exam.quizzes.length"
 				>
-					<el-option
-						v-for="i in lastIndex"
-						:key="i"
-						:value="i"
-						:label="i + 1"
-					></el-option>
-				</el-select>
+				</el-pagination>
 			</div>
 			<div class="col text-right">
 				<el-button
@@ -152,7 +157,7 @@ export default {
 	},
 
 	computed: {
-		allowSubmitTask() {
+		allowSubmitExam() {
 			return (
 				this.task.assignee_id == this.$auth.user.id &&
 				[TASK_STATUS.SUBMITTED, TASK_STATUS.ON_PROGRESS].includes(
@@ -174,6 +179,7 @@ export default {
 		return {
 			TASK_STATUS,
 			index: 0,
+			page: 1,
 			timer: 0,
 			indexImage: 0,
 			showImage: false
@@ -183,10 +189,12 @@ export default {
 	methods: {
 		nextQuiz() {
 			this.index++;
+			this.page++;
 		},
 
 		prevQuiz() {
 			this.index--;
+			this.page--;
 		},
 
 		runTimer() {
@@ -195,11 +203,9 @@ export default {
 			}, 1000);
 		},
 
-		submitExam() {
-			this.time_finished = new Date();
-			const answer = this.exam.quizzes.map(q => q.user_answer);
+		submitExam(index, answer) {
 			this.$axios
-				.$post(`/api/task/submitExam/${this.task.id}`, { answer })
+				.$post(`/api/task/submitExam/${this.task.id}`, { index, answer })
 				.then(response => {
 					this.$message({
 						message: response.message,

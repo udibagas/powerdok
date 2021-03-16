@@ -24,6 +24,8 @@ class DocumentExam extends Model
         'time_finished'
     ];
 
+    protected $casts = ['quizzes' => 'json'];
+
     protected $appends = ['score', 'passed', 'correct_answer'];
 
     public function task()
@@ -34,7 +36,7 @@ class DocumentExam extends Model
     public function getCorrectAnswerAttribute()
     {
         return count(array_filter($this->quizzes, function ($quiz) {
-            return $quiz->correct_answer == $quiz->user_answer;
+            return $quiz['correct_answer'] == $quiz['user_answer'];
         }));
     }
 
@@ -48,21 +50,21 @@ class DocumentExam extends Model
         return $this->score >= $this->exam_minimum_score;
     }
 
-    public function getQuizzesAttribute($value)
-    {
-        if (
-            in_array(
-                $this->task->status,
-                [Task::STATUS_DRAFT, Task::STATUS_ON_PROGRESS, Task::STATUS_SUBMITTED, Task::STATUS_VOID]
-            )
-            && $this->user_id != auth()->id()
-        ) {
-            return array_map(function ($quiz) {
-                $quiz->correct_answer = null;
-                return $quiz;
-            }, json_decode($value));
-        }
+    // public function getQuizzesAttribute($value)
+    // {
+    //     if (
+    //         in_array(
+    //             $this->task->status,
+    //             [Task::STATUS_DRAFT, Task::STATUS_ON_PROGRESS, Task::STATUS_SUBMITTED, Task::STATUS_VOID]
+    //         )
+    //         && $this->user_id != auth()->id()
+    //     ) {
+    //         return array_map(function ($quiz) {
+    //             $quiz->correct_answer = null;
+    //             return $quiz;
+    //         }, json_decode($value));
+    //     }
 
-        return json_decode($value);
-    }
+    //     return json_decode($value);
+    // }
 }

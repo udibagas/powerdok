@@ -87,7 +87,7 @@ class TaskController extends Controller
                                     return $attachment->url;
                                 })
                             ];
-                        })
+                        })->shuffle()->all()
                     ]);
                 }
 
@@ -196,12 +196,6 @@ class TaskController extends Controller
             ->first();
 
         $approval->update($request->all());
-
-        // hapus approval yg 1 level yang belum ada approval
-        $task->approvals()->whereLevel($approval->level)
-            ->whereNull('status')
-            ->delete();
-
         event(new TaskApprovedEvent($task, $request->user()));
         return ['message' => 'Approval has been saved'];
     }
@@ -347,6 +341,25 @@ class TaskController extends Controller
     public function exam(Task $task)
     {
         $this->authorize('view', $task);
+
+        $open = [
+            Task::STATUS_DRAFT,
+            Task::STATUS_SUBMITTED,
+            Task::STATUS_ON_PROGRESS,
+            Task::STATUS_VOID
+        ];
+
+        if (in_array($task->status, $open) && $task->user_id != auth()->id()) {
+            $quizzes = array_map(function ($quiz) {
+                $quiz['correct_answer'] = null;
+                return $quiz;
+            }, $task->exam->quizzes);
+
+            $exam = $task->exam;
+            $exam->quizzes = $quizzes;
+            return $exam;
+        }
+
         return $task->exam;
     }
 
