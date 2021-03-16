@@ -225,20 +225,52 @@ class TaskController extends Controller
         return ['message' => 'Comment has been saved',];
     }
 
+    public function startExam(Task $task)
+    {
+        $this->authorize('startExam', $task);
+
+        if ($task->exam->time_start == null) {
+            $start = now();
+            $task->exam->update(['time_start' => $start]);
+        } else {
+            $start = $task->exam->time_start;
+        }
+
+        $task->update(['status' => Task::STATUS_ON_PROGRESS]);
+
+        return [
+            'message' => 'Exam started',
+            'time_start' => $start
+        ];
+    }
+
+    public function finishExam(Task $task)
+    {
+        $this->authorize('finishExam', $task);
+
+        $now = now();
+        $task->exam->update(['time_finished' => $now]);
+        $task->update(['status' => Task::STATUS_FINISHED]);
+        event(new TaskFinishedEvent($task));
+
+        return [
+            'message' => 'Exam has been finished',
+            'time_finished' => $now
+        ];
+    }
+
     public function submitExam(Task $task, Request $request)
     {
         $this->authorize('submitExam', $task);
-        $request->validate(['answer' => 'required|array']);
+
+        $request->validate([
+            'index' => 'required|numeric',
+            'answer' => 'required|in:0,1,2,3'
+        ]);
+
         $userAnswer = $task->exam->quizzes;
-
-        foreach ($request->answer as $index => $answer) {
-            $userAnswer[$index]->user_answer = $answer;
-        }
-
+        $userAnswer[$request->index]->user_answer = $request->answer;
         $task->exam->update(['quizzes' => $userAnswer]);
-        $task->status = Task::STATUS_FINISHED;
-        $task->save();
-        event(new TaskFinishedEvent($task));
 
         return ['message' => 'Your answer has been saved'];
     }

@@ -22,7 +22,10 @@ class DocumentQuizFactory extends Factory
     public function definition()
     {
         return [
-            //
+            'document_id' => rand(1, 10),
+            'question' => $this->faker->paragraphs(3, true),
+            'choices' => $this->faker->paragraphs(4),
+            'correct_answer' => rand(0, 3),
         ];
     }
 }

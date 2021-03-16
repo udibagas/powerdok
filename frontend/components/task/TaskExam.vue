@@ -3,14 +3,15 @@
 		<el-card
 			v-if="task.status != TASK_STATUS.FINISHED"
 			class="mb-3 text-center"
-			shadow="hover"
+			shadow="never"
+			style="padding: 20px 0"
 		>
-			<a href="#" @click.prevent="confirmStart">
-				<h3>START EXAM</h3>
-			</a>
+			<el-button type="danger" icon="el-icon-timer" @click="confirmStart">
+				{{ $t("START EXAM") }}
+			</el-button>
 		</el-card>
 
-		<ExamDialog :task="task" :show="showDialog" />
+		<ExamDialog :task="task" :exam="exam" :show="showDialog" />
 
 		<el-card
 			class="mb-3"
@@ -26,8 +27,7 @@
 					<h1>
 						{{ exam.score }}
 						<small
-							>({{ exam.correct_answer }} /
-							{{ exam.quizzes.length }})</small
+							>({{ exam.correct_answer }} / {{ exam.quizzes.length }})</small
 						>
 					</h1>
 				</div>
@@ -58,15 +58,16 @@
 			"
 		>
 			<el-card
-				v-for="(e, index) in exam.quizzes"
+				shadow="never"
+				v-for="(quiz, index) in exam.quizzes"
 				class="mb-2"
 				:key="index"
 				:class="{
 					'border-success':
-						e.correct_answer == e.user_answer &&
+						quiz.correct_answer == quiz.user_answer &&
 						task.status == TASK_STATUS.FINISHED,
 					'border-danger':
-						e.correct_answer != e.user_answer &&
+						quiz.correct_answer != quiz.user_answer &&
 						task.status == TASK_STATUS.FINISHED,
 				}"
 			>
@@ -77,10 +78,10 @@
 							style="font-size: 30px"
 							:class="{
 								'el-icon-circle-check text-success':
-									e.correct_answer == e.user_answer &&
+									quiz.correct_answer == quiz.user_answer &&
 									task.status == TASK_STATUS.FINISHED,
 								'el-icon-circle-close text-danger':
-									e.correct_answer != e.user_answer &&
+									quiz.correct_answer != quiz.user_answer &&
 									task.status == TASK_STATUS.FINISHED,
 							}"
 						></i>
@@ -88,12 +89,12 @@
 					<div class="flex-grow-1">
 						<div class="d-flex">
 							<div class="mr-3 mb-3 flex-grow-1">
-								<h4>{{ e.question }}</h4>
+								<p class="text-justify">{{ quiz.question }}</p>
 
 								<div class="row">
 									<div
 										class="col-md-2"
-										v-for="(url, i) in e.attachments"
+										v-for="(url, i) in quiz.attachments"
 										:key="i"
 									>
 										<a
@@ -113,7 +114,7 @@
 								</div>
 								<vue-easy-lightbox
 									:visible="visible"
-									:imgs="e.attachments"
+									:imgs="quiz.attachments"
 									:index="index"
 									@hide="visible = false"
 								></vue-easy-lightbox>
@@ -122,20 +123,23 @@
 
 						<div class="row">
 							<div
-								v-for="(c, i) in e.choices"
+								v-for="(c, i) in quiz.choices"
 								:key="i"
-								class="col-5 mb-3 d-flex"
+								class="col-6 mb-3 d-flex"
 								:class="{
 									'text-success font-weight-bold':
-										(e.user_answer == e.correct_answer) == i,
+										(quiz.user_answer == quiz.correct_answer) == i,
 									'text-danger font-weight-bold':
-										e.user_answer != e.correct_answer && e.user_answer == i,
+										quiz.user_answer != quiz.correct_answer &&
+										quiz.user_answer == i,
 								}"
 							>
 								<strong class="mr-2"> {{ ["A", "B", "C", "D"][i] }}. </strong>
-								{{ e.choices[i] }}
-								<!-- <i v-if="e.user_answer == e.correct_answer == i" style="font-size:15px" class="el-icon-check text-success"></i>
-                <i v-if="e.user_answer != e.correct_answer && e.user_answer == i" style="font-size:15px" class="el-icon-close text-danger"></i> -->
+								<p class="text-justify">
+									{{ quiz.choices[i] }}
+								</p>
+								<!-- <i v-if="quiz.user_answer == quiz.correct_answer == i" style="font-size:15px" class="el-icon-check text-success"></i>
+                <i v-if="quiz.user_answer != quiz.correct_answer && quiz.user_answer == i" style="font-size:15px" class="el-icon-close text-danger"></i> -->
 							</div>
 						</div>
 					</div>
@@ -161,13 +165,13 @@ export default {
 			time_start: null,
 			time_finished: null,
 			showDialog: false,
-      exam: {}
+			exam: { quizzes: [] }
 		};
 	},
 
-  mounted() {
-    this.getData();
-  },
+	mounted() {
+		this.getData();
+	},
 
 	computed: {
 		allowSubmitTask() {
@@ -188,14 +192,37 @@ export default {
 
 	methods: {
 		confirmStart() {
-			this.start = true;
-			this.time_start = new Date();
-			this.showDialog = true;
+			this.$confirm(
+				this.$t(
+					"Are you sure you want to start the exam? This action can not be undo!",
+					this.$t("Confirm"),
+					{ type: "warning" }
+				)
+			)
+				.then(() => {
+					this.$axios
+						.$post(`/api/task/startExam/${this.task.id}`)
+						.then(response => {
+							this.start = true;
+							this.time_start = response.time_start;
+							this.showDialog = true;
+						})
+						.catch(e => {
+							this.$message({
+								message: e.response.data.message,
+								type: "error",
+								showClose: true
+							});
+						});
+				})
+				.catch(e => console.log(e));
 		},
 
-    getData() {
-      this.$axios.$get(`/api/task/exam/${this.task.id}`).then(response => this.exam = response);
-    }
+		getData() {
+			this.$axios
+				.$get(`/api/task/exam/${this.task.id}`)
+				.then(response => (this.exam = response));
+		}
 	}
 };
 </script>

@@ -27,7 +27,6 @@ class TaskRequest extends FormRequest
             'title' => 'required|max:255',
             'description' => 'required',
             'type' => 'required|in:1,2,3',
-            'assignees' => 'required',
             'priority' => 'required|in:0,1,2,3',
             'due_date' => 'required'
         ];

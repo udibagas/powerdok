@@ -22,7 +22,7 @@
 				<el-image
 					fit="cover"
 					class="mr-2 border rounded"
-					style="height: 50px; width: 50px"
+					style="height: 40px; width: 35px"
 					:src="attachment.url"
 				>
 				</el-image>

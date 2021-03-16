@@ -8,8 +8,9 @@
 			</div>
 
 			<el-button
-				class="btn-primary mr-2"
+				class="mr-2"
 				size="small"
+				type="primary"
 				icon="el-icon-plus"
 				@click="addData"
 				>NEW TASK
@@ -38,68 +39,53 @@
 		</div>
 
 		<el-table stripe :data="tableData" v-loading="loading">
-			<el-table-column
-        label="#"
-        type="index"
-        :index="pagination.form">
+			<el-table-column label="#" type="index" :index="pagination.form">
 			</el-table-column>
 
-			<el-table-column
-        label="Title"
-      >
+			<el-table-column label="Title">
 				<template slot-scope="scope">
 					<nuxt-link :to="`/task/${scope.row.id}`">
-            {{ scope.row.title }}
-          </nuxt-link>
+						{{ scope.row.title }}
+					</nuxt-link>
 				</template>
 			</el-table-column>
 
-      <el-table-column
-        prop="assignee.name"
-        label="Assignee"
-        width="220"
-      ></el-table-column>
+			<el-table-column
+				prop="assignee.name"
+				label="Assignee"
+				width="220"
+			></el-table-column>
 
 			<el-table-column
 				prop="type_name"
 				label="Type"
-        width="150"
+				width="150"
 			></el-table-column>
 
-			<el-table-column
-        :label="$t('Priority')"
-        width="80"
-      >
+			<el-table-column :label="$t('Priority')" width="80">
 				<template slot-scope="scope">
 					<span :class="`text-${priorityColors[scope.row.priority]}`">
-            {{ scope.row.priority_label }}
-          </span>
+						{{ scope.row.priority_label }}
+					</span>
 				</template>
 			</el-table-column>
 
-			<el-table-column
-        prop="due_date"
-        label="Due Date"
-        width="100"
-      >
+			<el-table-column prop="due_date" label="Due Date" width="100">
 				<template slot-scope="scope">
 					{{ $moment(scope.row.due_date).fromNow() }}
 				</template>
 			</el-table-column>
 
-			<el-table-column
-        label="Status"
-        width="90"
-      >
+			<el-table-column label="Status" width="90">
 				<template slot-scope="scope">
 					<span :class="`text-${statusColors[scope.row.status]}`">
-            {{ scope.row.status_label }}
-          </span>
+						{{ scope.row.status_label }}
+					</span>
 				</template>
 			</el-table-column>
 
-      <el-table-column
-        label="Action"
+			<el-table-column
+				label="Action"
 				fixed="right"
 				width="80"
 				header-align="center"

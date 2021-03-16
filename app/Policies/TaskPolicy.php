@@ -89,6 +89,18 @@ class TaskPolicy
         return $this->view($user, $task) && in_array($task->status, [Task::STATUS_SUBMITTED, Task::STATUS_ON_PROGRESS, Task::STATUS_FINISHED]);
     }
 
+    public function startExam(User $user, Task $task)
+    {
+        return $user->id == $task->assignee_id && $task->exam->time_finished == null;
+    }
+
+    public function finishExam(User $user, Task $task)
+    {
+        // TODO: pastikan soal sudah terjawab semua
+        return $user->id == $task->assignee_id && $task->exam->time_finished == null;
+    }
+
+
     public function submitExam(User $user, Task $task)
     {
         return ($user->id == $task->assignee_id) && in_array($task->status, [Task::STATUS_SUBMITTED, Task::STATUS_ON_PROGRESS]);

@@ -1,5 +1,6 @@
 <template>
 	<div class="my-3">
+		<h6 class="mt-5 mb-3">{{ $t("COMMENTS") }}</h6>
 		<CommentForm class="mb-3 bg-white" :url="url" @refresh="fetchData" />
 
 		<content-placeholders v-if="fetching">
@@ -28,7 +29,11 @@
 
 				<div class="my-2" v-html="comment.body"></div>
 
-				<Attachments class="mt-5" :data="comment.attachments" />
+				<Attachments
+					v-if="comment.attachments.length > 0"
+					class="mt-5"
+					:data="comment.attachments"
+				/>
 
 				<!-- <el-input
 					class="my-3"

@@ -1,7 +1,7 @@
 <template>
-	<el-card class="mt-3" shadow="never">
-		<div slot="header" class="d-flex justify-content-between">
-			<div>APPROVALS</div>
+	<div class="mt-5">
+		<div class="d-flex justify-content-between mb-3">
+			<h6>{{ $t("APPROVALS") }}</h6>
 			<el-button
 				size="small"
 				type="primary"
@@ -18,7 +18,7 @@
 
 		<div v-if="submittedApprovals.length > 0">
 			<div
-				class="media mb-3 border rounded shadow p-3"
+				class="media mb-3 border rounded shadow bg-white p-3"
 				v-for="approval in submittedApprovals"
 				:key="approval.id"
 			>
@@ -105,8 +105,8 @@
 			</div>
 		</div>
 
-		<div v-else class="text-center">
-			<h3 class="text-muted" style="line-hight: 200px">NO APPROVAL FOUND</h3>
+		<div v-else class="text-center border shadow rounded bg-white">
+			<h5 class="text-muted" style="line-height: 200px">NO APPROVAL FOUND</h5>
 		</div>
 
 		<RequestApprovalForm
@@ -116,7 +116,7 @@
 			@close="showForm = false"
 			@refresh="getData"
 		/>
-	</el-card>
+	</div>
 </template>
 
 <script>

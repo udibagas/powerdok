@@ -71,15 +71,23 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
         Route::post('attest/{task}', [TaskController::class, 'attest']);
         Route::post('comments/{task}', [TaskController::class, 'comment']);
         Route::get('comments/{task}', [TaskController::class, 'comments']);
-        Route::post('submitExam/{task}', [TaskController::class, 'submitExam']);
-        Route::post('updateDocument/{task}', [TaskController::class, 'updateDocument']);
-        Route::post('approval/{task}', [TaskController::class, 'requestApproval']);
-        Route::delete('approval/{taskApproval}', [TaskController::class, 'deleteApproval']);
-        Route::post('approve/{task}', [TaskController::class, 'approve']);
-        Route::get('approvals/{task}', [TaskController::class, 'approvals']);
-        Route::get('attachments/{task}', [TaskController::class, 'attachments']);
+
+        // exam related
         Route::get('exam/{task}', [TaskController::class, 'exam']);
+        Route::post('startExam/{task}', [TaskController::class, 'startExam']);
+        Route::post('finishExam/{task}', [TaskController::class, 'finishExam']);
+        Route::post('submitExam/{task}', [TaskController::class, 'submitExam']);
+
         Route::get('document/{task}', [TaskController::class, 'document']);
+        Route::post('updateDocument/{task}', [TaskController::class, 'updateDocument']);
+
+        // approval related
+        Route::get('approvals/{task}', [TaskController::class, 'approvals']);
+        Route::post('approval/{task}', [TaskController::class, 'requestApproval']);
+        Route::post('approve/{task}', [TaskController::class, 'approve']);
+        Route::delete('approval/{taskApproval}', [TaskController::class, 'deleteApproval']);
+
+        Route::get('attachments/{task}', [TaskController::class, 'attachments']);
     });
 
     Route::prefix('notification')->group(function () {

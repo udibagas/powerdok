@@ -7,16 +7,14 @@
 			<div class="media mt-3">
 				<el-avatar class="mr-3"></el-avatar>
 				<div class="media-body">
-					<strong>{{ document.latest_version.owner.name }}</strong>
+					<strong>{{ document.owner.name }}</strong>
 					<span class="text-muted">
 						&bull; {{ $moment(document.created_at).fromNow() }}
 					</span>
 					<div class="text-muted">
-						{{ document.latest_version.owner.position }} |
+						{{ document.owner.position }} |
 						{{
-							document.latest_version.owner.department
-								? document.latest_version.owner.department.name
-								: "N/A"
+							document.owner.department ? document.owner.department.name : "N/A"
 						}}
 					</div>
 				</div>
@@ -135,7 +133,12 @@ export default {
 			exam_minimum_score: "",
 			exam_max_duration: "",
 			quizzes: [],
-			errors: {}
+			errors: {},
+			pagination: {
+				current_page: 1,
+				per_page: 1,
+				total: document.exam.quizzes.legth
+			}
 		};
 	},
 

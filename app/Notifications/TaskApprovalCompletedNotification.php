@@ -41,12 +41,12 @@ class TaskApprovalCompletedNotification extends Notification
      * @param  mixed  $notifiable
      * @return \Illuminate\Notifications\Messages\MailMessage
      */
-    public function toMail($notifiable, Task $task)
+    public function toMail($notifiable)
     {
         $mail = (new MailMessage)
-                    ->subject('Approval Completed')
-                    ->greeting("Hello {$notifiable->name}!")
-                    ->markdown('mail.task.approval-completed', ['task' => $this->task]);
+            ->subject('Approval Completed')
+            ->greeting("Hello {$notifiable->name}!")
+            ->markdown('mail.task.approval-completed', ['task' => $this->task]);
 
         $mail->cc($this->task->user->email, $this->task->user->name);
 

@@ -3,12 +3,12 @@
 		<el-card shadow="never">
 			<div class="d-flex justify-content-between">
 				<div class="text-center">
-					<h1 class="text-primary">{{ task.exam.exam_minimum_score }}</h1>
+					<h1 class="text-primary">{{ exam.exam_minimum_score }}</h1>
 					<div class="text-muted">{{ $t("Minimum Score (%)") }}</div>
 				</div>
 
 				<div class="text-center">
-					<h1 class="text-primary">{{ task.exam.quizzes.length }}</h1>
+					<h1 class="text-primary">{{ exam.quizzes.length }}</h1>
 					<div class="text-muted">{{ $t("Total Quiz") }}</div>
 				</div>
 
@@ -19,7 +19,7 @@
 
 				<div class="text-center">
 					<h1 class="text-primary">
-						{{ task.exam.exam_max_duration || "0" }}
+						{{ exam.exam_max_duration || "0" }}
 					</h1>
 					<div class="text-muted">{{ $t("Duration (minutes)") }}</div>
 				</div>
@@ -39,13 +39,13 @@
 			<div class="flex-grow-1">
 				<div class="d-flex">
 					<div class="mr-3 mb-3 flex-grow-1">
-						<h4>{{ task.exam.quizzes[index].question }}</h4>
+						<h4>{{ exam.quizzes[index].question }}</h4>
 
 						<div class="d-flex my-3">
 							<a
 								href="#"
 								class="m-2 border rounded"
-								v-for="(url, i) in task.exam.quizzes[index].attachments"
+								v-for="(url, i) in exam.quizzes[index].attachments"
 								:key="i"
 								@click="
 									showImage = true;
@@ -61,7 +61,7 @@
 
 						<vue-easy-lightbox
 							:visible="showImage"
-							:imgs="task.exam.quizzes[index].attachments"
+							:imgs="exam.quizzes[index].attachments"
 							:index="indexImage"
 							@hide="
 								showImage = false;
@@ -73,19 +73,19 @@
 
 				<div class="row">
 					<div
-						v-for="(c, i) in task.exam.quizzes[index].choices"
+						v-for="(c, i) in exam.quizzes[index].choices"
 						:key="i"
 						class="col-6 mb-3 d-flex"
 					>
 						<el-radio
-							v-model="task.exam.quizzes[index].user_answer"
+							v-model="exam.quizzes[index].user_answer"
 							:label="i"
 							:disabled="!allowSubmitTask"
 						>
 							<strong class="text-muted" style="display: inline-block">
 								{{ ["A", "B", "C", "D"][i] }}.
 							</strong>
-							{{ task.exam.quizzes[index].choices[i] }}
+							{{ exam.quizzes[index].choices[i] }}
 						</el-radio>
 					</div>
 				</div>
@@ -93,7 +93,7 @@
 		</div>
 
 		<el-button
-			v-if="answered == task.exam.quizzes.length"
+			v-if="answered == exam.quizzes.length"
 			class="mt-4 btn-block"
 			icon="el-icon-finished"
 			type="success"
@@ -145,7 +145,7 @@
 import { TASK_STATUS } from "@/store/modules/task";
 
 export default {
-	props: ["task", "show"],
+	props: ["task", "exam", "show"],
 
 	mounted() {
 		this.runTimer();
@@ -162,11 +162,11 @@ export default {
 		},
 
 		lastIndex() {
-			return this.task.exam.quizzes.length - 1;
+			return this.exam.quizzes.length - 1;
 		},
 
 		answered() {
-			return this.task.exam.quizzes.filter(q => q.user_answer != null).length;
+			return this.exam.quizzes.filter(q => q.user_answer != null).length;
 		}
 	},
 
@@ -197,7 +197,7 @@ export default {
 
 		submitExam() {
 			this.time_finished = new Date();
-			const answer = this.task.exam.quizzes.map(q => q.user_answer);
+			const answer = this.exam.quizzes.map(q => q.user_answer);
 			this.$axios
 				.$post(`/api/task/submitExam/${this.task.id}`, { answer })
 				.then(response => {
@@ -221,9 +221,7 @@ export default {
 		},
 
 		confirmSubmit() {
-			const allAnswered = this.task.exam.quizzes.every(
-				q => q.user_answer != null
-			);
+			const allAnswered = this.exam.quizzes.every(q => q.user_answer != null);
 
 			if (allAnswered) {
 				this.$confirm(
@@ -231,7 +229,7 @@ export default {
 					"Confirm"
 				).then(() => this.submitExam());
 			} else {
-				const unAnswered = this.task.exam.quizzes
+				const unAnswered = this.exam.quizzes
 					.map((q, i) => {
 						return {
 							number: i + 1,
