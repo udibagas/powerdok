@@ -82,8 +82,8 @@
 									font-size: 13px;
 									margin-right: 20px;
 								"
-								>{{ doc.versions.type_name }} | No.
-								{{ doc.versions.number }} Ver. {{ doc.versions.version }}</span
+								>{{ doc.type_name }} | No. {{ doc.latest_version.number }} Ver.
+								{{ doc.latest_version.version }}</span
 							>
 							<span style="float: right; font-size: 14px"
 								>{{ doc.title }}

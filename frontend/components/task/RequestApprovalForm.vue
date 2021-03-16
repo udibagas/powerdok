@@ -100,7 +100,7 @@
 <script>
 import { mapState } from 'vuex';
 export default {
-	props: ['show', 'task', 'approvals', 'action'],
+	props: ['show', 'task', 'approvals'],
   data() {
     return {
       loading: false,
@@ -144,7 +144,15 @@ export default {
       });
     },
     submit() {
-      this.$axios.$post(`/api/task/approval/${this.task.id}`, { approvals: this.approvals }).then(response => {
+      const approvals = this.approvals.filter(a => a.status == null).map(a => {
+        return {
+          id: a.id || null,
+          level: a.level,
+          user_id: a.user_id
+        }
+      });
+
+      this.$axios.$post(`/api/task/approval/${this.task.id}`, { approvals }).then(response => {
         this.$message({
           message: response.message,
           type: 'success',
