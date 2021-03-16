@@ -5,50 +5,36 @@
 			{{ $t("Attachments") }}
 		</div>
 
-		<div class="row">
-			<div
-				class="col-md-4"
-				v-for="(attachment, i) in attachments"
-				:key="attachment.id"
+		<div
+			v-for="(attachment, i) in attachments"
+			:key="attachment.id"
+			class="media mb-2"
+		>
+			<a
+				v-if="attachment.is_image"
+				href="#"
+				class="mr-2"
+				@click.prevent="
+					index = i;
+					visible = true;
+				"
 			>
-				<div class="media border rounded p-2 mb-3">
-					<a
-						href="#"
-						@click.prevent="
-							index = i;
-							visible = true;
-						"
-					>
-						<el-image
-							fit="cover"
-							class="mr-2 border rounded"
-							style="height: 50px; width: 50px"
-							:src="attachment.url"
-						>
-							<div
-								slot="error"
-								class="image-slot text-center"
-								style="line-height: 50px"
-							>
-								<i
-									class="el-icon-document"
-									style="font-size: 30px; margin-top: 10px"
-								></i>
-							</div>
-						</el-image>
-					</a>
-					<div class="media-body text-truncate">
-						<div>{{ attachment.name }}</div>
-						<div class="text-muted">
-							{{ attachment.type }}
-						</div>
-						<div class="text-muted">
-							{{ bytesToSize(attachment.size) }}
-							<a href="#" class="ml-3" @click.prevent="download(attachment.id)">
-								<i class="el-icon-download"></i>
-							</a>
-						</div>
-					</div>
+				<el-image
+					fit="cover"
+					class="mr-2 border rounded"
+					style="height: 50px; width: 50px"
+					:src="attachment.url"
+				>
+				</el-image>
+			</a>
+			<i v-else class="el-icon-document mr-2" style="font-size: 40px"></i>
+
+			<div class="media-body">
+				<a href="#" @click.prevent="download(attachment.id)">
+					{{ attachment.name }}
+				</a>
+				<div class="text-muted">
+					{{ bytesToSize(attachment.size) }}
 				</div>
 			</div>
 		</div>
@@ -64,15 +50,40 @@
 
 <script>
 export default {
-	props: ["attachments"],
+	props: ["url", "data"],
+
 	data() {
 		return {
 			index: 0,
-			visible: false
+			visible: false,
+			attachments: []
 		};
 	},
 
+	mounted() {
+		if (this.url) {
+			this.fetchData();
+		}
+
+		if (this.data) {
+			this.attachments = this.data;
+		}
+	},
+
 	methods: {
+		fetchData() {
+			this.$axios
+				.$get(this.url)
+				.then(response => (this.attachments = response))
+				.catch(e => {
+					this.$message({
+						message: e.response.data.message,
+						type: "error",
+						showClose: true
+					});
+				});
+		},
+
 		bytesToSize(bytes) {
 			var sizes = ["Bytes", "KB", "MB", "GB", "TB"];
 			if (bytes == 0) return "0 Byte";

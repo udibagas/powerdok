@@ -1,6 +1,6 @@
 <template>
-	<el-card :header="$t('COMMENTS')" class="my-3" shadow="never">
-		<CommentForm class="mb-3" :url="url" @refresh="fetchData" />
+	<div class="my-3">
+		<CommentForm class="mb-3 bg-white" :url="url" @refresh="fetchData" />
 
 		<content-placeholders v-if="fetching">
 			<content-placeholders-heading :img="true" />
@@ -8,7 +8,7 @@
 		</content-placeholders>
 		<div
 			v-else
-			class="media mb-3 border shadow p-3"
+			class="media mb-3 border shadow p-3 bg-white"
 			v-for="comment in comments"
 			:key="comment.id"
 		>
@@ -28,21 +28,7 @@
 
 				<div class="my-2" v-html="comment.body"></div>
 
-				<div class="mt-5" v-if="comment.attachments.length > 0">
-					<div
-						class="media mb-3"
-						v-for="attachment in comment.attachments"
-						:key="attachment.id"
-					>
-						<i class="el-icon-document mr-2" style="font-size: 40px"></i>
-						<div class="media-body">
-							<a href="#" @click.prevent="download(attachment.id)">
-								{{ attachment.name }}
-							</a>
-							<div class="text-muted">{{ bytesToSize(attachment.size) }}</div>
-						</div>
-					</div>
-				</div>
+				<Attachments class="mt-5" :data="comment.attachments" />
 
 				<!-- <el-input
 					class="my-3"
@@ -69,7 +55,7 @@
 				</el-button> -->
 			</div>
 		</div>
-	</el-card>
+	</div>
 </template>
 
 <script>
@@ -101,20 +87,6 @@ export default {
 					});
 				})
 				.finally(() => (this.fetching = false));
-		},
-
-		bytesToSize(bytes) {
-			var sizes = ["Bytes", "KB", "MB", "GB", "TB"];
-			if (bytes == 0) return "0 Byte";
-			var i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)));
-			return Math.round(bytes / Math.pow(1024, i), 2) + " " + sizes[i];
-		},
-
-		download(id) {
-			window.open(
-				`${this.$axios.defaults.baseURL}/api/download/${id}`,
-				"_blank"
-			);
 		}
 	}
 };
