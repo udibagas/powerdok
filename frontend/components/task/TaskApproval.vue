@@ -41,17 +41,13 @@
                   v-model="approval.note"
                   placeholder="Note"
                 ></el-input>
-                <div class="mt-2 d-flex justify-content-between">
-                  <div>
-                    <el-button size="mini" type="danger" @click="approve(false, approval.note)">
-                      <i class="el-icon-close mr-1"></i>{{ $t('DECLINE') }}
-                    </el-button>
-                  </div>
-                  <div>
-                    <el-button size="mini" type="success" @click="approve(true, approval.note)">
-                      <i class="el-icon-check mr-1"></i>{{ $t('APPROVE') }}
-                    </el-button>
-                  </div>
+                <div class="mt-2 text-right">
+                  <el-button size="mini" type="danger" @click="approve(false, approval.note)">
+                    <i class="el-icon-close mr-1"></i>{{ $t('DECLINE') }}
+                  </el-button>
+                  <el-button size="mini" type="success" @click="approve(true, approval.note)">
+                    <i class="el-icon-check mr-1"></i>{{ $t('APPROVE') }}
+                  </el-button>
                 </div>
               </div>
               <div v-if="approval.status != null">
