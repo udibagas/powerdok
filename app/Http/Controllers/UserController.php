@@ -15,7 +15,11 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-        $data = User::when($request->keyword, function ($q) use ($request) {
+        $data = User::when($request->fields, function ($q) use ($request) {
+            $q->select($request->fields);
+        })->when($request->with, function ($q) use ($request) {
+            $q->with($request->with);
+        })->when($request->keyword, function ($q) use ($request) {
             $q->where(function ($q) use ($request) {
                 $q->where('name', 'ILIKE', "%{$request->keyword}%")
                     ->orWhere('email', 'ILIKE', "%{$request->keyword}%")
