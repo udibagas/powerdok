@@ -9,7 +9,7 @@
 		</content-placeholders>
 		<div
 			v-else
-			class="media mb-3 border shadow p-3 bg-white"
+			class="media mb-3 border rounded shadow p-3 bg-white"
 			v-for="comment in comments"
 			:key="comment.id"
 		>

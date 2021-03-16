@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<el-card class="mb-3" shadow="never">
+		<el-card class="mb-3">
 			<div class="row">
 				<div class="col">
 					<div class="text-muted">{{ $t("Minimum Score (%)") }}</div>

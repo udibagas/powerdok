@@ -1,5 +1,5 @@
 <template>
-	<div class="media border shadow p-3">
+	<div class="media border rounded shadow p-3">
 		<el-avatar class="mr-3" :size="45" icon="el-icon-user"></el-avatar>
 		<div class="media-body">
 			<strong>{{ $t("Me") }}</strong>
@@ -18,54 +18,30 @@
 						placeholder="Type your comment here"
 					></el-input>
 				</el-form-item>
-
-				<!-- <el-form-item label="Due Date" :class="{ 'is-error': errors.due_date }">
-				<el-date-picker
-					style="width: 100%"
-					v-model="form.due_date"
-					type="date"
-					format="dd-MMM-yyyy"
-					value-format="yyyy-MM-dd"
-					placeholder="Due Date"
-				></el-date-picker>
-
-				<div class="el-form-item__error" v-if="errors.due_date">
-					{{ errors.due_date.join(", ") }}
-				</div>
-			</el-form-item> -->
-
-				<!-- <el-form-item label="Priority">
-				<el-select
-					style="width: 100%"
-					v-model="form.priority"
-					placeholder="Priority"
-					filterable
-					clearable
-					default-first-option
-				>
-					<el-option :value="0" label="Low"></el-option>
-					<el-option :value="1" label="Medium"></el-option>
-					<el-option :value="2" label="High"></el-option>
-					<el-option :value="3" label="Urgent"></el-option>
-				</el-select>
-
-				<div class="el-form-item__error" v-if="errors.priority">
-					{{ errors.priority.join(", ") }}
-				</div>
-			</el-form-item> -->
 			</el-form>
 
-			<div
-				class="media mb-3"
-				v-for="attachment in form.attachments"
-				:key="attachment.id"
-			>
-				<i class="el-icon-document mr-2" style="font-size: 40px"></i>
-				<div class="media-body">
-					<a href="#" @click.prevent="download(attachment.url)">
-						{{ attachment.name }}
-					</a>
-					<div class="text-muted">{{ bytesToSize(attachment.size) }}</div>
+			<div class="mb-3" v-if="form.attachments.length > 0">
+				<div
+					class="media p-2 rounded hover"
+					v-for="(attachment, index) in form.attachments"
+					:key="index"
+				>
+					<i class="el-icon-document mr-2" style="font-size: 40px"></i>
+					<div class="media-body d-flex justify-content-between">
+						<div>
+							<a href="#" @click.prevent="download(attachment.url)">
+								{{ attachment.name }}
+							</a>
+							<div class="text-muted">{{ bytesToSize(attachment.size) }}</div>
+						</div>
+						<div>
+							<el-button
+								icon="el-icon-delete"
+								type="text"
+								@click="removeAttachment(index, attachment.path)"
+							></el-button>
+						</div>
+					</div>
 				</div>
 			</div>
 
@@ -150,6 +126,21 @@ export default {
 			el.remove();
 		},
 
+		removeAttachment(index, path) {
+			this.$axios
+				.$delete("/api/attachment/deleteByPath", { params: { path } })
+				.then(response => {
+					this.form.attachments.splice(index, 1);
+				})
+				.catch(e => {
+					this.$message({
+						message: e.response.data.message,
+						type: "error",
+						showClose: true
+					});
+				});
+		},
+
 		bytesToSize(bytes) {
 			var sizes = ["Bytes", "KB", "MB", "GB", "TB"];
 			if (bytes == 0) return "0 Byte";
@@ -163,3 +154,9 @@ export default {
 	}
 };
 </script>
+
+<style scoped>
+.hover:hover {
+	background: #eee;
+}
+</style>
