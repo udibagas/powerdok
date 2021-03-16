@@ -1,6 +1,6 @@
 <template>
-	<el-card :header="$t('COMMENTS')" class="my-3">
-		<CommentForm class="mb-5" :url="url" @refresh="fetchData" />
+	<el-card :header="$t('COMMENTS')" class="my-3" shadow="never">
+		<CommentForm class="mb-3" :url="url" @refresh="fetchData" />
 
 		<content-placeholders v-if="fetching">
 			<content-placeholders-heading :img="true" />
@@ -8,15 +8,11 @@
 		</content-placeholders>
 		<div
 			v-else
-			class="media mb-4"
+			class="media mb-3 border shadow p-3"
 			v-for="comment in comments"
 			:key="comment.id"
 		>
-			<el-avatar
-				class="mr-3 border-2 border-success"
-				:size="45"
-				icon="el-icon-user"
-			></el-avatar>
+			<el-avatar class="mr-3" :size="45" icon="el-icon-user"></el-avatar>
 			<div class="media-body">
 				<strong>{{ comment.user.name }}</strong>
 
@@ -32,7 +28,7 @@
 
 				<div class="my-2" v-html="comment.body"></div>
 
-				<div class="mt-5">
+				<div class="mt-5" v-if="comment.attachments.length > 0">
 					<div
 						class="media mb-3"
 						v-for="attachment in comment.attachments"
