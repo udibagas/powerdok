@@ -68,6 +68,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     });
 
     Route::prefix('task')->group(function () {
+        Route::post('attest/{task}', [TaskController::class, 'attest']);
         Route::post('comments/{task}', [TaskController::class, 'comment']);
         Route::get('comments/{task}', [TaskController::class, 'comments']);
         Route::post('submitExam/{task}', [TaskController::class, 'submitExam']);

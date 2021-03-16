@@ -38,7 +38,7 @@
 						</el-image>
 					</a>
 					<div class="media-body text-truncate">
-						<div class="font-weight-bold">{{ attachment.name }}</div>
+						<div>{{ attachment.name }}</div>
 						<div class="text-muted">
 							{{ attachment.type }}
 						</div>

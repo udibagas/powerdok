@@ -261,6 +261,13 @@ class TaskController extends Controller
         return ['message' => 'Document has been saved'];
     }
 
+    public function attest(Task $task)
+    {
+        $this->authorize('attest', $task);
+        $task->update(['status' => Task::STATUS_FINISHED]);
+        return ['message' => 'Data has been saved'];
+    }
+
     public function getPendingApproval(Request $request)
     {
         $data = TaskApproval::whereNull('status')->where('user_id', $request->user()->id);

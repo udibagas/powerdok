@@ -46,17 +46,27 @@
 			</el-form-item> -->
 		</el-form>
 
+		<div
+			class="media mb-3"
+			v-for="attachment in form.attachments"
+			:key="attachment.id"
+		>
+			<i class="el-icon-document mr-2" style="font-size: 40px"></i>
+			<div class="media-body">
+				<a href="#" @click.prevent="download(attachment.url)">
+					{{ attachment.name }}
+				</a>
+				<div class="text-muted">{{ bytesToSize(attachment.size) }}</div>
+			</div>
+		</div>
+
 		<div>
 			<el-button size="small" type="primary" @click="save">
 				<i class="uil-comment-dots mr-1"></i> {{ $t("COMMENT") }}
 			</el-button>
-			<el-button
-				size="small"
-				type="info"
-				class="btn-success"
-				icon="el-icon-paperclip"
-			>
-				{{ $t("ATTACH") }}
+
+			<el-button type="text" icon="el-icon-paperclip" @click="attach">
+				{{ $t("Attach Document") }}
 			</el-button>
 		</div>
 	</div>
@@ -68,7 +78,7 @@ export default {
 
 	data() {
 		return {
-			form: {},
+			form: { attachments: [] },
 			errors: {}
 		};
 	},
@@ -99,6 +109,46 @@ export default {
 						showClose: true
 					});
 				});
+		},
+
+		attach() {
+			let el = document.createElement("input");
+			el.type = "file";
+			el.style = "display: none";
+
+			el.addEventListener("change", event => {
+				let formData = new FormData();
+				formData.append("file", event.target.files[0]);
+
+				this.$axios
+					.$post("api/upload", formData, {
+						headers: { "Content-Type": "multipart/form-data" }
+					})
+					.then(response => {
+						this.form.attachments.push(response);
+					})
+					.catch(e => {
+						this.$message({
+							message: e.response.data.message,
+							type: "error",
+							showClose: true
+						});
+					});
+			});
+
+			el.click();
+			el.remove();
+		},
+
+		bytesToSize(bytes) {
+			var sizes = ["Bytes", "KB", "MB", "GB", "TB"];
+			if (bytes == 0) return "0 Byte";
+			var i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)));
+			return Math.round(bytes / Math.pow(1024, i), 2) + " " + sizes[i];
+		},
+
+		download(url) {
+			window.open(url, "_blank");
 		}
 	}
 };
