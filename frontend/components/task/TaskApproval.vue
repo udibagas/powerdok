@@ -10,19 +10,8 @@
     <div v-if="submittedApprovals.length > 0">
       <div v-for="approval in submittedApprovals" :key="approval.id" class="mb-4">
         <div class="media mb-3">
-          <el-avatar class="mr-3"></el-avatar>
           <div class="media-body row">
-            <div class="col">
-              <strong>{{ approval.user_id == $auth.user.id ? "Me" : approval.user.name }}</strong>
-              <div class="text-muted">
-                {{ approval.user.position }} |
-                {{ approval.user.department ? approval.user.department.name : "N/A" }}
-              </div>
-            </div>
-            <div class="col text-right">
-              <span class="text-muted">
-                {{ $moment(approval.updated_at).fromNow() }} &bull;
-              </span>
+            <div class="col-md-2 text-center">
               <el-tag
                 v-if="approval.status !== null"
                 effect="dark"
@@ -36,26 +25,45 @@
               >{{$t("WAITING")}}
               </el-tag>
             </div>
+            <el-avatar></el-avatar>
+            <div class="col-md-3">
+              <strong>{{ approval.user_id == $auth.user.id ? "Me" : approval.user.name }}</strong>
+              <div class="text-muted">
+                {{ approval.user.position }} |
+                {{ approval.user.department ? approval.user.department.name : "N/A" }}
+              </div>
+            </div>
+            <div class="col-md-5">
+              <div v-if="approval.user_id == $auth.user.id && approval.status == null">
+                <el-input
+                  type="textarea"
+                  rows="2"
+                  v-model="approval.note"
+                  placeholder="Note"
+                ></el-input>
+                <div class="mt-2 d-flex justify-content-between">
+                  <div>
+                    <el-button size="mini" type="danger" @click="approve(false, approval.note)">
+                      <i class="el-icon-close mr-1"></i>{{ $t('DECLINE') }}
+                    </el-button>
+                  </div>
+                  <div>
+                    <el-button size="mini" type="success" @click="approve(true, approval.note)">
+                      <i class="el-icon-check mr-1"></i>{{ $t('APPROVE') }}
+                    </el-button>
+                  </div>
+                </div>
+              </div>
+              <div v-if="approval.status != null">
+                <strong>Note</strong> : {{ approval.note }}
+              </div>
+            </div>
+            <div class="col text-right">
+              <span class="text-muted">
+                &bull; {{ $moment(approval.updated_at).fromNow() }}
+              </span>
+            </div>
           </div>
-        </div>
-        <div class="mb-3" v-if="approval.user_id == $auth.user.id && approval.status == null">
-          <el-input
-            type="textarea"
-            rows="3"
-            v-model="approval.note"
-            placeholder="Note"
-          ></el-input>
-          <div class="mt-2">
-            <el-button size="mini" type="danger" @click="approve(false, approval.note)">
-              <i class="el-icon-close mr-1"></i>{{ $t('DECLINE') }}
-            </el-button>
-            <el-button size="mini" type="success" @click="approve(true, approval.note)">
-              <i class="el-icon-check mr-1"></i>{{ $t('APPROVE') }}
-            </el-button>
-          </div>
-        </div>
-        <div class="mb-3" v-else>
-          {{ approval.note }}
         </div>
       </div>
     </div>
