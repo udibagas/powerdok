@@ -4,11 +4,9 @@
 			<div class="flex-grow-1">
 				<h2>{{ task.title }}</h2>
 
-				<div class="my-4 text-muted">
-					{{ task.description }}
-				</div>
+				<div class="my-4 pr-3 text-justify" v-html="task.description"></div>
 
-				<div v-if="task.document">
+				<div v-if="task.document" class="mt-5">
 					<div class="text-muted mb-3">
 						<i class="el-icon-paperclip"></i>
 						{{ $t("Related Document") }}
@@ -28,7 +26,7 @@
 					</div>
 				</div>
 
-				<Attachments class="mt-3" :url="`/api/task/attachments/${task.id}`" />
+				<Attachments class="mt-5" :url="`/api/task/attachments/${task.id}`" />
 			</div>
 
 			<TaskSummary :task="task" />

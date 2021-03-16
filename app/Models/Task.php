@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Mews\Purifier\Facades\Purifier;
 
 class Task extends Model
 {
@@ -73,6 +74,11 @@ class Task extends Model
         'assignee',
         'document'
     ];
+
+    public function getDescriptionAttribute($value)
+    {
+        return Purifier::clean(nl2br($value));
+    }
 
     public function user()
     {

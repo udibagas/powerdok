@@ -104,9 +104,9 @@ export default {
 						showClose: true
 					});
 
-					this.form = {};
+					this.form = { attachments: [] };
 					this.errors = {};
-					this.$emit("refresh", response.task);
+					this.$emit("refresh");
 				})
 				.catch(e => {
 					if (e.response.status == 422) {

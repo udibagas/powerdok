@@ -13,12 +13,18 @@ export const mutations = {
 }
 
 export const actions = {
-  async fetchUsers({commit}) {
-    const data = await this.$axios.$get('/api/user');
+  async fetchUsers({ commit }) {
+    const params = {
+      fields: ['id', 'name', 'email', 'position'],
+      with: ['department']
+    };
+
+    const data = await this.$axios.$get('/api/user', { params });
     commit('setUserList', data);
   },
-  async fetchDepartments({commit}) {
-    const data = await this.$axios.$get('/api/department');
+  async fetchDepartments({ commit }) {
+    const params = { fields: ['id', 'name'] };
+    const data = await this.$axios.$get('/api/department', { params });
     commit('setDepartmentList', data);
   }
 }
