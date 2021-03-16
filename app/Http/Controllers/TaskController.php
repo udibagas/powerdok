@@ -150,7 +150,8 @@ class TaskController extends Controller
      */
     public function destroy(Task $task)
     {
-        // $this->authorize('delete', $task);
+        $this->authorize('delete', $task);
+
         DB::transaction(function () use ($task) {
             $task->attachments()->delete();
             $task->delete();
@@ -181,7 +182,8 @@ class TaskController extends Controller
 
     public function approve(Task $task, Request $request)
     {
-        // $this->authorize('approve', $task);
+        $this->authorize('approve', $task);
+
         $request->validate([
             'status' => 'required|boolean',
             'note' => 'required'
@@ -267,6 +269,13 @@ class TaskController extends Controller
         return ['message' => 'Document has been saved'];
     }
 
+    public function attest(Task $task)
+    {
+        $this->authorize('attest', $task);
+        $task->update(['status' => Task::STATUS_FINISHED]);
+        return ['message' => 'Data has been saved'];
+    }
+
     public function getPendingApproval(Request $request)
     {
         $data = TaskApproval::whereNull('status')->where('user_id', $request->user()->id);
@@ -285,26 +294,31 @@ class TaskController extends Controller
 
     public function approvals(Task $task)
     {
+        $this->authorize('view', $task);
         return $task->approvals;
     }
 
     public function comments(Task $task)
     {
+        $this->authorize('view', $task);
         return $task->comments;
     }
 
     public function attachments(Task $task)
     {
+        $this->authorize('view', $task);
         return $task->attachments;
     }
 
     public function exam(Task $task)
     {
+        $this->authorize('view', $task);
         return $task->exam;
     }
 
     public function document(Task $task)
     {
+        $this->authorize('view', $task);
         return $task->document;
     }
 }

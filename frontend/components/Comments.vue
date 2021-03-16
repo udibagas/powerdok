@@ -12,7 +12,11 @@
 			v-for="comment in comments"
 			:key="comment.id"
 		>
-			<el-avatar class="mr-3" :size="45" icon="el-icon-user"></el-avatar>
+			<el-avatar
+				class="mr-3 border-2 border-success"
+				:size="45"
+				icon="el-icon-user"
+			></el-avatar>
 			<div class="media-body">
 				<strong>{{ comment.user.name }}</strong>
 
@@ -27,6 +31,22 @@
 				</span>
 
 				<div class="my-2" v-html="comment.body"></div>
+
+				<div class="mt-5">
+					<div
+						class="media mb-3"
+						v-for="attachment in comment.attachments"
+						:key="attachment.id"
+					>
+						<i class="el-icon-document mr-2" style="font-size: 40px"></i>
+						<div class="media-body">
+							<a href="#" @click.prevent="download(attachment.id)">
+								{{ attachment.name }}
+							</a>
+							<div class="text-muted">{{ bytesToSize(attachment.size) }}</div>
+						</div>
+					</div>
+				</div>
 
 				<!-- <el-input
 					class="my-3"
@@ -85,6 +105,20 @@ export default {
 					});
 				})
 				.finally(() => (this.fetching = false));
+		},
+
+		bytesToSize(bytes) {
+			var sizes = ["Bytes", "KB", "MB", "GB", "TB"];
+			if (bytes == 0) return "0 Byte";
+			var i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)));
+			return Math.round(bytes / Math.pow(1024, i), 2) + " " + sizes[i];
+		},
+
+		download(id) {
+			window.open(
+				`${this.$axios.defaults.baseURL}/api/download/${id}`,
+				"_blank"
+			);
 		}
 	}
 };

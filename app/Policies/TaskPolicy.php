@@ -98,4 +98,11 @@ class TaskPolicy
     {
         return ($user->id == $task->assignee_id) && in_array($task->status, [Task::STATUS_SUBMITTED, Task::STATUS_ON_PROGRESS]);
     }
+
+    public function attest(User $user, Task $task)
+    {
+        return $user->id == $task->assignee_id &&
+            $task->type == Task::TYPE_ATESTATION &&
+            !in_array($task->status, [Task::STATUS_FINISHED, Task::STATUS_CLOSED, Task::STATUS_VOID]);
+    }
 }

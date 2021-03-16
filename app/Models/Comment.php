@@ -15,7 +15,7 @@ class Comment extends Model
         'body'
     ];
 
-    protected $with = ['user'];
+    protected $with = ['user', 'attachments'];
 
     public function user()
     {
@@ -30,5 +30,10 @@ class Comment extends Model
     public function getBodyAttribute($value)
     {
         return Purifier::clean($value);
+    }
+
+    public function attachments()
+    {
+        return $this->morphMany(Attachment::class, 'attachable');
     }
 }

@@ -18,8 +18,9 @@ class AttachmentController extends Controller
             'user_id' => $request->user()->id,
             'name' => $request->file('file')->getClientOriginalName(),
             'path' => $path,
-            'url' => Storage::url($path),
-            'data' => $request->data
+            'url' => url(Storage::url($path)),
+            'data' => $request->data,
+            'size' => Storage::size($path)
         ];
     }
 
