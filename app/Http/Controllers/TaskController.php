@@ -186,10 +186,12 @@ class TaskController extends Controller
 
         $request->validate([
             'status' => 'required|boolean',
-            'note' => 'required'
+            'note' => 'required',
+            'id' => 'required'
         ]);
 
         $approval = $task->approvals()
+            ->where('id', $request->id)
             ->where('user_id', $request->user()->id)
             ->first();
 
