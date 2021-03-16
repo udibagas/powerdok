@@ -1,16 +1,25 @@
 <template>
-	<div>
-		<el-form>
-			<el-form-item>
-				<el-input
-					v-model="form.body"
-					type="textarea"
-					rows="5"
-					placeholder="Type your comment here"
-				></el-input>
-			</el-form-item>
+	<div class="media border shadow p-3">
+		<el-avatar class="mr-3" :size="45" icon="el-icon-user"></el-avatar>
+		<div class="media-body">
+			<strong>{{ $t("Me") }}</strong>
 
-			<!-- <el-form-item label="Due Date" :class="{ 'is-error': errors.due_date }">
+			<div class="text-muted">
+				{{ $auth.user.position }} |
+				{{ $auth.user.department ? $auth.user.department.name : "N/A" }}
+			</div>
+
+			<el-form class="mt-3">
+				<el-form-item>
+					<el-input
+						v-model="form.body"
+						type="textarea"
+						:autosize="{ minRows: 2, maxRows: 10 }"
+						placeholder="Type your comment here"
+					></el-input>
+				</el-form-item>
+
+				<!-- <el-form-item label="Due Date" :class="{ 'is-error': errors.due_date }">
 				<el-date-picker
 					style="width: 100%"
 					v-model="form.due_date"
@@ -25,7 +34,7 @@
 				</div>
 			</el-form-item> -->
 
-			<!-- <el-form-item label="Priority">
+				<!-- <el-form-item label="Priority">
 				<el-select
 					style="width: 100%"
 					v-model="form.priority"
@@ -44,30 +53,31 @@
 					{{ errors.priority.join(", ") }}
 				</div>
 			</el-form-item> -->
-		</el-form>
+			</el-form>
 
-		<div
-			class="media mb-3"
-			v-for="attachment in form.attachments"
-			:key="attachment.id"
-		>
-			<i class="el-icon-document mr-2" style="font-size: 40px"></i>
-			<div class="media-body">
-				<a href="#" @click.prevent="download(attachment.url)">
-					{{ attachment.name }}
-				</a>
-				<div class="text-muted">{{ bytesToSize(attachment.size) }}</div>
+			<div
+				class="media mb-3"
+				v-for="attachment in form.attachments"
+				:key="attachment.id"
+			>
+				<i class="el-icon-document mr-2" style="font-size: 40px"></i>
+				<div class="media-body">
+					<a href="#" @click.prevent="download(attachment.url)">
+						{{ attachment.name }}
+					</a>
+					<div class="text-muted">{{ bytesToSize(attachment.size) }}</div>
+				</div>
 			</div>
-		</div>
 
-		<div>
-			<el-button size="small" type="primary" @click="save">
-				<i class="uil-comment-dots mr-1"></i> {{ $t("COMMENT") }}
-			</el-button>
+			<div>
+				<el-button size="small" type="primary" @click="save">
+					<i class="uil-comment-dots mr-1"></i> {{ $t("COMMENT") }}
+				</el-button>
 
-			<el-button type="text" icon="el-icon-paperclip" @click="attach">
-				{{ $t("Attach Document") }}
-			</el-button>
+				<el-button type="text" icon="el-icon-paperclip" @click="attach">
+					{{ $t("Attach Document") }}
+				</el-button>
+			</div>
 		</div>
 	</div>
 </template>
