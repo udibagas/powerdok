@@ -10,6 +10,12 @@ class DocumentVersion extends Model
 {
     use HasFactory, SoftDeletes;
 
+    const STATUS_DRAFT = 0;
+
+    const STATUS_SUBMITTED = 1;
+
+    const STATUS_PUBLISHED = 2;
+
     protected $fillable = [
         'document_id',
         'number',

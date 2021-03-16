@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Events\ApprovalRequestEvent;
+use App\Events\DocumentPublishedEvent;
 use App\Events\NewCommentEvent;
 use App\Events\NewTaskEvent;
 use App\Events\TaskApprovedEvent;
@@ -10,6 +11,7 @@ use App\Events\TaskFinishedEvent;
 use App\Http\Requests\TaskRequest;
 use App\Http\Resources\TaskCollection;
 use App\Models\Document;
+use App\Models\DocumentVersion;
 use App\Models\Task;
 use App\Models\TaskApproval;
 use Illuminate\Http\Request;
@@ -267,6 +269,27 @@ class TaskController extends Controller
         }
 
         return ['message' => 'Document has been saved'];
+    }
+
+    public function publishDocument(Request $request, Task $task)
+    {
+        // $this->authorize('publishDocument', $task);
+        $request->validate([
+            'number' => 'required',
+            'version' => 'required',
+            'effective_date' => 'required',
+            'expired_date' => 'required',
+            'categories' => 'required',
+            'tags' => 'required',
+            'departments'=> 'required'
+        ]);
+
+        $task->document->update($request->all());
+        $task->document->latest_version->update($request->all());
+
+        event(new DocumentPublishedEvent($task));
+
+        return ['message' => 'Document has been published'];
     }
 
     public function attest(Task $task)

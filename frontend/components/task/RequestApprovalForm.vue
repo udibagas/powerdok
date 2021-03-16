@@ -6,7 +6,6 @@
 		:close-on-click-modal="false"
     width="700px"
   >
-
     <el-table :data="approvals">
       <el-table-column label="Level" width="120px">
         <template slot-scope="scope">

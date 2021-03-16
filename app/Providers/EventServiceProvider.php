@@ -3,11 +3,13 @@
 namespace App\Providers;
 
 use App\Events\ApprovalRequestEvent;
+use App\Events\DocumentPublishedEvent;
 use App\Events\NewCommentEvent;
 use App\Events\NewTaskEvent;
 use App\Events\TaskApprovedEvent;
 use App\Events\TaskFinishedEvent;
 use App\Listeners\ApprovalRequestListener;
+use App\Listeners\DocumentPublishedListener;
 use App\Listeners\NewCommentListener;
 use App\Listeners\NewTaskListener;
 use App\Listeners\TaskApprovedListener;
@@ -30,7 +32,8 @@ class EventServiceProvider extends ServiceProvider
         NewCommentEvent::class => [NewCommentListener::class],
         TaskFinishedEvent::class => [TaskFinishedListener::class],
         ApprovalRequestEvent::class => [ApprovalRequestListener::class],
-        TaskApprovedEvent::class => [TaskApprovedListener::class, ApprovalRequestListener::class]
+        TaskApprovedEvent::class => [TaskApprovedListener::class, ApprovalRequestListener::class],
+        DocumentPublishedEvent::class => [DocumentPublishedListener::class],
     ];
 
     /**
