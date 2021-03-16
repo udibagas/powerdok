@@ -38,7 +38,7 @@
             </div>
           </div>
         </div>
-        <div class="mb-3 text-right" v-if="approval.user_id == $auth.user.id && approval.status == null">
+        <div class="mb-3" v-if="approval.user_id == $auth.user.id && approval.status == null">
           <el-input
             type="textarea"
             rows="3"

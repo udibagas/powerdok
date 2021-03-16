@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Events\ApprovalRequestEvent;
 use App\Events\NewCommentEvent;
 use App\Events\NewTaskEvent;
+use App\Events\TaskApprovedEvent;
 use App\Events\TaskFinishedEvent;
 use App\Http\Requests\TaskRequest;
 use App\Http\Resources\TaskCollection;
@@ -186,13 +187,18 @@ class TaskController extends Controller
             'note' => 'required'
         ]);
 
-        $task->approvals()
+        $approval = $task->approvals()
             ->where('user_id', $request->user()->id)
-            ->update($request->all());
+            ->first();
 
-        // todo: raise event taskapproved
-        // event(new DocumentApprovedEvent($task));
+        $approval->update($request->all());
 
+        // hapus approval yg 1 level yang belum ada approval
+        $task->approvals()->whereLevel($approval->level)
+            ->whereNull('status')
+            ->delete();
+
+        event(new TaskApprovedEvent($task, $request->user()));
         return ['message' => 'Approval has been saved'];
     }
 
