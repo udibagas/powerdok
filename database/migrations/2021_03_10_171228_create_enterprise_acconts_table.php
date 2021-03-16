@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateAttestationAssignmentsTable extends Migration
+class CreateEnterpriseAccontsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,8 @@ class CreateAttestationAssignmentsTable extends Migration
      */
     public function up()
     {
-        Schema::create('attestation_assignments', function (Blueprint $table) {
-            $table->index(['attestation_id', 'user_id']);
-            $table->unsignedBigInteger('attestation_id');
-            $table->unsignedBigInteger('user_id');
+        Schema::create('enterprise_acconts', function (Blueprint $table) {
+            $table->id();
             $table->timestamps();
         });
     }
@@ -28,6 +26,6 @@ class CreateAttestationAssignmentsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('attestation_assignments');
+        Schema::dropIfExists('enterprise_acconts');
     }
 }

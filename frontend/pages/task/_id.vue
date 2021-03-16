@@ -1,10 +1,10 @@
 <template>
 	<div>
 		<el-card>
-      <TaskSummary slot="header" :task="task" />
-      <div class="row mr-2">
-        <div class="col text-justify">
-          <h2>{{ task.title }}</h2>
+			<TaskSummary slot="header" :task="task" />
+			<div class="row mr-2">
+				<div class="col text-justify">
+					<h2>{{ task.title }}</h2>
 
           <div class="mt-2 text-muted text-justify">
             {{ task.description }}
@@ -65,20 +65,18 @@
       <!-- <Attachments :attachments="task.attachments" /> -->
 		</el-card>
 
-    <TaskApproval :task="task" @refresh="fetchData" />
+		<TaskApproval :task="task" @refresh="fetchData" />
 
 		<div class="mt-3">
-      <DocumentForm v-if="task.type == TASK_TYPE.DOCUMENT_REVIEW" :task="task" @refresh="fetchData" />
+			<DocumentForm
+				v-if="task.type == TASK_TYPE.DOCUMENT_REVIEW"
+				:task="task"
+				@refresh="fetchData"
+			/>
 			<TaskExam v-if="task.type == TASK_TYPE.EXAMINATION" :task="task" />
 		</div>
 
-		<el-card :header="$t('SUBMIT COMMENT')" class="mt-3">
-			<CommentForm :task="task" @refresh="fetchData" />
-		</el-card>
-
-		<el-card :header="$t('Comments')" class="my-3">
-			<!-- <Comments :comments="task.comments" /> -->
-		</el-card>
+		<Comments :url="`/api/task/comments/${task.id}`" />
 	</div>
 </template>
 

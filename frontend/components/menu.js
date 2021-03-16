@@ -68,6 +68,11 @@ export const menuItems = [
     icon: "uil-globe",
     link: "/language"
   }, {
+    id: 15,
+    label: "Manage Form",
+    icon: "uil-globe",
+    link: "/master-form"
+  }, {
     id: 14,
     label: "Setting",
     icon: "uil-sliders-v-alt",

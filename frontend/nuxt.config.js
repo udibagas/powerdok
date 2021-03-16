@@ -44,6 +44,7 @@ export default {
    */
   plugins: [
     '~/plugins/index.js',
+    '~/plugins/content-placeholder.js',
     "~/plugins/simplebar.js",
     "~/plugins/vue-click-outside.js",
     "~/plugins/vue-apexcharts.js",
@@ -65,7 +66,7 @@ export default {
    */
   buildModules: [
     '@nuxtjs/moment',
-    // '@nuxtjs/laravel-echo',
+    '@nuxtjs/laravel-echo',
   ],
 
   // moment: {

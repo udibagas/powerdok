@@ -2,17 +2,17 @@
 
 namespace Database\Factories;
 
-use App\Models\UserGroup;
+use App\Models\EnterpriseAccont;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class UserGroupFactory extends Factory
+class EnterpriseAccontFactory extends Factory
 {
     /**
      * The name of the factory's corresponding model.
      *
      * @var string
      */
-    protected $model = UserGroup::class;
+    protected $model = EnterpriseAccont::class;
 
     /**
      * Define the model's default state.

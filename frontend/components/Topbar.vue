@@ -28,24 +28,24 @@ export default {
     this.getNewNotifications();
     // setInterval(this.getNewNotifications, 5000);
 
-    console.log('Listening', 'App.Models.User.' + this.$auth.user.id);
-    // this.$echo
-    //   .private('users.' + this.$auth.user.id)
-    //   .notification((notification) => {
-    //     console.log(notification);
-    //     alert(JSON.stringify(notification))
-    //     // TODO: push notification
-    //     // this.notifications.push(notification);
-    //     // this.$notify.warning({
-    //     //   position: "bottom-right",
-    //     //   title: notification.data.title,
-    //     //   dangerouslyUseHTMLString: true,
-    //     //   onClick: () => {
-    //     //     this.readNotification(notification);
-    //     //   },
-    //     //   message: notification.data.text + '<br /><small class="text-muted"><i class="mdi mdi-clock-outline"></i>' + this.$moment(notification.created_at).fromNow() + '</small>'
-    //     // });
-    //   });
+    console.log('Listening', 'users.' + this.$auth.user.id);
+    this.$echo
+      .private('users.' + this.$auth.user.id)
+      .notification((notification) => {
+        console.log(notification);
+        alert(JSON.stringify(notification))
+        // TODO: push notification
+        // this.notifications.push(notification);
+        // this.$notify.warning({
+        //   position: "bottom-right",
+        //   title: notification.data.title,
+        //   dangerouslyUseHTMLString: true,
+        //   onClick: () => {
+        //     this.readNotification(notification);
+        //   },
+        //   message: notification.data.text + '<br /><small class="text-muted"><i class="mdi mdi-clock-outline"></i>' + this.$moment(notification.created_at).fromNow() + '</small>'
+        // });
+      });
   },
 
   methods: {

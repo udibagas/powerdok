@@ -38,7 +38,7 @@ export default {
     },
 
     upload(params) {
-      console.log(params);
+      // console.log(params);
       const { file, onError, onSuccess, onProgress, data } = params;
 
       let formData = new FormData();
@@ -59,7 +59,7 @@ export default {
     },
 
     handleRemove(file, fileList) {
-      console.log(file)
+      // console.log(file)
       const indexFile = this.model.attachments.findIndex(f => f.uid == file.uid)
       this.model.attachments.splice(indexFile, 1);
       console.log(this.model.attachments);
@@ -76,7 +76,7 @@ export default {
 		},
 
 		handleUploadFileError(err, file, fileList) {
-      console.log(err);
+      // console.log(err);
       let message =  ''
 
 			if (err.status == 413) {
