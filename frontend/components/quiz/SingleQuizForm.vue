@@ -25,7 +25,7 @@
 
 				<el-input
 					type="textarea"
-					rows="3"
+					:autosize="{ minRow: 2, maxRow: 10 }"
 					:placeholder="$t('Question')"
 					v-model="quiz.question"
 					class="mb-3"
@@ -91,7 +91,7 @@
 				</el-radio>
 				<el-input
 					type="textarea"
-					rows="2"
+					:autosize="{ minRow: 2, maxRow: 10 }"
 					v-model="quiz.choices[i]"
 					:placeholder="$t('Choice')"
 				></el-input>

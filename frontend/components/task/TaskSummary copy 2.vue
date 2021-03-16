@@ -17,7 +17,32 @@
 			</div>
 		</div>
 
-		<!-- TODO : Tracking -->
+		<div class="text-muted mt-4 mb-2">
+			{{ $t("Task No.") }}
+		</div>
+		<h5>#{{ task.id }}</h5>
+
+		<div class="text-muted mt-4 mb-2">
+			{{ $t("Task Type") }}
+		</div>
+		<h5>{{ task.type_name }}</h5>
+
+		<div class="text-muted mt-4 mb-2">
+			{{ $t("Priority") }}
+		</div>
+		<h5>{{ task.priority_label }}</h5>
+
+		<div class="text-muted mt-4 mb-2">
+			{{ $t("Status") }}
+		</div>
+		<h5>{{ task.status_label }}</h5>
+
+		<div class="text-muted mt-4 mb-2">
+			{{ $t("Due Date") }}
+		</div>
+		<h5>
+			{{ task.due_date ? $moment(task.due_date).format("DD-MMM-YYYY") : "N/A" }}
+		</h5>
 	</div>
 </template>
 

@@ -92,7 +92,7 @@
 				}"
 			>
 				<div class="d-flex">
-					<div class="mr-3">
+					<div class="mr-3 text-center">
 						<h4 class="text-muted">#{{ index + 1 }}</h4>
 						<i
 							style="font-size: 30px"
@@ -111,44 +111,17 @@
 							<div class="mr-3 mb-3 flex-grow-1">
 								<p class="text-justify">{{ quiz.question }}</p>
 
-								<div class="row">
-									<div
-										class="col-md-2"
-										v-for="(url, i) in quiz.attachments"
-										:key="i"
-									>
-										<a
-											href="#"
-											@click.prevent="
-												index = i;
-												visible = true;
-											"
-										>
-											<el-image
-												class="my-3 border mr-3 rounded"
-												style="height: 100px; width: 100px"
-												:src="url"
-											></el-image>
-										</a>
-									</div>
-								</div>
-								<vue-easy-lightbox
-									:visible="visible"
-									:imgs="quiz.attachments"
-									:index="index"
-									@hide="visible = false"
-								></vue-easy-lightbox>
+								<ImageList :images="quiz.attachments" />
 							</div>
 						</div>
 
 						<div class="row">
 							<div
 								v-for="(c, i) in quiz.choices"
-								:key="i"
 								class="col-6 mb-3 d-flex"
+								:key="i"
 								:class="{
-									'text-success font-weight-bold':
-										(quiz.user_answer == quiz.correct_answer) == i,
+									'text-success font-weight-bold': quiz.correct_answer == i,
 									'text-danger font-weight-bold':
 										quiz.user_answer != quiz.correct_answer &&
 										quiz.user_answer == i,
@@ -158,8 +131,6 @@
 								<p class="text-justify">
 									{{ quiz.choices[i] }}
 								</p>
-								<!-- <i v-if="quiz.user_answer == quiz.correct_answer == i" style="font-size:15px" class="el-icon-check text-success"></i>
-                <i v-if="quiz.user_answer != quiz.correct_answer && quiz.user_answer == i" style="font-size:15px" class="el-icon-close text-danger"></i> -->
 							</div>
 						</div>
 					</div>
@@ -180,7 +151,6 @@ export default {
 			TASK_TYPE,
 			TASK_STATUS,
 			visible: false,
-			index: 0,
 			start: false,
 			time_start: null,
 			time_finished: null,
