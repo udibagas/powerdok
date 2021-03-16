@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -26,7 +27,7 @@ class DocumentExam extends Model
 
     protected $casts = ['quizzes' => 'json'];
 
-    protected $appends = ['score', 'passed', 'correct_answer'];
+    protected $appends = ['score', 'passed', 'correct_answer', 'duration'];
 
     public function task()
     {
@@ -36,13 +37,13 @@ class DocumentExam extends Model
     public function getCorrectAnswerAttribute()
     {
         return count(array_filter($this->quizzes, function ($quiz) {
-            return $quiz['correct_answer'] == $quiz['user_answer'];
+            return $quiz['correct_answer'] === $quiz['user_answer'];
         }));
     }
 
     public function getScoreAttribute()
     {
-        return round(($this->correctAnswer / count($this->quizzes)), 2) * 100;
+        return round($this->correctAnswer / count($this->quizzes)) * 100;
     }
 
     public function getPassedAttribute()
@@ -50,21 +51,11 @@ class DocumentExam extends Model
         return $this->score >= $this->exam_minimum_score;
     }
 
-    // public function getQuizzesAttribute($value)
-    // {
-    //     if (
-    //         in_array(
-    //             $this->task->status,
-    //             [Task::STATUS_DRAFT, Task::STATUS_ON_PROGRESS, Task::STATUS_SUBMITTED, Task::STATUS_VOID]
-    //         )
-    //         && $this->user_id != auth()->id()
-    //     ) {
-    //         return array_map(function ($quiz) {
-    //             $quiz->correct_answer = null;
-    //             return $quiz;
-    //         }, json_decode($value));
-    //     }
+    public function getDurationAttribute()
+    {
+        $start = new Carbon($this->time_start);
+        $finished = new Carbon($this->time_finished);
 
-    //     return json_decode($value);
-    // }
+        return $finished->diff($start)->format('%H:%I:%S');
+    }
 }

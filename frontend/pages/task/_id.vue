@@ -46,7 +46,11 @@
 				:task="task"
 				@refresh="fetchData"
 			/>
-			<TaskExam v-if="task.type == TASK_TYPE.EXAMINATION" :task="task" />
+			<TaskExam
+				v-if="task.type == TASK_TYPE.EXAMINATION"
+				:task="task"
+				@refresh="fetchData"
+			/>
 		</div>
 
 		<Comments :url="`/api/task/comments/${task.id}`" />

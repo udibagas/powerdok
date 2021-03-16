@@ -231,9 +231,32 @@ export default {
 
 			if (allAnswered) {
 				this.$confirm(
-					"Are you sure want to submit your answer ?",
+					"Are you sure want to submit your answer?",
 					"Confirm"
-				).then(() => this.submitExam());
+				).then(() => {
+					this.$axios
+						.$post(`/api/task/finishExam/${this.task.id}`)
+						.then(response => {
+							this.$message({
+								message: response.message,
+								type: "success",
+								showClose: true
+							});
+							this.$emit("close");
+							this.$emit("refresh");
+						})
+						.catch(e => {
+							this.$message({
+								message: e.response.data.message,
+								type: "error",
+								showClose: true
+							});
+
+							if (e.response.status == 422) {
+								this.errors = e.response.data.errors;
+							}
+						});
+				});
 			} else {
 				const unAnswered = this.exam.quizzes
 					.map((q, i) => {

@@ -1,45 +1,42 @@
 <template>
 	<div>
-		<el-card
-			v-if="task.status != TASK_STATUS.FINISHED"
-			class="mb-3 text-center"
-			shadow="never"
-			style="padding: 20px 0"
-		>
-			<el-button type="danger" icon="el-icon-timer" @click="confirmStart">
-				{{ $t("START EXAM") }}
-			</el-button>
-		</el-card>
-
-		<ExamDialog v-if="start" :task="task" :exam="exam" :show="showDialog" />
-
-		<el-card
-			class="mb-3"
-			v-if="
-				task.status == TASK_STATUS.FINISHED || task.status == TASK_STATUS.CLOSED
-			"
-		>
+		<el-card class="mb-3" shadow="never">
 			<div class="row">
 				<div class="col">
-					<div class="text-muted">
-						{{ $t("Score") }}
-					</div>
-					<h1>
+					<div class="text-muted">{{ $t("Minimum Score (%)") }}</div>
+					<h1 class="text-primary">{{ exam.exam_minimum_score }}</h1>
+				</div>
+
+				<div class="col text-center">
+					<div class="text-muted">{{ $t("Total Quiz") }}</div>
+					<h1 class="text-primary">{{ exam.quizzes.length }}</h1>
+				</div>
+
+				<div class="col text-right">
+					<div class="text-muted">{{ $t("Duration (minutes)") }}</div>
+					<h1 class="text-primary">{{ exam.exam_max_duration || "0" }}</h1>
+				</div>
+			</div>
+
+			<div
+				class="row mt-4"
+				v-if="
+					task.status == TASK_STATUS.FINISHED ||
+					task.status == TASK_STATUS.CLOSED
+				"
+			>
+				<div class="col">
+					<div class="text-muted">{{ $t("Score") }}</div>
+					<h1 class="text-success">
 						{{ exam.score }}
 						<small
 							>({{ exam.correct_answer }} / {{ exam.quizzes.length }})</small
 						>
 					</h1>
 				</div>
-				<div class="col">
-					<div class="col text-muted">
-						{{ $t("Time") }}
-					</div>
-				</div>
-				<div class="col-md-2">
-					<div class="text-muted">
-						{{ $t("Status") }}
-					</div>
+
+				<div class="col text-center">
+					<div class="text-muted">{{ $t("Status") }}</div>
 					<h1
 						:class="{
 							'text-success': exam.passed,
@@ -49,8 +46,31 @@
 						{{ exam.passed ? $t("PASSED") : $t("FAILED") }}
 					</h1>
 				</div>
+
+				<div class="col text-right">
+					<div class="text-muted">{{ $t("Duration") }}</div>
+					<h1 class="text-warning">{{ exam.duration }}</h1>
+				</div>
+			</div>
+
+			<div class="text-center my-3" v-if="exam.time_finished == null">
+				<el-button type="danger" icon="el-icon-timer" @click="confirmStart">
+					{{ $t("START EXAM") }}
+				</el-button>
 			</div>
 		</el-card>
+
+		<ExamDialog
+			v-if="start"
+			:task="task"
+			:exam="exam"
+			:show="showDialog"
+			@close="showDialog = false"
+			@refresh="
+				getData();
+				$emit('refresh');
+			"
+		/>
 
 		<div
 			v-if="

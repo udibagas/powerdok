@@ -263,7 +263,7 @@ class TaskController extends Controller
         ]);
 
         $userAnswer = $task->exam->quizzes;
-        $userAnswer[$request->index]->user_answer = $request->answer;
+        $userAnswer[$request->index]['user_answer'] = $request->answer;
         $task->exam->update(['quizzes' => $userAnswer]);
 
         return ['message' => 'Your answer has been saved'];
