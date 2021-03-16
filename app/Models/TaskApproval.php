@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Mews\Purifier\Facades\Purifier;
 
 class TaskApproval extends Model
 {
@@ -21,5 +22,10 @@ class TaskApproval extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function getNoteAttribute($value)
+    {
+        return Purifier::clean(nl2br($value));
     }
 }
