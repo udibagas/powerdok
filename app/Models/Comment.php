@@ -29,7 +29,7 @@ class Comment extends Model
 
     public function getBodyAttribute($value)
     {
-        return Purifier::clean($value);
+        return Purifier::clean(nl2br($value));
     }
 
     public function attachments()
