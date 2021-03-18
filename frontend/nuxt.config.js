@@ -37,6 +37,7 @@ export default {
   css: [
     "~/assets/scss/app.scss",
     "element-ui/lib/theme-chalk/index.css",
+    "vue-wysiwyg/dist/vueWysiwyg.css"
   ],
   /*
    ** Plugins to load before mounting the App
@@ -47,14 +48,15 @@ export default {
     '~/plugins/content-placeholder.js',
     "~/plugins/simplebar.js",
     "~/plugins/vue-click-outside.js",
-    "~/plugins/vue-apexcharts.js",
+    // "~/plugins/vue-apexcharts.js",
     "~/plugins/vuelidate.js",
     "~/plugins/vue-slidebar.js",
     "~/plugins/vue-lightbox.js",
-    "~/plugins/vue-chartist.js",
+    // "~/plugins/vue-chartist.js",
     "~/plugins/vue-mask.js",
-    "~/plugins/vue-googlemap.js",
-    "@/plugins/element-ui"
+    // "~/plugins/vue-googlemap.js",
+    "@/plugins/element-ui",
+    "@/plugins/wysiwyg",
   ],
   /*
    ** Auto import components

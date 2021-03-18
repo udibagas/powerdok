@@ -12,10 +12,6 @@ class Task extends Model
 {
     use HasFactory, SoftDeletes;
 
-    // Status
-
-    const STATUS_DRAFT = 0;
-
     const STATUS_SUBMITTED = 1;
 
     const STATUS_ON_PROGRESS = 2;
@@ -67,7 +63,8 @@ class Task extends Model
         'status_label',
         'priority_label',
         'type_name',
-        'overdue'
+        'overdue',
+        'is_closed'
     ];
 
     protected $with = [
@@ -77,7 +74,7 @@ class Task extends Model
 
     public function getDescriptionAttribute($value)
     {
-        return Purifier::clean(nl2br($value));
+        return Purifier::clean($value);
     }
 
     public function user()
@@ -127,12 +124,7 @@ class Task extends Model
 
     public function getPriorityLabelAttribute()
     {
-        $priorityList = [
-            self::PRIORITY_LOW => 'Low',
-            self::PRIORITY_MEDIUM => 'Medium',
-            self::PRIORITY_HIGH => 'High',
-            self::PRIORITY_URGENT => 'Urgent'
-        ];
+        $priorityList = static::priorityList();
 
         return isset($priorityList[$this->priority]) ? $priorityList[$this->priority] : 'N/A';
     }
@@ -146,29 +138,57 @@ class Task extends Model
         return Carbon::now() > (new Carbon($this->due_date));
     }
 
+    public function getIsClosedAttribute()
+    {
+        return in_array($this->status, [
+            self::STATUS_CLOSED,
+            self::STATUS_FINISHED,
+            self::STATUS_VOID,
+        ]);
+    }
+
     public static function getStatusLabel($status)
     {
-        $statusList = [
-            self::STATUS_DRAFT => 'Draft',
-            self::STATUS_SUBMITTED => 'Submitted',
-            self::STATUS_ON_PROGRESS => 'On Progress',
-            self::STATUS_FINISHED => 'Finished',
-            self::STATUS_CLOSED => 'Closed',
-            self::STATUS_VOID => 'Void',
-            self::STATUS_POSTPONED => 'Postponed'
-        ];
+        $statusList = static::statusList();
 
         return isset($statusList[$status]) ? $statusList[$status] : 'N/A';
     }
 
     public function getTypeNameAttribute()
     {
-        $types = [
+        $types = static::typeList();
+
+        return isset($types[$this->type]) ? $types[$this->type] : 'N/A';
+    }
+
+    public static function typeList()
+    {
+        return [
             self::TYPE_DOCUMENT_REVIEW => 'Document Review',
             self::TYPE_ATESTATION => 'Atestation',
             self::TYPE_EXAMINATION => 'Examination'
         ];
+    }
 
-        return isset($types[$this->type]) ? $types[$this->type] : 'N/A';
+    public static function statusList()
+    {
+        return [
+            self::STATUS_SUBMITTED => 'New',
+            self::STATUS_ON_PROGRESS => 'On Progress',
+            self::STATUS_FINISHED => 'Finished',
+            self::STATUS_CLOSED => 'Closed',
+            self::STATUS_VOID => 'Void',
+            self::STATUS_POSTPONED => 'Postponed'
+        ];
+    }
+
+    public static function priorityList()
+    {
+        return [
+            self::PRIORITY_LOW => 'Low',
+            self::PRIORITY_MEDIUM => 'Medium',
+            self::PRIORITY_HIGH => 'High',
+            self::PRIORITY_URGENT => 'Urgent'
+        ];
     }
 }

@@ -1,66 +1,49 @@
 <template>
-	<div class="media border rounded shadow p-3">
-		<el-avatar class="mr-3" :size="45" icon="el-icon-user"></el-avatar>
-		<div class="media-body">
-			<strong>{{ $t("Me") }}</strong>
-
-			<div class="text-muted">
-				{{ $auth.user.position }} |
-				{{ $auth.user.department ? $auth.user.department.name : "N/A" }}
-			</div>
-
-			<div class="mt-3">
-				<el-radio-group size="mini" v-model="editor">
-					<el-radio-button label="Text" value="text"></el-radio-button>
-					<el-radio-button label="HTML" value="html"></el-radio-button>
-				</el-radio-group>
-			</div>
-
-			<div class="mb-3">
+	<div class="border rounded shadow p-3">
+		<el-form class="mt-3">
+			<el-form-item>
 				<el-input
-					v-if="editor == 'text'"
 					v-model="form.body"
 					type="textarea"
 					:autosize="{ minRows: 2, maxRows: 10 }"
 					placeholder="Type your comment here"
 				></el-input>
-				<wysiwyg v-else v-model="form.body"></wysiwyg>
-			</div>
+			</el-form-item>
+		</el-form>
 
-			<div class="mb-3" v-if="form.attachments.length > 0">
-				<div
-					class="media p-2 rounded hover"
-					v-for="(attachment, index) in form.attachments"
-					:key="index"
-				>
-					<i class="el-icon-document mr-2" style="font-size: 40px"></i>
-					<div class="media-body d-flex justify-content-between">
-						<div>
-							<a href="#" @click.prevent="download(attachment.url)">
-								{{ attachment.name }}
-							</a>
-							<div class="text-muted">{{ bytesToSize(attachment.size) }}</div>
-						</div>
-						<div>
-							<el-button
-								icon="el-icon-delete"
-								type="text"
-								@click="removeAttachment(index, attachment.path)"
-							></el-button>
-						</div>
+		<div class="mb-3" v-if="form.attachments.length > 0">
+			<div
+				class="media p-2 rounded hover"
+				v-for="(attachment, index) in form.attachments"
+				:key="index"
+			>
+				<i class="el-icon-document mr-2" style="font-size: 40px"></i>
+				<div class="media-body d-flex justify-content-between">
+					<div>
+						<a href="#" @click.prevent="download(attachment.url)">
+							{{ attachment.name }}
+						</a>
+						<div class="text-muted">{{ bytesToSize(attachment.size) }}</div>
+					</div>
+					<div>
+						<el-button
+							icon="el-icon-delete"
+							type="text"
+							@click="removeAttachment(index, attachment.path)"
+						></el-button>
 					</div>
 				</div>
 			</div>
+		</div>
 
-			<div>
-				<el-button size="small" type="primary" @click="save">
-					<i class="uil-comment-dots mr-1"></i> {{ $t("COMMENT") }}
-				</el-button>
+		<div>
+			<el-button size="small" type="primary" @click="save">
+				<i class="uil-comment-dots mr-1"></i> {{ $t("COMMENT") }}
+			</el-button>
 
-				<el-button type="text" icon="el-icon-paperclip" @click="attach">
-					{{ $t("Attach Document") }}
-				</el-button>
-			</div>
+			<el-button type="text" icon="el-icon-paperclip" @click="attach">
+				{{ $t("Attach Document") }}
+			</el-button>
 		</div>
 	</div>
 </template>
@@ -72,8 +55,7 @@ export default {
 	data() {
 		return {
 			form: { attachments: [] },
-			errors: {},
-			editor: "text"
+			errors: {}
 		};
 	},
 

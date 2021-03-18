@@ -1,8 +1,8 @@
 <template>
-	<div class="card">
-		<div class="card-header bg-white d-flex mb-3">
-			<div class="flex-grow-1" style="font-size: 24px">
-				<i class="uil-file-check-alt"></i> {{ $t("My Task") }}
+	<el-card :body-style="{ padding: '0' }">
+		<div class="d-flex justify-content-between" slot="header">
+			<div style="font-size: 1.2rem">
+				{{ $t("My Task") }}
 			</div>
 
 			<div>
@@ -30,11 +30,18 @@
 			</div>
 		</div>
 
-		<el-table stripe :data="tableData" v-loading="loading">
+		<el-table
+			stripe
+			:data="tableData"
+			v-loading="loading"
+			height="calc(100vh - 245px)"
+			@filter-change="filterChange"
+			@sort-change="sortChange"
+		>
 			<el-table-column label="#" type="index" :index="pagination.form">
 			</el-table-column>
 
-			<el-table-column label="Title">
+			<el-table-column :label="$t('Title')" show-overflow-tooltip>
 				<template slot-scope="scope">
 					<nuxt-link :to="`/task/${scope.row.id}`">{{
 						scope.row.title
@@ -45,36 +52,67 @@
 			<el-table-column
 				prop="type_name"
 				label="Type"
-				width="200"
+				width="150"
+				align="center"
+				header-align="center"
+				column-key="type"
+				:filters="typeList"
 			></el-table-column>
 
-			<el-table-column :label="$t('Priority')" width="150">
+			<el-table-column
+				prop="due_date"
+				label="Due Date"
+				width="120"
+				sortable="custom"
+				align="center"
+				header-align="center"
+			>
 				<template slot-scope="scope">
-					<span :class="`text-${priorityColors[scope.row.priority]}`">{{
+					<span
+						:class="{
+							'text-danger': scope.row.overdue && !scope.row.is_closed,
+						}"
+					>
+						{{ $moment(scope.row.due_date).fromNow() }}
+					</span>
+				</template>
+			</el-table-column>
+
+			<el-table-column
+				prop="priority"
+				:label="$t('Priority')"
+				width="120"
+				align="center"
+				header-align="center"
+				column-key="priority"
+				:filters="priorityList"
+				sortable="custom"
+			>
+				<template slot-scope="scope">
+					<span :class="`text-${priorityColors[scope.row.priority_label]}`">{{
 						scope.row.priority_label
 					}}</span>
 				</template>
 			</el-table-column>
 
-			<el-table-column prop="due_date" label="Due Date" width="150">
+			<el-table-column
+				label="Status"
+				width="150"
+				header-align="center"
+				align="center"
+				column-key="status"
+				:filters="statusList"
+			>
 				<template slot-scope="scope">
-					{{ $moment(scope.row.due_date).fromNow() }}
-				</template>
-			</el-table-column>
-
-			<el-table-column label="Status" width="150">
-				<template slot-scope="scope">
-					<span :class="`text-${statusColors[scope.row.status]}`">{{
+					<span :class="`text-${statusColors[scope.row.status_label]}`">{{
 						scope.row.status_label
 					}}</span>
 				</template>
 			</el-table-column>
 		</el-table>
 
-		<div class="d-flex p-3">
+		<div class="text-right p-3">
 			<el-pagination
-				class="flex-grow-1"
-				background
 				@current-change="
 					(p) => {
 						pagination.current_page = p;
@@ -87,22 +125,18 @@
 						fetchData();
 					}
 				"
-				layout="prev, pager, next"
+				layout="sizes, prev, pager, next, total"
 				:page-size="Number(pagination.per_page)"
 				:page-sizes="pageSizes"
 				:total="pagination.total"
 			></el-pagination>
-
-			<div style="line-height: 30px">
-				{{ pagination.from }} - {{ pagination.to }} of
-				{{ pagination.total }}
-			</div>
 		</div>
-	</div>
+	</el-card>
 </template>
 
 <script>
 import table from "@/mixins/table";
+import { mapState } from "vuex";
 
 export default {
 	mixins: [table],
@@ -111,28 +145,24 @@ export default {
 			title: `${this.title}`
 		};
 	},
+
+	computed: {
+		...mapState([
+			"priorityColors",
+			"statusColors",
+			"statusList",
+			"priorityList",
+			"typeList"
+		])
+	},
+
 	data() {
 		return {
 			url: "/api/task",
 			filters: { assigned: true },
-			priorityColors: {
-				Low: "secondary",
-				Medium: "warning",
-				High: "danger",
-				Urgent: "danger"
-			},
-			statusColors: {
-				Draft: "secondary",
-				Submitted: "warning",
-				"On Progress": "primary",
-				Finished: "success",
-				Closed: "secondary",
-				Void: "secondary",
-				Postponed: "secondary"
-			},
 			title: "Powerdok | My Task"
 		};
-	},
+	}
 };
 </script>
 

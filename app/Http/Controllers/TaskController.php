@@ -41,7 +41,10 @@ class TaskController extends Controller
             })->when($request->keyword, function ($q) use ($request) {
                 $q->where(function ($q) use ($request) {
                     $q->where('title', 'ILIKE', "%{$request->keyword}%")
-                        ->orWhere('description', 'ILIKE', "%{$request->keyword}%");
+                        ->orWhere('description', 'ILIKE', "%{$request->keyword}%")
+                        ->orWhereHas('assignee', function ($q) use ($request) {
+                            $q->where('name', 'ILIKE', "%{$request->keyword}%");
+                        });
                 });
             })->orderBy(
                 $request->sort_field ?: 'updated_at',
@@ -156,6 +159,8 @@ class TaskController extends Controller
             $task->attachments()->delete();
             $task->delete();
         });
+
+        // TODO: notify to assignee task has been deleted
 
         return ['message' => 'Data has been deleted', 'data' => $task];
     }
@@ -343,7 +348,6 @@ class TaskController extends Controller
         $this->authorize('view', $task);
 
         $open = [
-            Task::STATUS_DRAFT,
             Task::STATUS_SUBMITTED,
             Task::STATUS_ON_PROGRESS,
             Task::STATUS_VOID
@@ -367,5 +371,21 @@ class TaskController extends Controller
     {
         $this->authorize('view', $task);
         return $task->document;
+    }
+
+    public function statusList()
+    {
+        return Task::statusList();
+    }
+
+    public function typeList()
+    {
+        return Task::typeList();
+    }
+
+
+    public function priorityList()
+    {
+        return Task::priorityList();
     }
 }

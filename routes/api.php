@@ -90,6 +90,10 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
         Route::get('attachments/{task}', [TaskController::class, 'attachments']);
     });
 
+    Route::get('typeList', [TaskController::class, 'typeList']);
+    Route::get('statusList', [TaskController::class, 'statusList']);
+    Route::get('priorityList', [TaskController::class, 'priorityList']);
+
     Route::prefix('notification')->group(function () {
         Route::get('', [NotificationController::class, 'index']);
         Route::get('/getNewNotifications', [NotificationController::class, 'getNewNotifications']);

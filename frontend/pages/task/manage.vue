@@ -1,48 +1,55 @@
 <template>
-	<div class="card">
-		<div class="card-header bg-white d-flex">
-			<div class="flex-grow-1" style="line-height: 30px">
-				<h4 class="text-primary m-0 p-0">
-					<i class="uil-file-check-alt"></i> Manage Task
-				</h4>
+	<el-card :body-style="{ padding: '0' }">
+		<div class="d-flex justify-content-between" slot="header">
+			<div style="font-size: 1.2rem">
+				{{ $t("Manage Task") }}
 			</div>
 
-			<el-button
-				class="mr-2"
-				size="small"
-				type="primary"
-				icon="el-icon-plus"
-				@click="addData"
-				>NEW TASK
-			</el-button>
+			<div>
+				<el-button
+					class="mr-2"
+					size="small"
+					type="primary"
+					icon="el-icon-plus"
+					@click="addData"
+					>NEW TASK
+				</el-button>
 
-			<el-input
-				placeholder="Search"
-				v-model="keyword"
-				prefix-icon="el-icon-search"
-				size="small"
-				style="width: 200px"
-				clearable
-				@change="
-					() => {
-						pagination.current_page = 1;
-						fetchData();
-					}
-				"
-			></el-input>
-			<el-button
-				icon="el-icon-refresh"
-				size="small"
-				class="ml-2"
-				@click="refresh"
-			></el-button>
+				<el-input
+					placeholder="Search"
+					v-model="keyword"
+					prefix-icon="el-icon-search"
+					size="small"
+					style="width: 200px"
+					clearable
+					@change="
+						() => {
+							pagination.current_page = 1;
+							fetchData();
+						}
+					"
+				></el-input>
+				<el-button
+					icon="el-icon-refresh"
+					size="small"
+					class="ml-2"
+					@click="refresh"
+				></el-button>
+			</div>
 		</div>
 
-		<el-table stripe :data="tableData" v-loading="loading">
+		<el-table
+			stripe
+			:data="tableData"
+			v-loading="loading"
+			height="calc(100vh - 245px)"
+			@filter-change="filterChange"
+			@sort-change="sortChange"
+		>
 			<el-table-column label="#" type="index" :index="pagination.form">
 			</el-table-column>
 
-			<el-table-column label="Title">
+			<el-table-column :label="$t('Title')" show-overflow-tooltip>
 				<template slot-scope="scope">
 					<nuxt-link :to="`/task/${scope.row.id}`">
 						{{ scope.row.title }}
@@ -53,46 +60,73 @@
 			<el-table-column
 				prop="assignee.name"
 				label="Assignee"
-				width="220"
+				width="150"
+				show-overflow-tooltip
 			></el-table-column>
 
 			<el-table-column
 				prop="type_name"
 				label="Type"
 				width="150"
+				align="center"
+				header-align="center"
+				column-key="type"
+				:filters="typeList"
 			></el-table-column>
 
-			<el-table-column :label="$t('Priority')" width="80">
-				<template slot-scope="scope">
-					<span :class="`text-${priorityColors[scope.row.priority]}`">
-						{{ scope.row.priority_label }}
-					</span>
-				</template>
-			</el-table-column>
-
-			<el-table-column prop="due_date" label="Due Date" width="100">
+			<el-table-column
+				prop="due_date"
+				:label="$t('Due Date')"
+				width="120"
+				sortable="custom"
+				align="center"
+				header-align="center"
+			>
 				<template slot-scope="scope">
 					{{ $moment(scope.row.due_date).fromNow() }}
 				</template>
 			</el-table-column>
 
-			<el-table-column label="Status" width="90">
+			<el-table-column
+				prop="priority"
+				:label="$t('Priority')"
+				width="120"
+				align="center"
+				header-align="center"
+				column-key="priority"
+				:filters="priorityList"
+				sortable="custom"
+			>
 				<template slot-scope="scope">
-					<span :class="`text-${statusColors[scope.row.status]}`">
-						{{ scope.row.status_label }}
-					</span>
+					<span :class="`text-${priorityColors[scope.row.priority_label]}`">{{
+						scope.row.priority_label
+					}}</span>
 				</template>
 			</el-table-column>
 
 			<el-table-column
-				label="Action"
+				label="Status"
+				width="150"
+				header-align="center"
+				align="center"
+				column-key="status"
+				:filters="statusList"
+			>
+				<template slot-scope="scope">
+					<span :class="`text-${statusColors[scope.row.status_label]}`">{{
+						scope.row.status_label
+					}}</span>
+				</template>
+			</el-table-column>
+
+			<el-table-column
 				fixed="right"
-				width="80"
+				width="60"
 				header-align="center"
 				align="center"
 			>
 				<template slot-scope="scope">
-					<el-dropdown>
+					<el-dropdown v-if="!scope.row.is_closed">
 						<span class="el-dropdown-link">
 							<i class="el-icon-more"></i>
 						</span>
@@ -113,10 +147,8 @@
 			</el-table-column>
 		</el-table>
 
-		<div class="d-flex p-3">
+		<div class="text-right p-3">
 			<el-pagination
-				class="flex-grow-1"
-				background
 				@current-change="
 					(p) => {
 						pagination.current_page = p;
@@ -129,16 +161,11 @@
 						fetchData();
 					}
 				"
-				layout="prev, pager, next"
+				layout="sizes, prev, pager, next, total"
 				:page-size="Number(pagination.per_page)"
 				:page-sizes="pageSizes"
 				:total="pagination.total"
 			></el-pagination>
-
-			<div style="line-height: 30px">
-				{{ pagination.from }} - {{ pagination.to }} of
-				{{ pagination.total }}
-			</div>
 		</div>
 
 		<TaskForm
@@ -148,11 +175,12 @@
 			@close="showForm = false"
 			@refresh="refresh"
 		/>
-	</div>
+	</el-card>
 </template>
 
 <script>
 import table from "@/mixins/table";
+import { mapState } from "vuex";
 
 export default {
 	mixins: [table],
@@ -164,24 +192,20 @@ export default {
 	data() {
 		return {
 			url: "/api/task",
-			priorityColors: {
-				Low: "secondary",
-				Medium: "warning",
-				High: "danger",
-				Urgent: "danger"
-			},
-			statusColors: {
-				Draft: "secondary",
-				Submitted: "warning",
-				"On Progress": "primary",
-				Finished: "success",
-				Closed: "secondary",
-				Void: "secondary",
-				Postponed: "secondary"
-			},
 			title: "Powerdok | Manage Task"
 		};
 	},
+
+	computed: {
+		...mapState([
+			"priorityColors",
+			"statusColors",
+			"statusList",
+			"priorityList",
+			"typeList"
+		])
+	},
+
 	methods: {
 		addData() {
 			this.selectedData = { attachments: [] };
@@ -190,20 +214,3 @@ export default {
 	}
 };
 </script>
-
-<style lang="scss" scoped>
-.table-responsive {
-	height: calc(100vh - 170px);
-}
-
-thead th {
-	position: sticky;
-	top: 0;
-	background: #5b73e8;
-	color: white;
-}
-
-td {
-	vertical-align: middle;
-}
-</style>

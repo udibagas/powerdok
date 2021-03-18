@@ -1,5 +1,5 @@
 <template>
-	<div style="min-width: 350px; border-left: 1px solid #ddd" class="p-3">
+	<div style="min-width: 300px; border-left: 1px solid #ddd" class="p-3">
 		<div class="text-muted mb-2">
 			<i class="uil-user-check"></i>
 			{{ $t("Assigned to") }}

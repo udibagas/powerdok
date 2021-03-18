@@ -6,6 +6,9 @@ export default {
 		document.body.removeAttribute("data-topbar");
 		this.$store.dispatch("fetchUsers");
 		this.$store.dispatch("fetchDepartments");
+		this.$store.dispatch("fetchTaskStatuses");
+		this.$store.dispatch("fetchTaskTypes");
+		this.$store.dispatch("fetchTaskPriorities");
 	},
 
 	methods: {

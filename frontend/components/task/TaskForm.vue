@@ -8,44 +8,35 @@
 	>
 		<el-form label-position="left" label-width="150px">
 			<el-form-item label="Title" :class="{ 'is-error': errors.title }">
-				<el-input v-model="formModel.title" placeholder="Title"></el-input>
+				<el-input v-model="model.title" placeholder="Title"></el-input>
 
 				<div class="el-form-item__error" v-if="errors.title">
 					{{ errors.title.join(", ") }}
 				</div>
 			</el-form-item>
 
-			<el-form-item
-				label="Description"
-				:class="{ 'is-error': errors.description }"
-			>
-				<el-input
-					type="textarea"
-					rows="7"
-					v-model="formModel.description"
-					placeholder="Description"
-				></el-input>
-
-				<div class="el-form-item__error" v-if="errors.description">
-					{{ errors.description.join(", ") }}
-				</div>
-			</el-form-item>
+			<wysiwyg class="mb-3" v-model="model.description"></wysiwyg>
+			<div class="el-form-item__error" v-if="errors.description">
+				{{ errors.description.join(", ") }}
+			</div>
 
 			<el-form-item label="Type" :class="{ 'is-error': errors.type }">
 				<el-select
 					style="width: 100%"
-					v-model="formModel.type"
+					v-model="model.type"
 					placeholder="Type"
-					default-first-option
-					clearable
+					:disabled="!!model.id"
 					@change="
 						documentList = [];
 						model.document_id = null;
 					"
 				>
-					<el-option :value="1" label="Document Review"></el-option>
-					<el-option :value="2" label="Atestation"></el-option>
-					<el-option :value="3" label="Examination"></el-option>
+					<el-option
+						v-for="t in typeList"
+						:key="t.value"
+						:value="t.value"
+						:label="t.text"
+					></el-option>
 				</el-select>
 
 				<div class="el-form-item__error" v-if="errors.type">
@@ -59,13 +50,13 @@
 			>
 				<el-select
 					style="width: 100%"
-					v-model="formModel.document_id"
+					v-model="model.document_id"
 					placeholder="Select Document"
 					filterable
 					default-first-option
 					clearable
 					remote
-					:disabled="formModel.type == null"
+					:disabled="model.type == null"
 					:remote-method="(q) => getList(documentUrl, 'documentList', q)"
 				>
 					<el-option
@@ -93,14 +84,17 @@
 				</div>
 			</el-form-item>
 
-			<el-form-item label="Assignees" :class="{ 'is-error': errors.assignees }">
+			<el-form-item
+				:label="$t('Assignees')"
+				:class="{ 'is-error': errors.assignees }"
+			>
 				<el-select
+					v-if="!model.id"
 					style="width: 100%"
-					v-model="formModel.assignees"
+					v-model="model.assignees"
 					placeholder="Assignees"
 					filterable
 					default-first-option
-					clearable
 					multiple
 				>
 					<el-option
@@ -127,6 +121,8 @@
 					</el-option>
 				</el-select>
 
+				<el-input v-else v-model="model.assignee.name" disabled></el-input>
+
 				<div class="el-form-item__error" v-if="errors.assignees">
 					{{ errors.assignees.join(", ") }}
 				</div>
@@ -135,7 +131,7 @@
 			<el-form-item label="Due Date" :class="{ 'is-error': errors.due_date }">
 				<el-date-picker
 					style="width: 100%"
-					v-model="formModel.due_date"
+					v-model="model.due_date"
 					type="date"
 					format="dd-MMM-yyyy"
 					value-format="yyyy-MM-dd"
@@ -150,16 +146,18 @@
 			<el-form-item label="Priority" :class="{ 'is-error': errors.priority }">
 				<el-select
 					style="width: 100%"
-					v-model="formModel.priority"
+					v-model="model.priority"
 					placeholder="Priority"
 					filterable
 					clearable
 					default-first-option
 				>
-					<el-option :value="0" label="Low"></el-option>
-					<el-option :value="1" label="Medium"></el-option>
-					<el-option :value="2" label="High"></el-option>
-					<el-option :value="3" label="Urgent"></el-option>
+					<el-option
+						v-for="p in priorityList"
+						:value="p.value"
+						:label="p.text"
+						:key="p.value"
+					></el-option>
 				</el-select>
 
 				<div class="el-form-item__error" v-if="errors.priority">
@@ -213,9 +211,6 @@ export default {
 	props: ["show", "model", "url"],
 	mixins: [form, dropdown],
 	computed: {
-		formModel() {
-			return this.model;
-		},
 		fileList() {
 			return this.model.attachments || [];
 		},
@@ -225,7 +220,7 @@ export default {
 			}
 			return "/api/document";
 		},
-		...mapState(["userList"])
+		...mapState(["userList", "priorityList", "typeList"])
 	},
 	mounted() {
 		this.getList(this.documentUrl, "documentList");

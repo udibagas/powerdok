@@ -37,7 +37,7 @@ class TaskPolicy
      */
     public function update(User $user, Task $task)
     {
-        return $task->user_id == $user->id;
+        return $task->user_id == $user->id && !$task->is_closed;
     }
 
     /**
@@ -49,7 +49,7 @@ class TaskPolicy
      */
     public function delete(User $user, Task $task)
     {
-        return $task->user_id == $user->id;
+        return $task->user_id == $user->id && !$task->is_closed;
     }
 
     /**
@@ -73,7 +73,7 @@ class TaskPolicy
      */
     public function forceDelete(User $user, Task $task)
     {
-        return $task->user_id == $user->id;
+        return $task->user_id == $user->id && !$task->is_closed;
     }
 
     public function approve(User $user, Task $task)
