@@ -1,0 +1,15 @@
+build-job:
+  stage: build
+  script:
+    - composer install
+    - cd frontend && npm install
+
+test-job1:
+  stage: test
+  script:
+    - php artisan test
+
+deploy-prod:
+  stage: deploy
+  script:
+    - cd frontend && npm run build
