@@ -1,13 +1,13 @@
 image: registry.gitlab.com/udibagas/laravel-sample:latest
 
 services:
-  - mysql:5.7
+  - postgres:12.2-alpine
 
 variables:
-  MYSQL_DATABASE: homestead
-  MYSQL_ROOT_PASSWORD: secret
-  DB_HOST: mysql
-  DB_USERNAME: root
+  POSTGRES_DB: nice_marmot
+  POSTGRES_USER: runner
+  POSTGRES_PASSWORD: ""
+  POSTGRES_HOST_AUTH_METHOD: trust
 
 stages:
   - test
