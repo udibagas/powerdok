@@ -13,19 +13,25 @@ class Task extends Model
 
     // Status
 
-    const STATUS_DRAFT = 0;
+    const STATUS_SUBMITTED = 0;
 
-    const STATUS_SUBMITTED = 1;
+    const STATUS_ON_PROGRESS = 1;
 
-    const STATUS_ON_PROGRESS = 2;
+    const STATUS_FINALIZED = 2;
 
-    const STATUS_FINISHED = 3;
+    const STATUS_APPROVAL = 3;
 
-    const STATUS_CLOSED = 4;
+    const STATUS_PARTIALLY_APPROVED = 4;
 
-    const STATUS_VOID = 5;
+    const STATUS_APPROVED = 5;
 
-    const STATUS_POSTPONED = 6;
+    const STATUS_FINISHED = 6;
+
+    const STATUS_CLOSED = 7;
+
+    const STATUS_VOID = 8;
+
+    const STATUS_POSTPONED = 9;
 
     // Priorities
 
@@ -143,9 +149,12 @@ class Task extends Model
     public static function getStatusLabel($status)
     {
         $statusList = [
-            self::STATUS_DRAFT => 'Draft',
             self::STATUS_SUBMITTED => 'Submitted',
             self::STATUS_ON_PROGRESS => 'On Progress',
+            self::STATUS_FINALIZED => 'Finalized',
+            self::STATUS_APPROVAL => 'Approval',
+            self::STATUS_PARTIALLY_APPROVED => 'Partially Approved',
+            self::STATUS_APPROVED => 'Approved',
             self::STATUS_FINISHED => 'Finished',
             self::STATUS_CLOSED => 'Closed',
             self::STATUS_VOID => 'Void',

@@ -8,7 +8,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class TaskApprovalCompletedNotification extends Notification
+class ApprovalCompletedNotification extends Notification
 {
     use Queueable;
 
@@ -41,7 +41,7 @@ class TaskApprovalCompletedNotification extends Notification
      * @param  mixed  $notifiable
      * @return \Illuminate\Notifications\Messages\MailMessage
      */
-    public function toMail($notifiable, Task $task)
+    public function toMail($notifiable)
     {
         $mail = (new MailMessage)
                     ->subject('Approval Completed')
@@ -62,7 +62,9 @@ class TaskApprovalCompletedNotification extends Notification
     public function toArray($notifiable)
     {
         return [
-            'message' => 'This task approval has been completed!'
+            'type' => 'task',
+            'title' => "Task approval has been completed",
+            'url' => '/',
         ];
     }
 }

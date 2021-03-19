@@ -2,6 +2,7 @@
 
 namespace App\Notifications;
 
+use App\Models\Task;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
@@ -11,14 +12,17 @@ class DocumentPublishedNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 
+    public $task;
+
+
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(Task $task)
     {
-        //
+        $this->task = $task;
     }
 
     /**
@@ -40,10 +44,12 @@ class DocumentPublishedNotification extends Notification implements ShouldQueue
      */
     public function toMail($notifiable)
     {
+        $task = $this->task;
+
         return (new MailMessage)
-            ->subject("Document number {$this->task->document->number} has been published by {$this->task->user->name}")
+            ->subject("{$task->document->title} has been published by {$task->assignee->name}")
             ->greeting("Hello {$notifiable->name}!")
-            ->markdown('mail.task.document-published', ['task' => $this->task]);
+            ->markdown('mail.task.document-published', ['task' => $task]);
     }
 
     /**
@@ -54,8 +60,13 @@ class DocumentPublishedNotification extends Notification implements ShouldQueue
      */
     public function toArray($notifiable)
     {
+        $task = $this->task;
+
         return [
-            'message' => "Document number {$this->task->document->number} has been published by {$this->task->user->name}"
+            'type' => 'task',
+            'title' => "New Document Published",
+            'text' => "{$task->document->title} has been published by {$task->assignee->name}",
+            'url' => '/',
         ];
     }
 }

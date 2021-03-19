@@ -1,7 +1,7 @@
 @component('mail::message')
-# Document Published
+# Document Updated
 
-Document has been published!
+Document has been updated!
 
 @component('mail::button', ['url' => '/'])
 View Document

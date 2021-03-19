@@ -11,10 +11,21 @@
           type="primary"
           @click="save"
         >
-          {{ $t("SAVE DOCUMENT") }}
+          {{ $t(task.document ? 'UPDATE DOCUMENT' : 'SAVE DOCUMENT') }}
         </el-button>
 
         <el-button
+          v-if="task.status == TASK_STATUS.ON_PROGRESS"
+          icon="el-icon-document-checked"
+          size="small"
+          type="info"
+          @click="finalized"
+        >
+          {{ $t("FINALIZED DOCUMENT") }}
+        </el-button>
+
+        <el-button
+          v-if="task.status == TASK_STATUS.APPROVED"
           icon="el-icon-check"
           size="small"
           type="success"
@@ -40,8 +51,8 @@
           default-first-option
           clearable
         >
-          <el-option :value="1" label="SOP"></el-option>
-          <el-option :value="2" label="Policy"></el-option>
+          <el-option :value="0" label="SOP"></el-option>
+          <el-option :value="1" label="Policy"></el-option>
         </el-select>
 
         <div class="el-form-item__error" v-if="errors.type">
@@ -52,9 +63,9 @@
     <ckeditor v-model="form.body" :editor="editor"></ckeditor>
 
     <PublishDocumentForm
-      v-if="form.id"
+      v-if="task.document"
       :show="showForm"
-      :task="form"
+      :task="task"
       @close="showForm = false"
       @refresh="getData"
     />
@@ -64,6 +75,7 @@
 <script>
 import CKEditor from "@ckeditor/ckeditor5-vue";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
+import { TASK_STATUS } from "@/store/modules/task";
 
 export default {
   props: ["task"],
@@ -78,7 +90,9 @@ export default {
       form: { body: "" },
       errors: {},
       editor: ClassicEditor,
+      showFormFinalized: false,
       showForm: false,
+			TASK_STATUS
     };
   },
   components: {
@@ -86,30 +100,61 @@ export default {
   },
   methods: {
     save() {
-      this.loading = true;
-      this.$axios
-        .$post(`/api/task/updateDocument/${this.task.id}`, this.form)
-        .then((response) => {
-          this.$message({
-            message: response.message,
-            type: "success",
-          });
+      this.$confirm("Are you sure want to save this document?", "Confirm").then(() => {
+        this.loading = true;
+        this.$axios
+          .$post(`/api/task/updateDocument/${this.task.id}`, this.form)
+          .then((response) => {
+            this.$message({
+              message: response.message,
+              type: "success",
+            });
 
-          this.errors = {};
-          this.getData();
-          this.$emit("refresh");
-        })
-        .catch((e) => {
-          if (e.response.status == 422) {
-            this.errors = e.response.data.errors;
-          }
+            this.errors = {};
+            this.getData();
+            this.$emit("refresh");
+          })
+          .catch((e) => {
+            if (e.response.status == 422) {
+              this.errors = e.response.data.errors;
+            }
 
-          this.$message({
-            message: e.response.data.message,
-            type: "error",
-          });
-        })
-        .finally(() => (this.loading = false));
+            this.$message({
+              message: e.response.data.message,
+              type: "error",
+            });
+          })
+          .finally(() => (this.loading = false));
+      });
+    },
+
+    finalized() {
+      this.$confirm("Are you sure want to finalized this document?", "Confirm").then(() => {
+        this.loading = true;
+        this.$axios
+          .$post(`/api/task/finalizedDocument/${this.task.id}`)
+          .then((response) => {
+            this.$message({
+              message: response.message,
+              type: "success",
+            });
+
+            this.errors = {};
+            this.getData();
+            this.$emit("refresh");
+          })
+          .catch((e) => {
+            if (e.response.status == 422) {
+              this.errors = e.response.data.errors;
+            }
+
+            this.$message({
+              message: e.response.data.message,
+              type: "error",
+            });
+          })
+          .finally(() => (this.loading = false));
+      });
     },
 
     getData() {
@@ -117,8 +162,13 @@ export default {
       this.$axios
         .$get(`/api/task/document/${this.task.id}`)
         .then((response) => {
-          this.form = response;
-          this.form.body = response.latest_version.body;
+          if (!!response) {
+            this.form = {
+              title: response.title,
+              type: response.type,
+              body: response.latest_version.body
+            };
+          }
         })
         .catch((e) => {
           this.$message({

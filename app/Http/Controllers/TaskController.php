@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\ApprovalCompletedEvent;
 use App\Events\ApprovalRequestEvent;
+use App\Events\DocumentFinalizedEvent;
 use App\Events\DocumentPublishedEvent;
+use App\Events\DocumentUpdatedEvent;
 use App\Events\NewCommentEvent;
 use App\Events\NewTaskEvent;
 use App\Events\TaskApprovedEvent;
@@ -11,7 +14,6 @@ use App\Events\TaskFinishedEvent;
 use App\Http\Requests\TaskRequest;
 use App\Http\Resources\TaskCollection;
 use App\Models\Document;
-use App\Models\DocumentVersion;
 use App\Models\Task;
 use App\Models\TaskApproval;
 use Illuminate\Http\Request;
@@ -66,7 +68,7 @@ class TaskController extends Controller
             foreach ($request->assignees as $assignee) {
                 $task = Task::create(array_merge(
                     $request->all(),
-                    ['user_id' => $request->user()->id, 'assignee_id' => $assignee]
+                    ['user_id' => auth()->id(), 'assignee_id' => $assignee]
                 ));
 
                 if ($request->attachments) {
@@ -162,6 +164,74 @@ class TaskController extends Controller
         return ['message' => 'Data has been deleted', 'data' => $task];
     }
 
+    public function updateDocument(Task $task, Request $request)
+    {
+        $this->authorize('updateDocument', $task);
+
+        $request->validate([
+            'title' => 'required',
+            'type' => 'required',
+            'body' => 'required'
+        ]);
+
+        if (!$task->document_id) {
+            $document = Document::create($request->all());
+            $document->versions()->create([
+                'body' => $request->body,
+                'owner_id' => auth()->id(),
+                'status' => $request->status ?: 0
+            ]);
+
+            $task->update([
+                'document_id' => $document->id,
+                'status' => Task::STATUS_ON_PROGRESS
+            ]);
+        } else {
+            $task->document->update([
+                'title' => $request->title,
+                'type' => $request->type
+            ]);
+            $task->document->latest_version->update(['body' => $request->body]);
+        }
+
+        event(new DocumentUpdatedEvent($task));
+
+        return ['message' => 'Document has been saved'];
+    }
+
+    public function finalizedDocument(Task $task)
+    {
+        // $this->authorize('finalizedDocument', $task);
+
+        $task->update(['status' => Task::STATUS_FINALIZED]);
+
+        event(new DocumentFinalizedEvent($task));
+
+        return ['message' => 'Document has been finalized'];
+    }
+
+    public function publishDocument(Request $request, Task $task)
+    {
+        // $this->authorize('publishDocument', $task);
+        $request->validate([
+            'number' => 'required',
+            'version' => 'required',
+            'effective_date' => 'required',
+            'expired_date' => 'required',
+            'categories' => 'required',
+            'tags' => 'required',
+            'departments'=> 'required'
+        ]);
+
+        $task->document->update($request->all());
+        $task->document->latest_version->update($request->all());
+        $task->update(['status' => Task::STATUS_FINISHED]);
+
+        event(new DocumentPublishedEvent($task));
+
+        return ['message' => 'Document has been published'];
+    }
+
     public function requestApproval(Task $task, Request $request)
     {
         foreach ($request->approvals as $approval) {
@@ -169,6 +239,7 @@ class TaskController extends Controller
                 $task->approvals()->where('id', $approval['id'])->update($approval);
             } else {
                 $task->approvals()->create($approval);
+                $task->update(['status' => Task::STATUS_APPROVAL]);
             }
         }
 
@@ -184,7 +255,7 @@ class TaskController extends Controller
 
     public function approve(Task $task, Request $request)
     {
-        $this->authorize('approve', $task);
+        // $this->authorize('approve', $task);
 
         $request->validate([
             'status' => 'required|boolean',
@@ -202,8 +273,18 @@ class TaskController extends Controller
             ->whereNull('status')
             ->delete();
 
-        event(new TaskApprovedEvent($task, $request->user()));
-        return ['message' => 'Approval has been saved'];
+        $pendingApproval = $task->approvals()->whereNull('status')->count();
+
+        if ($pendingApproval > 0) {
+            $task->update(['status' => Task::STATUS_PARTIALLY_APPROVED]);
+            event(new TaskApprovedEvent($task, $request->user()));
+        } else {
+            $task->update(['status' => Task::STATUS_APPROVED]);
+            event(new TaskApprovedEvent($task, $request->user()));
+            event(new ApprovalCompletedEvent($task));
+        }
+
+        return ['message' => 'Task has been approved'];
     }
 
     public function comment(Task $task, Request $request)
@@ -241,55 +322,6 @@ class TaskController extends Controller
         event(new TaskFinishedEvent($task));
 
         return ['message' => 'Your answer has been saved'];
-    }
-
-    public function updateDocument(Task $task, Request $request)
-    {
-        $this->authorize('updateDocument', $task);
-
-        $request->validate([
-            'title' => 'required',
-            'type' => 'required',
-            'departments' => 'required',
-            'body' => 'required'
-        ]);
-
-        if (!$task->document_id) {
-            $document = Document::create($request->all());
-            $document->versions()->create([
-                'body' => $request->body,
-                'owner_id' => auth()->id(),
-                'status' => $request->status ?: 0
-            ]);
-
-            $task->update(['document_id' => $document->id]);
-        } else {
-            $task->document->update($request->all());
-            $task->document->latest_version->update(['body' => $request->body]);
-        }
-
-        return ['message' => 'Document has been saved'];
-    }
-
-    public function publishDocument(Request $request, Task $task)
-    {
-        // $this->authorize('publishDocument', $task);
-        $request->validate([
-            'number' => 'required',
-            'version' => 'required',
-            'effective_date' => 'required',
-            'expired_date' => 'required',
-            'categories' => 'required',
-            'tags' => 'required',
-            'departments'=> 'required'
-        ]);
-
-        $task->document->update($request->all());
-        $task->document->latest_version->update($request->all());
-
-        event(new DocumentPublishedEvent($task));
-
-        return ['message' => 'Document has been published'];
     }
 
     public function attest(Task $task)

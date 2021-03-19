@@ -9,7 +9,7 @@
     <el-form label-position="left" label-width="200px">
       <el-form-item label="Document Title" :class="{ 'is-error': errors.title }">
         <el-input
-          v-model="form.title"
+          v-model="task.document.title"
           placeholder="Document Title"
         ></el-input>
 
@@ -19,14 +19,14 @@
       </el-form-item>
       <el-form-item label="Document Type" :class="{ 'is-error': errors.type_name }">
         <el-select
-          v-model="form.type"
+          v-model="task.document.type"
           style="width: 100%"
           placeholder="Select Type"
           default-first-option
           clearable
         >
-          <el-option :value="1" label="SOP"></el-option>
-          <el-option :value="2" label="Policy"></el-option>
+          <el-option :value="0" label="SOP"></el-option>
+          <el-option :value="1" label="Policy"></el-option>
         </el-select>
 
         <div class="el-form-item__error" v-if="errors.type">
@@ -82,20 +82,30 @@
         </div>
       </el-form-item>
       <el-form-item label="Categories" :class="{ 'is-error': errors.categories }">
-        <el-input
+        <el-select
           v-model="form.categories"
-          placeholder="Categories"
-        ></el-input>
+          style="width: 100%"
+          placeholder="Select Categories"
+          default-first-option
+          filterable
+          allow-create
+          multiple
+        ></el-select>
 
         <div class="el-form-item__error" v-if="errors.categories">
           {{ errors.categories.join(", ") }}
         </div>
       </el-form-item>
       <el-form-item label="Tags" :class="{ 'is-error': errors.tags }">
-        <el-input
+        <el-select
           v-model="form.tags"
-          placeholder="Tags"
-        ></el-input>
+          style="width: 100%"
+          placeholder="Select Tags"
+          default-first-option
+          filterable
+          allow-create
+          multiple
+        ></el-select>
 
         <div class="el-form-item__error" v-if="errors.tags">
           {{ errors.tags.join(", ") }}
@@ -164,17 +174,17 @@ export default {
     return {
       loading: false,
       errors: {},
-      form: { title: ''}
+      form: {}
     }
   },
 
   mounted() {
-    // this.form = this.document.latest_version;
-    // this.form.title = this.document.title;
-    // this.form.type = this.document.type;
-    // this.form.categories = this.document.categories;
-    // this.form.tags = this.document.tags;
-    // this.form.departments = this.document.departments;
+    this.form = this.task.document.latest_version;
+    // this.form.title = this.task.document.title;
+    // this.form.type = this.task.document.type;
+    this.form.categories = this.task.document.categories;
+    this.form.tags = this.task.document.tags;
+    this.form.departments = this.task.document.departments;
   },
 
   computed: {
@@ -184,7 +194,7 @@ export default {
   methods: {
     publish() {
       this.$confirm("Are you sure want to publish this document?", "Confirm").then(() => {
-        this.$axios.$post(`/api/task/publishDocument/${this.task.id}`, this.form).then(response => {
+        this.$axios.$post(`/api/task/publishDocument/${this.task.id}`, this.form, this.task).then(response => {
           this.$message({
             message: response.message,
             type: 'success',

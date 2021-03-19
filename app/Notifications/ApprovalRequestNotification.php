@@ -60,7 +60,9 @@ class ApprovalRequestNotification extends Notification implements ShouldQueue
     public function toArray($notifiable)
     {
         return [
-            'message' => 'You have new approval request'
+            'type' => 'task',
+            'title' => "You have new approval request!",
+            'url' => '/',
         ];
     }
 }

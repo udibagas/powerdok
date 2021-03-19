@@ -1,10 +1,10 @@
 @component('mail::message')
-# Invoice Paid
+# Approval Completed
 
-Your invoice has been paid!
+Approval has been completed!
 
-@component('mail::button', ['url' => $url])
-View Invoice
+@component('mail::button', ['url' => '/'])
+View Task
 @endcomponent
 
 Thanks,<br>

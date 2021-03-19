@@ -3,29 +3,25 @@
 namespace App\Notifications;
 
 use App\Models\Task;
-use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class TaskApprovedNotification extends Notification implements ShouldQueue
+class DocumentUpdatedNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 
     public $task;
-
-    public $user;
 
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct(Task $task, User $user)
+    public function __construct(Task $task)
     {
         $this->task = $task;
-        $this->user = $user;
     }
 
     /**
@@ -48,16 +44,11 @@ class TaskApprovedNotification extends Notification implements ShouldQueue
     public function toMail($notifiable)
     {
         $task = $this->task;
-        $user = $this->user;
 
-        $mail = (new MailMessage)
-                    ->subject("Task number {$task->id} has been approved by {$user->name}")
+        return (new MailMessage)
+                    ->subject("{$task->document->title} has been updated by {$task->assignee->name}")
                     ->greeting("Hello {$notifiable->name}!")
-                    ->markdown('mail.task.approved', ['task' => $task]);
-
-        $mail->cc($task->user->email, $task->user->name);
-
-        return $mail;
+                    ->markdown('mail.task.document-updated', ['task' => $task]);
     }
 
     /**
@@ -69,11 +60,11 @@ class TaskApprovedNotification extends Notification implements ShouldQueue
     public function toArray($notifiable)
     {
         $task = $this->task;
-        $user = $this->user;
 
         return [
             'type' => 'task',
-            'title' => "Task has been approved by {$user->name}",
+            'title' => "New Document Updated",
+            'text' => "{$task->document->title} has been updated by {$task->assignee->name}",
             'url' => '/',
         ];
     }

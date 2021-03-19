@@ -73,6 +73,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
         Route::get('comments/{task}', [TaskController::class, 'comments']);
         Route::post('submitExam/{task}', [TaskController::class, 'submitExam']);
         Route::post('updateDocument/{task}', [TaskController::class, 'updateDocument']);
+        Route::post('finalizedDocument/{task}', [TaskController::class, 'finalizedDocument']);
         Route::post('publishDocument/{task}', [TaskController::class, 'publishDocument']);
         Route::post('approval/{task}', [TaskController::class, 'requestApproval']);
         Route::delete('approval/{taskApproval}', [TaskController::class, 'deleteApproval']);

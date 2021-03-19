@@ -65,7 +65,11 @@
       <!-- <Attachments :attachments="task.attachments" /> -->
 		</el-card>
 
-		<TaskApproval :task="task" @refresh="fetchData" />
+		<TaskApproval
+      v-if="task.status != TASK_STATUS.SUBMITTED && task.status != TASK_STATUS.ON_PROGRESS"
+      :task="task"
+      @refresh="fetchData"
+    />
 
 		<div class="mt-3">
 			<DocumentForm
