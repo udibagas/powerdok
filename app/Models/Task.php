@@ -12,17 +12,27 @@ class Task extends Model
 {
     use HasFactory, SoftDeletes;
 
-    const STATUS_SUBMITTED = 1;
+    // Status
 
-    const STATUS_ON_PROGRESS = 2;
+    const STATUS_SUBMITTED = 0;
 
-    const STATUS_FINISHED = 3;
+    const STATUS_ON_PROGRESS = 1;
 
-    const STATUS_CLOSED = 4;
+    const STATUS_FINALIZED = 2;
 
-    const STATUS_VOID = 5;
+    const STATUS_APPROVAL = 3;
 
-    const STATUS_POSTPONED = 6;
+    const STATUS_PARTIALLY_APPROVED = 4;
+
+    const STATUS_APPROVED = 5;
+
+    const STATUS_FINISHED = 6;
+
+    const STATUS_CLOSED = 7;
+
+    const STATUS_VOID = 8;
+
+    const STATUS_POSTPONED = 9;
 
     // Priorities
 

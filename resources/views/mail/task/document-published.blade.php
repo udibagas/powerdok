@@ -1,10 +1,10 @@
 @component('mail::message')
-# Approval Completed
+# Document Published
 
-Approval has been completed!
+Document has been published!
 
 @component('mail::button', ['url' => '/'])
-View Task
+View Document
 @endcomponent
 
 Thanks,<br>

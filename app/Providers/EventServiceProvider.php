@@ -2,12 +2,20 @@
 
 namespace App\Providers;
 
+use App\Events\ApprovalCompletedEvent;
 use App\Events\ApprovalRequestEvent;
+use App\Events\DocumentFinalizedEvent;
+use App\Events\DocumentPublishedEvent;
+use App\Events\DocumentUpdatedEvent;
 use App\Events\NewCommentEvent;
 use App\Events\NewTaskEvent;
 use App\Events\TaskApprovedEvent;
 use App\Events\TaskFinishedEvent;
+use App\Listeners\ApprovalCompletedListener;
 use App\Listeners\ApprovalRequestListener;
+use App\Listeners\DocumentFinalizedListener;
+use App\Listeners\DocumentPublishedListener;
+use App\Listeners\DocumentUpdatedListener;
 use App\Listeners\NewCommentListener;
 use App\Listeners\NewTaskListener;
 use App\Listeners\TaskApprovedListener;
@@ -15,7 +23,6 @@ use App\Listeners\TaskFinishedListener;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
-use Illuminate\Support\Facades\Event;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -29,8 +36,12 @@ class EventServiceProvider extends ServiceProvider
         NewTaskEvent::class => [NewTaskListener::class],
         NewCommentEvent::class => [NewCommentListener::class],
         TaskFinishedEvent::class => [TaskFinishedListener::class],
+        DocumentUpdatedEvent::class => [DocumentUpdatedListener::class],
+        DocumentFinalizedEvent::class => [DocumentFinalizedListener::class],
+        DocumentPublishedEvent::class => [DocumentPublishedListener::class],
         ApprovalRequestEvent::class => [ApprovalRequestListener::class],
-        TaskApprovedEvent::class => [TaskApprovedListener::class, ApprovalRequestListener::class]
+        TaskApprovedEvent::class => [TaskApprovedListener::class],
+        ApprovalCompletedEvent::class => [ApprovalCompletedListener::class],
     ];
 
     /**

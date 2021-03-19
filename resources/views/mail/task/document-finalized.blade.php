@@ -1,10 +1,10 @@
 @component('mail::message')
-# Approval Completed
+# Document Finalized
 
-Approval has been completed!
+Document has been finalized!
 
 @component('mail::button', ['url' => '/'])
-View Task
+View Document
 @endcomponent
 
 Thanks,<br>

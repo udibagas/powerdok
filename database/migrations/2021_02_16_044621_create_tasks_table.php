@@ -24,7 +24,7 @@ class CreateTasksTable extends Migration
             $table->json('custom_fields')->nullable();
             $table->tinyInteger('priority')->default(0)->comment('0 = low, 1 = medium, 2 = high, 3 = urgent');
             $table->date('due_date')->nullable();
-            $table->tinyInteger('status')->default(1)->comment('1 = submitted, 2 = on progress, 3 = finished, 4 = closed, 5 = void');
+            $table->tinyInteger('status')->default(0)->comment('0 = submitted, 1 = on progress, 2 = finalized, 3 = approval, 4 = partially approved, 5 = approved, 6 = finished, 7 = closed, 8 = void, 9 = postponed');
             $table->softDeletes();
             $table->timestamps();
         });

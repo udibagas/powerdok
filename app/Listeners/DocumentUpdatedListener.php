@@ -2,13 +2,12 @@
 
 namespace App\Listeners;
 
-use App\Models\User;
-use App\Notifications\ApprovalRequestNotification;
+use App\Notifications\DocumentUpdatedNotification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Facades\Notification;
 
-class ApprovalRequestListener
+class DocumentUpdatedListener
 {
     /**
      * Create the event listener.
@@ -29,10 +28,7 @@ class ApprovalRequestListener
     public function handle($event)
     {
         $task = $event->task;
-        $a = $task->approvals()->whereNull('status')->orderBy('level', 'asc')->first();
-        $userList = $task->approvals()->whereLevel($a->level)->pluck('user_id')->toArray();
-        $users = User::whereIn('id', $userList)->get();
 
-        Notification::send($users, new ApprovalRequestNotification($task));
+        $task->user->notify(new DocumentUpdatedNotification($task));
     }
 }
