@@ -1,6 +1,5 @@
 <template>
-	<div class="my-3">
-		<h6 class="mt-5 mb-3">{{ $t("COMMENTS") }}</h6>
+	<el-card shadhow="never" class="my-3" :header="$t('COMMENTS')">
 		<CommentForm class="mb-3 bg-white" :url="url" @refresh="fetchData" />
 
 		<content-placeholders v-if="fetching">
@@ -9,7 +8,7 @@
 		</content-placeholders>
 		<div
 			v-else
-			class="media mb-3 border rounded shadow p-3 bg-white"
+			class="media mb-3 pt-3 border-top"
 			v-for="comment in comments"
 			:key="comment.id"
 		>
@@ -60,7 +59,7 @@
 				</el-button> -->
 			</div>
 		</div>
-	</div>
+	</el-card>
 </template>
 
 <script>

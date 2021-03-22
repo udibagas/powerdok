@@ -1,5 +1,5 @@
 <template>
-	<div class="media border rounded shadow p-3">
+	<div class="media">
 		<el-avatar class="mr-3" :size="45" icon="el-icon-user"></el-avatar>
 		<div class="media-body">
 			<strong>{{ $t("Me") }}</strong>
@@ -11,20 +11,20 @@
 
 			<div class="mt-3">
 				<el-radio-group size="mini" v-model="editor">
-					<el-radio-button label="Text" value="text"></el-radio-button>
-					<el-radio-button label="HTML" value="html"></el-radio-button>
+					<el-radio-button label="Text"></el-radio-button>
+					<el-radio-button label="HTML"></el-radio-button>
 				</el-radio-group>
 			</div>
 
 			<div class="mb-3">
 				<el-input
-					v-if="editor == 'text'"
+					v-show="editor == 'Text'"
 					v-model="form.body"
 					type="textarea"
 					:autosize="{ minRows: 2, maxRows: 10 }"
 					placeholder="Type your comment here"
 				></el-input>
-				<wysiwyg v-else v-model="form.body"></wysiwyg>
+				<wysiwyg v-show="editor == 'HTML'" v-model="form.body"></wysiwyg>
 			</div>
 
 			<div class="mb-3" v-if="form.attachments.length > 0">
@@ -73,7 +73,7 @@ export default {
 		return {
 			form: { attachments: [] },
 			errors: {},
-			editor: "text"
+			editor: "Text"
 		};
 	},
 
