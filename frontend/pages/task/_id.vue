@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<div class="border rounded shadow bg-white d-flex">
-			<div class="flex-grow p-3">
+			<div class="flex-grow-1 p-3">
 				<!-- <div class="text-info mt-3" style="font-size: 1.2rem">
 					<i class="el-icon-collection-tag"></i>
 					{{ task.type_name }}
@@ -95,11 +95,11 @@
 				</div>
 			</div>
 
-			<TaskSummary :task="task" />
+			<TaskSummary style="width:300px" :task="task" />
 		</div>
 
 		<TaskApproval
-			v-if="task.type == TASK_TYPE.DOCUMENT_REVIEW"
+			v-if="task.type == TASK_TYPE.DOCUMENT_REVIEW && ![TASK_STATUS.NEW, TASK_STATUS.ON_PROGRESS].includes(task.status)"
 			:task="task"
 			@refresh="fetchData"
 		/>
@@ -135,7 +135,7 @@ export default {
 	},
 
 	computed: {
-		...mapState(["priorityColors", "statusColors"])
+		...mapState(["priorityColors", "statusColors", 'statusList'])
 	},
 
 	async asyncData({ $axios, params }) {

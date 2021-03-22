@@ -6,61 +6,78 @@
       </div>
       <div>
         <el-button
-          icon="el-icon-document"
-          size="small"
-          type="primary"
-          @click="save"
-        >
-          {{ $t(task.document ? 'UPDATE DOCUMENT' : 'SAVE DOCUMENT') }}
-        </el-button>
-
-        <el-button
-          v-if="task.status == TASK_STATUS.ON_PROGRESS"
-          icon="el-icon-document-checked"
-          size="small"
-          type="info"
-          @click="finalized"
-        >
-          {{ $t("FINALIZED DOCUMENT") }}
-        </el-button>
-
-        <el-button
-          v-if="task.status == TASK_STATUS.APPROVED"
-          icon="el-icon-check"
-          size="small"
-          type="success"
-          @click="showForm = true"
-        >
-          {{ $t("PUBLISH DOCUMENT") }}
-        </el-button>
+            icon="el-icon-plus"
+            size="small"
+            type="primary"
+            @click="save"
+          >
+            {{ $t('CREATE NEW VERSION') }}
+          </el-button>
       </div>
     </div>
-    <el-form label-position="left" label-width="150px">
-      <el-form-item label="Document Title">
-        <el-input v-model="form.title" placeholder="Document Title"></el-input>
 
-        <div class="el-form-item__error" v-if="errors.title">
-          {{ errors.title.join(", ") }}
-        </div>
-      </el-form-item>
-      <el-form-item label="Document Type">
-        <el-select
-          v-model="form.type"
-          style="width: 100%"
-          placeholder="Select Type"
-          default-first-option
-          clearable
-        >
-          <el-option :value="0" label="SOP"></el-option>
-          <el-option :value="1" label="Policy"></el-option>
-        </el-select>
+    <el-tabs type="card">
+      <el-tab-pane v-for="(version, index) in document.versions" :key="version.id" :label="`Ver. ${version.version}`">
+        <el-form label-position="left" label-width="150px">
+          <el-form-item label="Document Title">
+            <el-input :disabled="index > 0" v-model="version.title" placeholder="Document Title"></el-input>
 
-        <div class="el-form-item__error" v-if="errors.type">
-          {{ errors.type.join(", ") }}
+            <div class="el-form-item__error" v-if="errors.title">
+              {{ errors.title.join(", ") }}
+            </div>
+          </el-form-item>
+          <el-form-item label="Document Type">
+            <el-select
+              :disabled="index > 0"
+              v-model="version.type"
+              style="width: 100%"
+              placeholder="Select Type"
+              default-first-option
+              clearable
+            >
+              <el-option :value="0" label="SOP"></el-option>
+              <el-option :value="1" label="Policy"></el-option>
+            </el-select>
+
+            <div class="el-form-item__error" v-if="errors.type">
+              {{ errors.type.join(", ") }}
+            </div>
+          </el-form-item>
+        </el-form>
+        <ckeditor v-model="version.body" :editor="editor" :disabled="index > 0"></ckeditor>
+
+        <div class="text-right mt-3" v-if="index == 0">
+          <el-button
+            icon="el-icon-document"
+            size="small"
+            type="primary"
+            @click="save(version)"
+          >
+            {{ $t(task.document ? 'UPDATE DOCUMENT' : 'SAVE DOCUMENT') }}
+          </el-button>
+
+          <el-button
+            v-if="task.status == TASK_STATUS.ON_PROGRESS"
+            icon="el-icon-document-checked"
+            size="small"
+            type="info"
+            @click="finalized"
+          >
+            {{ $t("FINALIZED DOCUMENT") }}
+          </el-button>
+
+          <el-button
+            v-if="task.status == TASK_STATUS.APPROVED"
+            icon="el-icon-check"
+            size="small"
+            type="success"
+            @click="showForm = true"
+          >
+            {{ $t("PUBLISH DOCUMENT") }}
+          </el-button>
         </div>
-      </el-form-item>
-    </el-form>
-    <ckeditor v-model="form.body" :editor="editor"></ckeditor>
+      </el-tab-pane>
+    </el-tabs>
 
     <PublishDocumentForm
       v-if="task.document"
@@ -92,6 +109,7 @@ export default {
       editor: ClassicEditor,
       showFormFinalized: false,
       showForm: false,
+      document: {},
 			TASK_STATUS
     };
   },
@@ -99,7 +117,7 @@ export default {
     ckeditor: CKEditor.component,
   },
   methods: {
-    save() {
+    save(version) {
       this.$confirm("Are you sure want to save this document?", "Confirm").then(() => {
         this.loading = true;
         this.$axios
@@ -168,6 +186,8 @@ export default {
               type: response.type,
               body: response.latest_version.body
             };
+
+            this.document = response;
           }
         })
         .catch((e) => {

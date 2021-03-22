@@ -104,7 +104,7 @@ class Task extends Model
 
     public function comments()
     {
-        return $this->morphMany(Comment::class, 'commentable');
+        return $this->morphMany(Comment::class, 'commentable')->orderBy('updated_at', 'desc');
     }
 
     public function document()
@@ -185,6 +185,7 @@ class Task extends Model
         return [
             self::STATUS_SUBMITTED => 'New',
             self::STATUS_ON_PROGRESS => 'On Progress',
+            self::STATUS_FINALIZED => 'Finalized',
             self::STATUS_FINISHED => 'Finished',
             self::STATUS_CLOSED => 'Closed',
             self::STATUS_VOID => 'Void',

@@ -424,7 +424,7 @@ class TaskController extends Controller
     public function document(Task $task)
     {
         $this->authorize('view', $task);
-        return $task->document;
+        return $task->document->load('versions');
     }
 
     public function statusList()
