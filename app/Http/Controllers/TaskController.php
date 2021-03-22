@@ -140,6 +140,7 @@ class TaskController extends Controller
 
         $task = DB::transaction(function () use ($request, $task) {
             $task->update($request->all());
+            $task->track(auth()->id(), Task::STATUS_UPDATED);
 
             if ($request->attachments) {
                 $task->attachments()->createMany($request->attachments);

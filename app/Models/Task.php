@@ -34,6 +34,8 @@ class Task extends Model
 
     const STATUS_POSTPONED = 9;
 
+    const STATUS_UPDATED = 99;
+
     // Priorities
 
     const PRIORITY_LOW = 0;
@@ -197,7 +199,8 @@ class Task extends Model
             self::STATUS_FINISHED => 'Finished',
             self::STATUS_CLOSED => 'Closed',
             self::STATUS_VOID => 'Void',
-            self::STATUS_POSTPONED => 'Postponed'
+            self::STATUS_POSTPONED => 'Postponed',
+            self::STATUS_UPDATED => 'Updated',
         ];
     }
 

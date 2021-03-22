@@ -62,6 +62,13 @@
 								</el-dropdown-item>
 							</el-dropdown-menu>
 						</el-dropdown>
+
+						<el-button
+							class="ml-1"
+							type="primary"
+							icon="el-icon-refresh"
+							@click="fetchData"
+						></el-button>
 					</div>
 				</div>
 
@@ -224,6 +231,14 @@
 			"
 			:url="`/api/task/comments/${task.id}`"
 		/>
+
+		<TaskForm
+			:show="showForm"
+			:model="model"
+			url="/api/task"
+			@close="showForm = false"
+			@refresh="fetchData"
+		/>
 	</div>
 </template>
 
@@ -235,6 +250,8 @@ export default {
 	data() {
 		return {
 			document: "",
+			showForm: false,
+			model: {},
 			TASK_TYPE,
 			TASK_STATUS
 		};
@@ -268,6 +285,12 @@ export default {
 		},
 
 		handleCommand(command) {
+			if (command == "edit") {
+				this.model = JSON.parse(JSON.stringify(this.task));
+				this.showForm = true;
+				return;
+			}
+
 			this.$confirm(this.$t("Anda yakin?"), this.$t("Confirm"), {
 				type: "warning"
 			})
@@ -283,10 +306,6 @@ export default {
 
 						case "delete":
 							this.deleteTask();
-							break;
-
-						case "edit":
-							// TODO: show edit form
 							break;
 					}
 				})
