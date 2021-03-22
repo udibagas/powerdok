@@ -79,13 +79,13 @@
 							placeholder="Note"
 						></el-input>
 						<div class="mt-3">
-							<el-button
+							<!-- <el-button
 								size="small"
 								type="danger"
 								@click="approve(approval.id, false, approval.note)"
 							>
 								<i class="el-icon-close mr-1"></i>{{ $t("DECLINE") }}
-							</el-button>
+							</el-button> -->
 							<el-button
 								size="small"
 								type="success"

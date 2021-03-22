@@ -5,6 +5,7 @@ use App\Http\Controllers\AttachmentController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\DocumentQuizController;
+use App\Http\Controllers\DocumentVersionController;
 use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\MasterFormController;
 use App\Http\Controllers\NotificationController;
@@ -58,6 +59,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
         'task' => TaskController::class,
         'user' => UserController::class,
         'masterForm' => MasterFormController::class,
+        'documentVersion' => DocumentVersionController::class,
     ]);
 
     Route::prefix('document')->group(function () {

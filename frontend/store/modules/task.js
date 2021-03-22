@@ -1,5 +1,5 @@
 export const TASK_STATUS = {
-  SUBMITTED: 0,
+  NEW: 0,
   ON_PROGRESS: 1,
   FINALIZED: 2,
   APPROVAL: 3,
