@@ -1,126 +1,132 @@
 <script>
 import { authFackMethods } from "~/store/helpers";
-import moment from 'moment';
+import moment from "moment";
 
 export default {
-  data() {
-    return {
-      current_language: this.$i18n.locale,
-      text: null,
-      flag: null,
-      value: null,
-      notifications: []
-    };
-  },
+	data() {
+		return {
+			current_language: this.$i18n.locale,
+			text: null,
+			flag: null,
+			value: null,
+			notifications: []
+		};
+	},
 
-  computed: {
-    languages() {
-      return this.$i18n.locales.map(({flag, code: language, name: title}) => {
-        return {flag, language, title};
-      })
-    }
-  },
+	computed: {
+		languages() {
+			return this.$i18n.locales.map(({ flag, code: language, name: title }) => {
+				return { flag, language, title };
+			});
+		}
+	},
 
-  mounted() {
-    this.value = this.languages.find((x) => x.language === this.$i18n.locale);
-    this.text = this.value.title;
-    this.flag = this.value.flag;
-    this.getNewNotifications();
-    // setInterval(this.getNewNotifications, 5000);
+	mounted() {
+		this.value = this.languages.find(x => x.language === this.$i18n.locale);
+		this.text = this.value.title;
+		this.flag = this.value.flag;
+		this.getNewNotifications();
+		// setInterval(this.getNewNotifications, 5000);
 
-    console.log('Listening', 'users.' + this.$auth.user.id);
-    this.$echo
-      .private('users.' + this.$auth.user.id)
-      .notification((notification) => {
-        console.log(notification);
-        alert(JSON.stringify(notification))
-        // TODO: push notification
-        // this.notifications.push(notification);
-        // this.$notify.warning({
-        //   position: "bottom-right",
-        //   title: notification.data.title,
-        //   dangerouslyUseHTMLString: true,
-        //   onClick: () => {
-        //     this.readNotification(notification);
-        //   },
-        //   message: notification.data.text + '<br /><small class="text-muted"><i class="mdi mdi-clock-outline"></i>' + this.$moment(notification.created_at).fromNow() + '</small>'
-        // });
-      });
-  },
+		console.log("Listening", "users." + this.$auth.user.id);
+		// this.$echo
+		//   .private('users.' + this.$auth.user.id)
+		//   .notification((notification) => {
+		//     console.log(notification);
+		//     alert(JSON.stringify(notification))
+		//     // TODO: push notification
+		//     // this.notifications.push(notification);
+		//     // this.$notify.warning({
+		//     //   position: "bottom-right",
+		//     //   title: notification.data.title,
+		//     //   dangerouslyUseHTMLString: true,
+		//     //   onClick: () => {
+		//     //     this.readNotification(notification);
+		//     //   },
+		//     //   message: notification.data.text + '<br /><small class="text-muted"><i class="mdi mdi-clock-outline"></i>' + this.$moment(notification.created_at).fromNow() + '</small>'
+		//     // });
+		//   });
+	},
 
-  methods: {
-    ...authFackMethods,
+	methods: {
+		...authFackMethods,
 
-    getNewNotifications() {
-      this.$axios.$get('/api/notification/getNewNotifications').then(response => {
-        this.notifications = response;
-      });
-    },
+		getNewNotifications() {
+			this.$axios
+				.$get("/api/notification/getNewNotifications")
+				.then(response => {
+					this.notifications = response;
+				});
+		},
 
-    readNotification(notification) {
-      this.$axios.$put(`/api/notification/markAsRead/${notification.id}`).then(response => {
-        let index = this.notifications.findIndex(n => n.id == notification.id);
-        this.notifications.splice(index, 1);
-        this.$router.push(notification.data.url);
-      });
-    },
+		readNotification(notification) {
+			this.$axios
+				.$put(`/api/notification/markAsRead/${notification.id}`)
+				.then(response => {
+					let index = this.notifications.findIndex(
+						n => n.id == notification.id
+					);
+					this.notifications.splice(index, 1);
+					this.$router.push(notification.data.url);
+				});
+		},
 
-    markAllAsRead() {
-      this.$axios.$put(`/api/notification/markAllAsRead`).then(response => {
-        this.notifications = []
-      });
-    },
+		markAllAsRead() {
+			this.$axios.$put(`/api/notification/markAllAsRead`).then(response => {
+				this.notifications = [];
+			});
+		},
 
-    readableTime(time) {
-      return moment(time).format('DD-MMM-YY HH:mm');
-    },
+		readableTime(time) {
+			return moment(time).format("DD-MMM-YY HH:mm");
+		},
 
-    toggleMenu() {
-      this.$parent.toggleMenu();
-    },
+		toggleMenu() {
+			this.$parent.toggleMenu();
+		},
 
-    initFullScreen() {
-        document.body.classList.toggle("fullscreen-enable");
-        if (
-          !document.fullscreenElement &&
-          /* alternative standard method */
-          !document.mozFullScreenElement &&
-          !document.webkitFullscreenElement
-        ) {
-          // current working methods
-          if (document.documentElement.requestFullscreen) {
-              document.documentElement.requestFullscreen();
-          } else if (document.documentElement.mozRequestFullScreen) {
-              document.documentElement.mozRequestFullScreen();
-          } else if (document.documentElement.webkitRequestFullscreen) {
-              document.documentElement.webkitRequestFullscreen(
-                  Element.ALLOW_KEYBOARD_INPUT
-              );
-          }
-        } else {
-          if (document.cancelFullScreen) {
-            document.cancelFullScreen();
-          } else if (document.mozCancelFullScreen) {
-            document.mozCancelFullScreen();
-          } else if (document.webkitCancelFullScreen) {
-            document.webkitCancelFullScreen();
-          }
-        }
-    },
+		initFullScreen() {
+			document.body.classList.toggle("fullscreen-enable");
+			if (
+				!document.fullscreenElement &&
+				/* alternative standard method */
+				!document.mozFullScreenElement &&
+				!document.webkitFullscreenElement
+			) {
+				// current working methods
+				if (document.documentElement.requestFullscreen) {
+					document.documentElement.requestFullscreen();
+				} else if (document.documentElement.mozRequestFullScreen) {
+					document.documentElement.mozRequestFullScreen();
+				} else if (document.documentElement.webkitRequestFullscreen) {
+					document.documentElement.webkitRequestFullscreen(
+						Element.ALLOW_KEYBOARD_INPUT
+					);
+				}
+			} else {
+				if (document.cancelFullScreen) {
+					document.cancelFullScreen();
+				} else if (document.mozCancelFullScreen) {
+					document.mozCancelFullScreen();
+				} else if (document.webkitCancelFullScreen) {
+					document.webkitCancelFullScreen();
+				}
+			}
+		},
 
-    setLanguage(locale, country, flag) {
-      this.$i18n.setLocale(locale);
-      this.$i18n.locale = locale;
-      this.current_language = locale;
-      this.text = country;
-      this.flag = flag;
-    },
+		setLanguage(locale, country, flag) {
+			this.$i18n.setLocale(locale);
+			this.$i18n.locale = locale;
+			this.current_language = locale;
+			this.text = country;
+			this.flag = flag;
+		},
 
-    logoutUser() {
-      this.$auth.logout();
-      this.$router.push({ path: "/login", });
-    },
-  },
+		logoutUser() {
+			this.$auth.logout();
+			this.$router.push({ path: "/login" });
+		}
+	}
 };
 </script>
 

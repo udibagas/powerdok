@@ -117,4 +117,14 @@ class TaskPolicy
             $task->type == Task::TYPE_ATESTATION &&
             !in_array($task->status, [Task::STATUS_FINISHED, Task::STATUS_CLOSED, Task::STATUS_VOID]);
     }
+
+    public function close(User $user, Task $task)
+    {
+        return $user->id == $task->user_id && $task->status == Task::STATUS_FINISHED;
+    }
+
+    public function void(User $user, Task $task)
+    {
+        return $user->id == $task->user_id && ($task->status == Task::STATUS_SUBMITTED || $task->status == Task::STATUS_ON_PROGRESS);
+    }
 }

@@ -360,6 +360,23 @@ class TaskController extends Controller
     {
         $this->authorize('attest', $task);
         $task->update(['status' => Task::STATUS_FINISHED]);
+        event(new TaskFinishedEvent($task));
+        return ['message' => 'Data has been saved'];
+    }
+
+    public function close(Task $task)
+    {
+        $this->authorize('close', $task);
+        $task->update(['status' => Task::STATUS_CLOSED]);
+        $task->track(auth()->id(), Task::STATUS_CLOSED);
+        return ['message' => 'Data has been saved'];
+    }
+
+    public function void(Task $task)
+    {
+        $this->authorize('void', $task);
+        $task->update(['status' => Task::STATUS_VOID]);
+        $task->track(auth()->id(), Task::STATUS_VOID);
         return ['message' => 'Data has been saved'];
     }
 
@@ -425,6 +442,11 @@ class TaskController extends Controller
     {
         $this->authorize('view', $task);
         return $task->document ? $task->document->load('versions') : null;
+    }
+
+    public function trackings(Task $task)
+    {
+        return $task->trackings;
     }
 
     public function statusList()

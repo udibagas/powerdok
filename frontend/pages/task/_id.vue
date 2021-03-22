@@ -2,16 +2,70 @@
 	<div>
 		<div class="border rounded shadow bg-white d-flex">
 			<div class="flex-grow-1 p-3">
-				<!-- <div class="text-info mt-3" style="font-size: 1.2rem">
-					<i class="el-icon-collection-tag"></i>
-					{{ task.type_name }}
-				</div> -->
-				<h3 class="mt-3 mb-0">
-					<span class="text-muted"> #{{ task.id }} </span>
-					{{ task.title }}
-				</h3>
+				<div class="d-flex justify-content-between">
+					<div class="mt-3">
+						<h3 class="mb-0">
+							<span class="text-muted"> #{{ task.id }} </span>
+							{{ task.title }}
+						</h3>
 
-				<div class="row mt-4 p-3 rounded border-top border-bottom">
+						{{
+							$moment(task.created_at)
+								.lang($i18n.locale)
+								.format("DD-MMM-YYYY HH:mm")
+						}}
+
+						(<i> {{ $moment(task.created_at).lang($i18n.locale).fromNow() }} </i
+						>)
+					</div>
+
+					<div class="mt-3">
+						<el-dropdown
+							split-button
+							type="primary"
+							v-if="showAction"
+							@command="handleCommand"
+						>
+							<i class="el-icon-setting"></i>
+							{{ $t("Action") }}
+							<el-dropdown-menu slot="dropdown">
+								<el-dropdown-item
+									v-if="!task.is_closed"
+									command="edit"
+									icon="el-icon-edit"
+								>
+									{{ $t("Edit Task") }}
+								</el-dropdown-item>
+
+								<el-dropdown-item
+									v-if="task.status == TASK_STATUS.FINISHED"
+									icon="el-icon-lock"
+									command="close"
+								>
+									{{ $t("Close Task") }}
+								</el-dropdown-item>
+
+								<el-dropdown-item
+									v-if="!task.is_closed"
+									icon="el-icon-circle-close"
+									command="void"
+								>
+									{{ $t("Void Task") }}
+								</el-dropdown-item>
+
+								<el-dropdown-item
+									v-if="task.status == TASK_STATUS.NEW"
+									icon="el-icon-delete"
+									command="delete"
+								>
+									{{ $t("Delete Task") }}
+								</el-dropdown-item>
+							</el-dropdown-menu>
+						</el-dropdown>
+					</div>
+				</div>
+
+				<div class="row mt-4 p-3 rounded border-top border-bottom mb-3">
 					<div class="col-md-3">
 						<div class="text-muted mb-1">
 							{{ $t("Type") }}
@@ -51,51 +105,87 @@
 					</div>
 				</div>
 
-				<div class="media my-4">
-					<el-avatar class="mr-3" :size="45" icon="el-icon-user"></el-avatar>
-					<div class="media-body">
-						<strong>{{ task.user.name }}</strong>
-
-						<span class="text-muted">
-							&bull;
-							{{ task.user.position }} |
-							{{ task.user.department ? task.user.department.name : "N/A" }}
-							<br />
-							<i>
-								{{ $moment(task.created_at).lang($i18n.locale).fromNow() }}
-							</i>
-						</span>
-					</div>
-				</div>
-
-				<div>
-					<div class="mb-4 text-justify" v-html="task.description"></div>
-
-					<div v-if="task.document" class="mt-5">
-						<div class="text-muted mb-3">
-							<i class="el-icon-paperclip"></i>
-							{{ $t("Related Document") }}
-						</div>
-						<div class="media">
-							<i class="el-icon-document mr-2" style="font-size: 40px"></i>
-							<div class="media-body">
-								<div>
-									<strong>{{ task.document.type_name }}</strong> &nbsp; No.
-									{{ task.document.latest_version.number }} &nbsp; Ver.
-									{{ task.document.latest_version.version }}
+				<div class="border rounded shadow p-3">
+					<div class="d-flex justify-content-between">
+						<div>
+							<div class="text-primary mb-2">{{ $t("From") }}:</div>
+							<div class="media">
+								<el-avatar
+									class="mr-3"
+									:size="45"
+									icon="el-icon-user"
+								></el-avatar>
+								<div class="media-body">
+									<strong>{{ task.user.name }}</strong>
+									<br />
+									<span class="text-muted">
+										{{ task.user.position }} |
+										{{
+											task.user.department ? task.user.department.name : "N/A"
+										}}
+										<br />
+										<i> </i>
+									</span>
 								</div>
-								<nuxt-link :to="`/documents/${task.document.id}`">
-									{{ task.document.title }}
-								</nuxt-link>
+							</div>
+						</div>
+
+						<div>
+							<div class="text-primary mb-2">{{ $t("To") }}:</div>
+							<div class="media">
+								<el-avatar
+									class="mr-3"
+									:size="45"
+									icon="el-icon-user"
+								></el-avatar>
+								<div class="media-body">
+									<strong>{{ task.assignee.name }}</strong>
+									<br />
+									<span class="text-muted">
+										{{ task.assignee.position }} |
+										{{
+											task.assignee.department
+												? task.assignee.department.name
+												: "N/A"
+										}}
+									</span>
+								</div>
 							</div>
 						</div>
 					</div>
 
-					<Attachments class="mt-5" :url="`/api/task/attachments/${task.id}`" />
+					<hr />
+
+					<div v-html="task.description"></div>
 				</div>
+
+				<div v-if="task.document" class="mt-3 border shadow rounded p-3">
+					<div class="text-muted mb-3">
+						<i class="el-icon-paperclip"></i>
+						{{ $t("Related Document") }}
+					</div>
+					<div class="media">
+						<i class="el-icon-document mr-2" style="font-size: 40px"></i>
+						<div class="media-body">
+							<div>
+								<strong>{{ task.document.type_name }}</strong> &nbsp; No.
+								{{ task.document.latest_version.number }} &nbsp; Ver.
+								{{ task.document.latest_version.version }}
+							</div>
+							<nuxt-link :to="`/documents/${task.document.id}`">
+								{{ task.document.title }}
+							</nuxt-link>
+						</div>
+					</div>
+				</div>
+
+				<Attachments
+					class="mt-3 border rounded shadow p-3"
+					:url="`/api/task/attachments/${task.id}`"
+				/>
 			</div>
 
-			<TaskSummary style="min-width: 300px" :task="task" />
+			<TaskSummary :task="task" />
 		</div>
 
 		<TaskApproval
@@ -151,6 +241,13 @@ export default {
 	},
 
 	computed: {
+		showAction() {
+			return (
+				this.task.user_id == this.$auth.user.id &&
+				this.task.status != TASK_STATUS.CLOSED &&
+				this.task.status != TASK_STATUS.VOID
+			);
+		},
 		...mapState(["priorityColors", "statusColors", "statusList"])
 	},
 
@@ -168,6 +265,92 @@ export default {
 	methods: {
 		async fetchData() {
 			this.task = await this.$axios.$get(`/api/task/${this.task.id}`);
+		},
+
+		handleCommand(command) {
+			this.$confirm(this.$t("Anda yakin?"), this.$t("Confirm"), {
+				type: "warning"
+			})
+				.then(() => {
+					switch (command) {
+						case "close":
+							this.closeTask();
+							break;
+
+						case "void":
+							this.voidTask();
+							break;
+
+						case "delete":
+							this.deleteTask();
+							break;
+
+						case "edit":
+							// TODO: show edit form
+							break;
+					}
+				})
+				.catch(e => console.log(e));
+		},
+
+		closeTask() {
+			this.$axios
+				.$post(`/api/task/close/${this.task.id}`)
+				.then(response => {
+					this.$message({
+						message: response.message,
+						type: "success",
+						showClose: true
+					});
+					this.fetchData();
+				})
+				.catch(e => {
+					this.$message({
+						message: e.response.data.message,
+						type: "error",
+						showClose: true
+					});
+				});
+		},
+
+		voidTask() {
+			this.$axios
+				.$post(`/api/task/void/${this.task.id}`)
+				.then(response => {
+					this.$message({
+						message: response.message,
+						type: "success",
+						showClose: true
+					});
+					this.fetchData();
+				})
+				.catch(e => {
+					this.$message({
+						message: e.response.data.message,
+						type: "error",
+						showClose: true
+					});
+				});
+		},
+
+		deleteTask() {
+			this.$axios
+				.$delete(`/api/task/${this.task.id}`)
+				.then(response => {
+					this.$message({
+						message: response.message,
+						type: "success",
+						showClose: true
+					});
+					this.$router.push("/task/manage");
+				})
+				.catch(e => {
+					this.$message({
+						message: e.response.data.message,
+						type: "error",
+						showClose: true
+					});
+				});
 		}
 	}
 };

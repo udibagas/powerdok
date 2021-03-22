@@ -127,6 +127,14 @@ class Task extends Model
         return $this->hasMany(TaskTracking::class);
     }
 
+    public function track($user_id, $status)
+    {
+        $this->trackings()->create([
+            'user_id' => $user_id,
+            'status' => $status
+        ]);
+    }
+
     public function getStatusLabelAttribute()
     {
         return static::getStatusLabel($this->status);

@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<div class="text-muted my-3">
+		<div class="text-muted">
 			<i class="el-icon-paperclip"></i>
 			{{ $t("Attachments") }}
 		</div>
