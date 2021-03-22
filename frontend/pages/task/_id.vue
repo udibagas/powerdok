@@ -95,7 +95,7 @@
 				</div>
 			</div>
 
-			<TaskSummary style="width: 300px" :task="task" />
+			<TaskSummary style="min-width: 300px" :task="task" />
 		</div>
 
 		<TaskApproval
@@ -128,7 +128,12 @@
 			@refresh="fetchData"
 		/>
 
-		<Comments :url="`/api/task/comments/${task.id}`" />
+		<Comments
+			:allowComment="
+				![TASK_STATUS.CLOSED, TASK_STATUS.VOID].includes(task.status)
+			"
+			:url="`/api/task/comments/${task.id}`"
+		/>
 	</div>
 </template>
 
