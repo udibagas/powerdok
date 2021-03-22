@@ -1,6 +1,6 @@
 <template>
 	<el-card shadow="never" class="my-3" :header="$t('COMMENTS')">
-		<el-card shadow="hover" class="mb-3">
+		<el-card shadow="hover" class="mb-3" v-if="allowComment">
 			<CommentForm :url="url" @refresh="fetchData" />
 		</el-card>
 
@@ -69,7 +69,7 @@
 
 <script>
 export default {
-	props: ["url"],
+	props: ["url", "allowComment"],
 
 	mounted() {
 		this.fetchData();

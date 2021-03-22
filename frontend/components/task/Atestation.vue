@@ -6,7 +6,7 @@
 		</content-placeholders>
 
 		<div v-else>
-			<h1>{{ document.title }}</h1>
+			<h2 class="my-3">{{ document.title }}</h2>
 
 			<div class="border-top border-bottom py-3 my-3">
 				<div class="d-flex justify-content-between">
