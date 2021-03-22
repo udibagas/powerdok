@@ -49,6 +49,12 @@
 export default {
 	props: ["task"],
 
+	watch: {
+		"task.updated_at"(v) {
+			this.getTracking();
+		}
+	},
+
 	data() {
 		return {
 			trackings: []
