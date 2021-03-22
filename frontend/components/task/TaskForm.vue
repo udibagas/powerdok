@@ -1,7 +1,7 @@
 <template>
 	<el-dialog
 		title="TASK"
-		width="700px"
+		width="750px"
 		:visible.sync="show"
 		:before-close="closeForm"
 		:close-on-click-modal="false"
@@ -15,10 +15,12 @@
 				</div>
 			</el-form-item>
 
-			<wysiwyg class="mb-3" v-model="model.description"></wysiwyg>
-			<div class="el-form-item__error" v-if="errors.description">
-				{{ errors.description.join(", ") }}
-			</div>
+			<el-form-item :label="$t('Description')">
+				<wysiwyg class="mb-3" v-model="model.description"></wysiwyg>
+				<div class="el-form-item__error" v-if="errors.description">
+					{{ errors.description.join(", ") }}
+				</div>
+			</el-form-item>
 
 			<el-form-item label="Type" :class="{ 'is-error': errors.type }">
 				<el-select

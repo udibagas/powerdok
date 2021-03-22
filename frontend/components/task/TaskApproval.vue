@@ -1,10 +1,10 @@
 <template>
-	<div class="mt-5">
-		<div class="d-flex justify-content-between mb-3">
-			<h6>{{ $t("APPROVALS") }}</h6>
+	<el-card shadow="never" class="mt-3">
+		<div class="d-flex justify-content-between" slot="header">
+			<div>{{ $t("APPROVALS") }}</div>
 			<el-button
 				size="small"
-				type="primary"
+				type="text"
 				icon="el-icon-edit"
 				@click="showForm = true"
 			>
@@ -17,92 +17,97 @@
 		</div>
 
 		<div v-if="submittedApprovals.length > 0">
-			<div
-				class="media mb-3 border rounded shadow bg-white p-3"
+			<el-card
+				shadow="hover"
 				v-for="approval in submittedApprovals"
 				:key="approval.id"
+				class="mb-3"
 			>
-				<el-avatar
-					class="mr-3 border-2 border-success"
-					:size="45"
-					icon="el-icon-user"
-				></el-avatar>
+				<div class="media">
+					<el-avatar
+						class="mr-3 border-2 border-success"
+						:size="45"
+						icon="el-icon-user"
+					></el-avatar>
 
-				<div class="media-body">
-					<div class="d-flex justify-content-between">
-						<div>
-							<strong>{{
-								approval.user_id == $auth.user.id
-									? $t("Me")
-									: approval.user.name
-							}}</strong>
+					<div class="media-body">
+						<div class="d-flex justify-content-between">
+							<div>
+								<strong>{{
+									approval.user_id == $auth.user.id
+										? $t("Me")
+										: approval.user.name
+								}}</strong>
 
-							<span class="text-muted">
-								&bull;
-								{{ approval.user.position }} |
-								{{
-									approval.user.department
-										? approval.user.department.name
-										: "N/A"
-								}}
-								<br />
-								<i>
+								<span class="text-muted">
+									&bull;
+									{{ approval.user.position }} |
 									{{
-										$moment(approval.updated_at).lang($i18n.locale).fromNow()
+										approval.user.department
+											? approval.user.department.name
+											: "N/A"
 									}}
-								</i>
-							</span>
+									<br />
+									<i>
+										{{
+											$moment(approval.updated_at).lang($i18n.locale).fromNow()
+										}}
+									</i>
+								</span>
+							</div>
+
+							<div>
+								<el-tag
+									v-if="approval.status !== null"
+									effect="dark"
+									:type="approval.status ? 'success' : 'danger'"
+									>{{ approval.status ? $t("APPROVED") : $t("DECLINED") }}
+								</el-tag>
+								<el-tag v-else effect="dark" type="info"
+									>{{ $t("WAITING") }}
+								</el-tag>
+							</div>
 						</div>
 
-						<div>
-							<el-tag
-								v-if="approval.status !== null"
-								effect="dark"
-								:type="approval.status ? 'success' : 'danger'"
-								>{{ approval.status ? $t("APPROVED") : $t("DECLINED") }}
-							</el-tag>
-							<el-tag v-else effect="dark" type="info"
-								>{{ $t("WAITING") }}
-							</el-tag>
-						</div>
-					</div>
-
-					<!-- approval form -->
-					<div
-						class="my-3"
-						v-if="approval.user_id == $auth.user.id && approval.status == null"
-					>
-						<el-input
-							type="textarea"
-							:autosize="{ minRows: 2, maxRows: 10 }"
-							v-model="approval.note"
-							placeholder="Note"
-						></el-input>
-						<div class="mt-3">
-							<!-- <el-button
+						<!-- approval form -->
+						<div
+							class="my-3"
+							v-if="
+								approval.user_id == $auth.user.id && approval.status == null
+							"
+						>
+							<el-input
+								type="textarea"
+								:autosize="{ minRows: 2, maxRows: 10 }"
+								v-model="approval.note"
+								placeholder="Note"
+							></el-input>
+							<div class="mt-3">
+								<!-- <el-button
 								size="small"
 								type="danger"
 								@click="approve(approval.id, false, approval.note)"
 							>
 								<i class="el-icon-close mr-1"></i>{{ $t("DECLINE") }}
 							</el-button> -->
-							<el-button
-								size="small"
-								type="success"
-								@click="approve(approval.id, true, approval.note)"
-							>
-								<i class="el-icon-check mr-1"></i>{{ $t("APPROVE") }}
-							</el-button>
+								<el-button
+									size="small"
+									type="success"
+									@click="approve(approval.id, true, approval.note)"
+								>
+									<i class="el-icon-check mr-1"></i>{{ $t("APPROVE") }}
+								</el-button>
+							</div>
 						</div>
-					</div>
 
-					<div
-						class="my-3"
-						v-if="approval.status != null && approval.note"
-						v-html="approval.note"
-					></div>
+						<div
+							class="my-3"
+							v-if="approval.status != null && approval.note"
+							v-html="approval.note"
+						></div>
+					</div>
 				</div>
-			</div>
+			</el-card>
 		</div>
 
 		<div v-else class="text-center border shadow rounded bg-white">
@@ -116,7 +121,7 @@
 			@close="showForm = false"
 			@refresh="getData"
 		/>
-	</div>
+	</el-card>
 </template>
 
 <script>

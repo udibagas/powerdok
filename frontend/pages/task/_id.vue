@@ -41,7 +41,7 @@
 						<div class="text-muted mb-1">
 							{{ $t("Due Date") }}
 						</div>
-						<h5>
+						<h5 class="text-danger">
 							{{
 								task.due_date
 									? $moment(task.due_date).format("DD-MMM-YYYY")
@@ -95,27 +95,38 @@
 				</div>
 			</div>
 
-			<TaskSummary style="width:300px" :task="task" />
+			<TaskSummary style="width: 300px" :task="task" />
 		</div>
 
 		<TaskApproval
-			v-if="task.type == TASK_TYPE.DOCUMENT_REVIEW && ![TASK_STATUS.NEW, TASK_STATUS.ON_PROGRESS].includes(task.status)"
+			v-if="
+				task.type == TASK_TYPE.DOCUMENT_REVIEW &&
+				![TASK_STATUS.NEW, TASK_STATUS.ON_PROGRESS].includes(task.status)
+			"
 			:task="task"
 			@refresh="fetchData"
 		/>
 
-		<div class="mt-3">
-			<DocumentForm
-				v-if="task.type == TASK_TYPE.DOCUMENT_REVIEW"
-				:task="task"
-				@refresh="fetchData"
-			/>
-			<TaskExam
-				v-if="task.type == TASK_TYPE.EXAMINATION"
-				:task="task"
-				@refresh="fetchData"
-			/>
-		</div>
+		<DocumentForm
+			class="mt-3"
+			v-if="task.type == TASK_TYPE.DOCUMENT_REVIEW"
+			:task="task"
+			@refresh="fetchData"
+		/>
+
+		<Atestation
+			class="mt-3"
+			:task="task"
+			v-if="task.type == TASK_TYPE.ATESTATION"
+			@refresh="fetchData"
+		/>
+
+		<TaskExam
+			class="mt-3"
+			v-if="task.type == TASK_TYPE.EXAMINATION"
+			:task="task"
+			@refresh="fetchData"
+		/>
 
 		<Comments :url="`/api/task/comments/${task.id}`" />
 	</div>
@@ -135,7 +146,7 @@ export default {
 	},
 
 	computed: {
-		...mapState(["priorityColors", "statusColors", 'statusList'])
+		...mapState(["priorityColors", "statusColors", "statusList"])
 	},
 
 	async asyncData({ $axios, params }) {

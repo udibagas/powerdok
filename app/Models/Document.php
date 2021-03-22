@@ -35,8 +35,6 @@ class Document extends Model
         'favourites' => 'json'
     ];
 
-    protected $with = ['versions'];
-
     protected $appends = ['last_update', 'type_name', 'latest_version'];
 
     public function quizzes()
@@ -69,7 +67,7 @@ class Document extends Model
 
     public function versions()
     {
-        return $this->hasMany(DocumentVersion::class);
+        return $this->hasMany(DocumentVersion::class)->orderBy('created_at', 'desc');
     }
 
     public function getLatestVersionAttribute()

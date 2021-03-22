@@ -1,40 +1,44 @@
 <template>
-	<el-card shadhow="never" class="my-3" :header="$t('COMMENTS')">
-		<CommentForm class="mb-3 bg-white" :url="url" @refresh="fetchData" />
+	<el-card shadow="never" class="my-3" :header="$t('COMMENTS')">
+		<el-card shadow="hover" class="mb-3">
+			<CommentForm :url="url" @refresh="fetchData" />
+		</el-card>
 
 		<content-placeholders v-if="fetching">
 			<content-placeholders-heading :img="true" />
 			<!-- <content-placeholders-text :lines="3" /> -->
 		</content-placeholders>
-		<div
+		<el-card
+			shadow="hover"
 			v-else
-			class="media mb-3 pt-3 border-top"
+			class="mb-3"
 			v-for="comment in comments"
 			:key="comment.id"
 		>
-			<el-avatar class="mr-3" :size="45" icon="el-icon-user"></el-avatar>
-			<div class="media-body">
-				<strong>{{ comment.user.name }}</strong>
+			<div class="media">
+				<el-avatar class="mr-3" :size="45" icon="el-icon-user"></el-avatar>
+				<div class="media-body">
+					<strong>{{ comment.user.name }}</strong>
 
-				<span class="text-muted">
-					&bull;
-					{{ comment.user.position }} |
-					{{ comment.user.department ? comment.user.department.name : "N/A" }}
-					<br />
-					<i>
-						{{ $moment(comment.created_at).lang($i18n.locale).fromNow() }}
-					</i>
-				</span>
+					<span class="text-muted">
+						&bull;
+						{{ comment.user.position }} |
+						{{ comment.user.department ? comment.user.department.name : "N/A" }}
+						<br />
+						<i>
+							{{ $moment(comment.created_at).lang($i18n.locale).fromNow() }}
+						</i>
+					</span>
 
-				<div class="my-2" v-html="comment.body"></div>
+					<div class="my-2" v-html="comment.body"></div>
 
-				<Attachments
-					v-if="comment.attachments.length > 0"
-					class="mt-5"
-					:data="comment.attachments"
-				/>
+					<Attachments
+						v-if="comment.attachments.length > 0"
+						class="mt-5"
+						:data="comment.attachments"
+					/>
 
-				<!-- <el-input
+					<!-- <el-input
 					class="my-3"
 					v-model="body"
 					type="textarea"
@@ -57,8 +61,9 @@
 				<el-button type="text">
 					<i class="mdi mdi-reply mr-1"></i> {{ $t("Reply") }}
 				</el-button> -->
+				</div>
 			</div>
-		</div>
+		</el-card>
 	</el-card>
 </template>
 
